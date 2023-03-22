@@ -96,9 +96,9 @@ model Transaction {
   pending                 Boolean
   pendingTransactionId    String?
   personalFinanceCategory String?
-  fundSource              Fund                  @relation(fields: [fundId], references: [id], onDelete: Cascade)
+  fundSource              Fund?                 @relation(fields: [fundId], references: [id], onDelete: Cascade)
   fundId                  String
-  budgetSource            Budget                @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  budgetSource            Budget?               @relation(fields: [budgetId], references: [id], onDelete: Cascade)
   budgetId                String
   transactionCode         String?
   transactionId           String                @unique
@@ -161,7 +161,7 @@ model User {
   bankAccessTokens BankAccessToken[]
   bankAccounts     BankAccount[]
   transactions     Transaction[]
-  fund             Fund[]
+  funds            Fund[]
   budgets          Budget[]
 }
 
