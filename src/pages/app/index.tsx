@@ -32,7 +32,9 @@ export default function Home() {
         {/* Transactions component */}
         <div
           className="group flex w-full cursor-pointer items-center justify-between rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
-          onClick={() => router.push("/app/transactions")}
+          onClick={() => {
+            async () => await router.push("/app/transactions");
+          }}
         >
           <div className="flex flex-col">
             <h3 className="text-xl font-bold">Transactions</h3>
@@ -49,7 +51,9 @@ export default function Home() {
         {/* Budget component */}
         <div
           className="group flex w-full cursor-pointer flex-col justify-between gap-1 rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
-          onClick={() => router.push("/app/budget")}
+          onClick={() => {
+            async () => router.push("/app/budget");
+          }}
         >
           <div className="flex justify-between">
             <h3 className="text-xl font-bold">Budget</h3>
@@ -73,7 +77,7 @@ export default function Home() {
         {/* Fund component */}
         <div
           className="group flex w-full cursor-pointer flex-col justify-between gap-1 rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
-          onClick={() => router.push("/app/funds")}
+          onClick={() => async () => router.push("/app/funds")}
         >
           <div className="flex justify-between">
             <h3 className="text-xl font-bold">Funds</h3>
@@ -90,7 +94,7 @@ export default function Home() {
         {/* Accounts component */}
         <div
           className="group flex w-full cursor-pointer items-center justify-between rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
-          onClick={() => router.push("/app/accounts")}
+          onClick={() => async () => router.push("/app/accounts")}
         >
           <div className="flex flex-col">
             <h3 className="text-xl font-bold">Accounts</h3>
@@ -116,7 +120,8 @@ export default function Home() {
               <div
                 key={account.id}
                 className="group cursor-pointer rounded-xl px-4 py-2 hover:bg-primary-light hover:text-primary-dark"
-                onClick={() => router.push(`/app/accounts/${account.id}`)}
+                onClick={() => async () =>
+                  router.push(`/app/accounts/${account.id}`)}
               >
                 <div className="flex items-center justify-between">
                   <h3 className="py-1 text-lg">{account.name}</h3>

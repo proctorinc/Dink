@@ -55,7 +55,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             />
             <button
               className="flex items-center gap-2 rounded-xl py-1 text-3xl font-bold"
-              onClick={() => router.push("/app")}
+              onClick={() => async () => router.push("/app")}
             >
               <FontAwesomeIcon
                 className="h-6 w-6 text-primary-light"
@@ -66,7 +66,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <FontAwesomeIcon
               className="h-5 w-5 rounded-full bg-secondary-dark p-2 text-secondary-med hover:bg-secondary-light hover:text-secondary-med"
               icon={faUser}
-              onClick={() => router.push("/app/user")}
+              onClick={() => async () => router.push("/app/user")}
             />
           </div>
         </nav>
@@ -85,22 +85,22 @@ const MyApp: AppType<{ session: Session | null }> = ({
               <FontAwesomeIcon
                 className="h-5 w-5 rounded-full bg-primary-med p-2 text-primary-light hover:bg-primary-light hover:text-primary-med"
                 icon={faBuildingColumns}
-                onClick={() => router.push("/app/accounts")}
+                onClick={() => async () => router.push("/app/accounts")}
               />
               <FontAwesomeIcon
                 className="h-5 w-5 rounded-full bg-primary-med p-2 text-primary-light hover:bg-primary-light hover:text-primary-med"
                 icon={faCalendarAlt}
-                onClick={() => router.push("/app/budget")}
+                onClick={() => async () => router.push("/app/budget")}
               />
               <FontAwesomeIcon
                 className="h-5 w-5 rounded-full bg-primary-med p-2 text-primary-light hover:bg-primary-light hover:text-primary-med"
                 icon={faHome}
-                onClick={() => router.push("/app")}
+                onClick={() => async () => router.push("/app")}
               />
               <FontAwesomeIcon
                 className="h-5 w-5 rounded-full bg-primary-med p-2 text-primary-light hover:bg-primary-light hover:text-primary-med"
                 icon={faPiggyBank}
-                onClick={() => router.push("/app/funds")}
+                onClick={() => async () => router.push("/app/funds")}
               />
               <FontAwesomeIcon
                 className="h-5 w-5 rounded-full bg-primary-med p-2 text-primary-light hover:bg-primary-light hover:text-primary-med"
@@ -113,7 +113,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
                 <FontAwesomeIcon
                   className="h-5 w-5 rounded-full bg-primary-med p-2 text-primary-light hover:bg-primary-light hover:text-primary-med"
                   icon={faReceipt}
-                  onClick={() => router.push("/app/transactions")}
+                  onClick={() => async () => router.push("/app/transactions")}
                 />
               </div>
             )}

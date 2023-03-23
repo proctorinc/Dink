@@ -7,7 +7,7 @@ const Login = () => {
   const router = useRouter();
 
   if (data) {
-    router.push("/banana");
+    async () => router.push("/banana");
   }
 
   return (

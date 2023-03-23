@@ -8,7 +8,7 @@ const NotFoundPage = () => {
       <span>404 - This page is not Found</span>
       <button
         className="rounded-xl bg-primary-med px-4 py-2 hover:bg-primary-light"
-        onClick={() => router.push("/app")}
+        onClick={() => async () => router.push("/app")}
       >
         Go Home
       </button>
