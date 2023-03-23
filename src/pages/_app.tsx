@@ -33,17 +33,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
     setDrawerOpen((prev) => !prev);
   };
 
-  Router.onRouteChangeStart = () => {
+  Router.events.on("routeChangeStart", () => {
     setLoading(true);
-  };
+  });
 
-  Router.onRouteChangeComplete = () => {
+  Router.events.on("routeChangeComplete", () => {
     setLoading(false);
-  };
-
-  // Router.onRouteChangeError = () => {
-  //   setLoading(false);
-  // };
+  });
 
   return (
     <SessionProvider session={session}>
