@@ -30,7 +30,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const toggleDrawerOpen = () => {
-    setDrawerOpen((prev) => setDrawerOpen(!prev));
+    setDrawerOpen((prev) => !prev);
   };
 
   Router.onRouteChangeStart = () => {
