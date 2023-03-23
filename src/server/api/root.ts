@@ -2,7 +2,9 @@ import { createTRPCRouter } from "~/server/api/trpc";
 import { exampleRouter } from "~/server/api/routers/example";
 import { mockDataRouter } from "./routers/mock_data";
 import { userRouter } from "./routers/users";
-import { bankAccountRouter } from "./routers/bank_accounts";
+import { bankAccountRouter } from "./routers/bankAccounts";
+import { budgetsRouter } from "./routers/budgets";
+import { fundsRouter } from "./routers/funds";
 
 /**
  * This is the primary router for your server.
@@ -14,6 +16,8 @@ export const appRouter = createTRPCRouter({
   mockData: mockDataRouter,
   users: userRouter,
   bankAccounts: bankAccountRouter,
+  budgets: budgetsRouter,
+  funds: fundsRouter,
 });
 
 // export type definition of API

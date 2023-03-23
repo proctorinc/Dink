@@ -6,6 +6,8 @@ export const userRouter = createTRPCRouter({
     return ctx.prisma.user.findMany({
       include: {
         bankAccounts: true,
+        funds: true,
+        budgets: true,
       },
     });
   }),
