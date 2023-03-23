@@ -16,8 +16,16 @@ const config = {
         med: "#00C6C5",
         light: "#B3FFFF",
       },
-      warning: "#EBD652",
-      danger: "#D7234A",
+      warning: {
+        dark: "#7b6b32",
+        med: "#F4D35E",
+        light: "#f3eac9",
+      },
+      danger: {
+        dark: "#DA4167",
+        med: "#DA4167",
+        light: "#DA4167",
+      },
     },
   },
   plugins: [],
