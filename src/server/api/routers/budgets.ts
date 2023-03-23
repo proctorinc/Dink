@@ -1,5 +1,4 @@
-import { Prisma } from "@prisma/client";
-import type { Budget } from "@prisma/client";
+import { Prisma, type Budget } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 function sumBudgetGoals(budgets: Budget[]) {

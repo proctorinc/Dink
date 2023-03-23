@@ -1,5 +1,4 @@
-import { Prisma } from "@prisma/client";
-import type { BankAccount } from "@prisma/client";
+import { type BankAccount, Prisma } from "@prisma/client";
 import { z } from "zod";
 import { AccountCategory } from "~/config";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
