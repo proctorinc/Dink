@@ -12,10 +12,12 @@ const config = {
         light: "#A3A5D7",
       },
       secondary: {
-        dark: "#138583",
+        dark: "#167B8D",
         med: "#00C6C5",
         light: "#B3FFFF",
       },
+      warning: "#EBD652",
+      danger: "#D7234A",
     },
   },
   plugins: [],
