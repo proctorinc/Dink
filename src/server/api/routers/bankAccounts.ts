@@ -67,6 +67,14 @@ export const bankAccountRouter = createTRPCRouter({
       },
     };
   }),
+  getCreditAccounts: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.bankAccount.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        type: AccountCategory.Credit,
+      },
+    });
+  }),
   delete: protectedProcedure
     .input(z.object({ accountId: z.string() }))
     .mutation(({ input, ctx }) => {
