@@ -2,35 +2,10 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 
-import { api } from "~/utils/api";
-
 const Home: NextPage = () => {
-  const ctx = api.useContext();
-  const users = api.users.getUsers.useQuery({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
-  const addMockUser = api.mockData.addMockUser.useMutation({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
-  const deleteUser = api.users.deleteUser.useMutation({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
-  const addMockBankAccount = api.mockData.addMockBankAccount.useMutation({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
-  const deleteBankAccount = api.bankAccounts.deleteBankAccount.useMutation({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
+  const { data: sessionData } = useSession();
+
+  console.log(sessionData);
 
   return (
     <>
@@ -44,47 +19,11 @@ const Home: NextPage = () => {
           <div className="flex flex-col items-center gap-2">
             <button
               className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-              onClick={() => addMockUser.mutate()}
+              onClick={sessionData ? () => void signOut() : () => void signIn()}
             >
-              Generate user
+              {sessionData ? "Sign out" : "Sign in"}
             </button>
-            {users?.data?.map((user) => (
-              <div key={user.id}>
-                <h2 className="text-3xl text-white">{user.name}</h2>
-                <p className="text-xl text-white">{user.email}</p>
-                <p className="text-xs text-white">{user.id}</p>
-                <button
-                  className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                  onClick={() => deleteUser.mutate({ userId: user.id })}
-                >
-                  Delete User
-                </button>
-                <button
-                  className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                  onClick={() => addMockBankAccount.mutate({ userId: user.id })}
-                >
-                  Generate bank account
-                </button>
-                {user.bankAccounts?.map((account) => (
-                  <div key={account.id}>
-                    <p className="text-2xl text-white">{account.name}</p>
-                    <p className="text-2xl text-white">
-                      {account.current ? String(account.current) : "$0.00"}
-                    </p>
-                    <button
-                      className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                      onClick={() =>
-                        deleteBankAccount.mutate({ accountId: account.id })
-                      }
-                    >
-                      Delete Account
-                    </button>
-                  </div>
-                ))}
-              </div>
-            ))}
           </div>
-          <AuthShowcase />
         </div>
       </main>
     </>
@@ -92,27 +31,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession();
-
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  );
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
-      </p>
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
-    </div>
-  );
-};
