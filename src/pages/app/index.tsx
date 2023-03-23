@@ -66,7 +66,6 @@ export default function Home() {
             {formatToCurrency(budgetData.data?.goal)}
           </span>
           <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
-            {/* <div className="absolute h-full w-[85%] rounded-md bg-secondary-dark"></div> */}
             <div className="absolute h-full w-[70%] rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"></div>
           </div>
         </div>
@@ -84,7 +83,6 @@ export default function Home() {
             $12,034 unallocated
           </span>
           <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
-            {/* <div className="absolute h-full w-[50%] rounded-md bg-secondary-dark"></div> */}
             <div className="absolute h-full w-[25%] rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"></div>
           </div>
         </div>
