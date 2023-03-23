@@ -7,42 +7,14 @@ import { formatToCurrency } from "~/utils";
 import React from "react";
 
 const Home: NextPage = () => {
-  const ctx = api.useContext();
-  const users = api.users.getUsers.useQuery({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
-  const addMockUser = api.mockData.addMockUser.useMutation({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
-  const deleteUser = api.users.deleteUser.useMutation({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
-  const addMockBankAccount = api.mockData.addMockBankAccount.useMutation({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
-  const addMockFund = api.mockData.addMockFund.useMutation({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
-  const addMockBudget = api.mockData.addMockBudget.useMutation({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
-  const deleteBankAccount = api.bankAccounts.delete.useMutation({
-    onSuccess: () => {
-      ctx.invalidate();
-    },
-  });
+  // const ctx = api.useContext();
+  const users = api.users.getUsers.useQuery();
+  const addMockUser = api.mockData.addMockUser.useMutation();
+  const deleteUser = api.users.deleteUser.useMutation();
+  const addMockBankAccount = api.mockData.addMockBankAccount.useMutation();
+  const addMockFund = api.mockData.addMockFund.useMutation();
+  const addMockBudget = api.mockData.addMockBudget.useMutation();
+  const deleteBankAccount = api.bankAccounts.delete.useMutation();
 
   return (
     <>
