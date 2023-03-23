@@ -1,5 +1,4 @@
 import { Prisma } from "@prisma/client";
-import type { Decimal } from "@prisma/client/runtime";
 
 export const formatToCurrency = (amount: Decimal | undefined | null) => {
   const USD = new Intl.NumberFormat("en-US", {
@@ -18,13 +17,12 @@ export const formatToTitleCase = (str: string) => {
 };
 
 export const formatToPercentage = (
-  numerator: Decimal | undefined | null,
-  divisor: Decimal | undefined | null
+  numerator: Prisma.Decimal | undefined | null,
+  divisor: Prisma.Decimal | undefined | null
 ) => {
   if (numerator && divisor) {
-    const result = Prisma.Decimal.div(numerator, divisor);
-    console.log(result);
-    return `${result?.toFixed(0)}%`;
+    const result = Prisma.Decimal.div(numerator, divisor).mul(100).toFixed(0);
+    return `${result}%`;
   }
   return "0%";
 };
