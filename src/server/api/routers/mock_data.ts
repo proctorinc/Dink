@@ -108,17 +108,28 @@ export const mockDataRouter = createTRPCRouter({
         AccountType.Loan,
       ]);
       const subtype = faker.helpers.arrayElement(AccountSubtypes[type]);
+      const limit = Number(
+        faker.datatype.bigInt({
+          max: 12000,
+          min: 400,
+        })
+      );
 
       return ctx.prisma.bankAccount.create({
         data: {
           available: null,
-          current: faker.datatype.float({ precision: 0.01 }),
+          current:
+            type === AccountType.Credit
+              ? faker.datatype.float({ precision: 0.01, max: limit })
+              : type === AccountType.Investment
+              ? faker.datatype.float({ precision: 0.01 })
+              : faker.datatype.float({ precision: 0.01, max: 15000 }),
           iso_currency_code: "USD",
-          limit: null,
+          limit: type === AccountType.Credit ? limit : null,
           unofficial_currency_code: null,
           mask: faker.finance.mask(4, false, false),
           name: faker.finance.accountName(),
-          official_name: faker.finance.accountName(),
+          official_name: faker.finance.creditCardIssuer(),
           type: type,
           subtype: subtype,
           user: {
@@ -133,7 +144,11 @@ export const mockDataRouter = createTRPCRouter({
       return ctx.prisma.fund.create({
         data: {
           icon: "",
-          initial_amount: faker.datatype.float({ precision: 0.01 }),
+          initial_amount: faker.datatype.float({
+            precision: 0.01,
+            max: 75000,
+            min: 0,
+          }),
           name: `${faker.word.adjective()} ${faker.word.noun()}`,
           user: {
             connect: { id: input.userId },
@@ -147,7 +162,7 @@ export const mockDataRouter = createTRPCRouter({
       return ctx.prisma.budget.create({
         data: {
           icon: "",
-          goal: faker.datatype.float({ precision: 0.01 }),
+          goal: faker.datatype.float({ precision: 0.01, min: 30, max: 2000 }),
           name: `${faker.word.adjective()} ${faker.word.noun()}`,
           user: {
             connect: { id: input.userId },
