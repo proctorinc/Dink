@@ -20,7 +20,7 @@ export default function BankAccounts() {
   }
 
   return (
-    <div className="container flex max-w-md flex-col items-center justify-center gap-12 px-4 py-10">
+    <div className="container flex max-w-md flex-col items-center justify-center gap-12 p-4">
       <div className="flex w-full flex-col items-center gap-4">
         <Header
           title="Accounts"
@@ -34,15 +34,15 @@ export default function BankAccounts() {
         />
 
         {/* Chart block component */}
-        <div className="h-64 w-full rounded-xl bg-secondary-med"></div>
+        <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
 
         {accountCategories.map((category) => (
           <div
             key={category}
-            className="group flex w-full flex-col rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
+            className="flex w-full flex-col rounded-xl bg-primary-med"
           >
             <div
-              className="flex items-center justify-between"
+              className="group flex items-center justify-between rounded-xl p-4 hover:bg-primary-light hover:text-primary-dark"
               onClick={() => handleOpen(category)}
             >
               <div className="flex items-center gap-3">
@@ -52,36 +52,36 @@ export default function BankAccounts() {
                     icon={AccountCategoryIcons[category]}
                   />
                 </div>
-                <h3 className="text-xl font-bold">
+                <h3 className="text-lg font-bold">
                   {category === AccountCategory.Cash
                     ? "Cash"
                     : formatToTitleCase(category)}
                 </h3>
               </div>
-              <span className="text-xl font-bold text-primary-light group-hover:text-primary-med">
+              <span className="text-lg font-bold text-primary-light group-hover:text-primary-med">
                 {formatToCurrency(accountData.data?.categories[category].total)}
               </span>
             </div>
             {open === category && (
-              <div className="flex flex-col gap-4 pt-5">
+              <div className="flex flex-col">
                 {accountData.data?.categories[category].accounts.map(
                   (account) => (
                     <div
                       key={account.id}
-                      className="bg-red-500 flex w-full items-center justify-between"
+                      className="bg-red-500 group flex w-full items-center justify-between rounded-xl p-4 hover:bg-primary-light hover:text-primary-dark"
                     >
                       <div className="flex items-center gap-2">
                         <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-secondary-dark">
                           <div className="h-8 w-8 rounded-full bg-secondary-med" />
                         </div>
                         <div className="flex flex-col">
-                          <h3 className="text-md">{account.official_name}</h3>
-                          <span className="text-sm text-primary-light">
-                            {account.name} - {account.mask}
+                          <h3 className="text-md">{account.name}</h3>
+                          <span className="text-sm text-primary-light group-hover:text-primary-med">
+                            {account.official_name} - {account.mask}
                           </span>
                         </div>
                       </div>
-                      <span className="text-lg text-primary-light">
+                      <span className="text-lg text-primary-light group-hover:text-primary-med">
                         {formatToCurrency(account.current)}
                       </span>
                     </div>

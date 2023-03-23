@@ -1,4 +1,4 @@
-import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { faGear, faMoneyBill1 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Header from "~/components/ui/Header";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
@@ -8,7 +8,7 @@ export default function Funds() {
   const funds = api.funds.getAll.useQuery();
 
   return (
-    <div className="container flex max-w-md flex-col items-center justify-center gap-12 px-4 py-10">
+    <div className="container flex max-w-md flex-col items-center justify-center gap-12 p-4">
       <div className="flex w-full flex-col items-center gap-4">
         <Header
           title="Funds"
@@ -22,7 +22,7 @@ export default function Funds() {
         />
 
         {/* Chart block component */}
-        <div className="h-64 w-full rounded-xl bg-secondary-med"></div>
+        <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
 
         {funds?.data?.map((fund) => (
           <div
@@ -31,14 +31,17 @@ export default function Funds() {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="relative flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-secondary-dark">
-                  <div className="h-5 w-5 rounded-full bg-secondary-med" />
+                <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-secondary-dark group-hover:bg-secondary-med">
+                  <FontAwesomeIcon
+                    className="h-5 w-5 text-secondary-med group-hover:text-secondary-light"
+                    icon={faMoneyBill1}
+                  />
                 </div>
-                <h3 className="text-xl font-bold">
+                <h3 className="text-lg font-bold">
                   {formatToTitleCase(fund.name)}
                 </h3>
               </div>
-              <span className="text-xl font-bold text-primary-light group-hover:text-primary-med">
+              <span className="text-lg font-bold text-primary-light group-hover:text-primary-med">
                 {formatToCurrency(fund.initial_amount)}
               </span>
             </div>

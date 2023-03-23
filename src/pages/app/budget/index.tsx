@@ -1,6 +1,5 @@
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Head from "next/head";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthYearSelector";
 import {
@@ -14,7 +13,7 @@ export default function Budgets() {
   const budgetData = api.budgets.getAllData.useQuery();
 
   return (
-    <div className="container flex max-w-md flex-col items-center justify-center gap-12 px-4 py-10">
+    <div className="container flex max-w-md flex-col items-center justify-center gap-12 p-4">
       <div className="flex w-full flex-col items-center gap-4">
         <Header
           title="Budget"
@@ -30,8 +29,7 @@ export default function Budgets() {
         {/* Budget total summary component */}
         <div className="flex w-full flex-col justify-between gap-1 rounded-xl bg-primary-med p-4">
           <div className="relative h-6 w-full rounded-md bg-primary-dark">
-            <div className="absolute h-full w-[50%] rounded-md bg-secondary-dark"></div>
-            <div className="absolute h-full w-[40%] rounded-md bg-secondary-med"></div>
+            <div className="absolute h-full w-[40%] rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"></div>
           </div>
           <div className="flex justify-between">
             <span className="text-md text-primary-light">
@@ -49,7 +47,7 @@ export default function Budgets() {
         </div>
 
         {/* Chart block component */}
-        <div className="h-40 w-full rounded-xl bg-secondary-med"></div>
+        <div className="h-40 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
 
         <MonthYearSelector />
 
@@ -62,8 +60,7 @@ export default function Budgets() {
               {formatToTitleCase(budget.name)}
             </h3>
             <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
-              <div className="absolute h-full w-[50%] rounded-md bg-secondary-dark"></div>
-              <div className="absolute h-full w-[40%] rounded-md bg-secondary-med"></div>
+              <div className="absolute h-full w-[40%] rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"></div>
             </div>
             <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
               <span>$??? / {formatToCurrency(budget.goal)}</span>

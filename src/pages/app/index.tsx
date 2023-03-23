@@ -1,4 +1,4 @@
-import { faArrowRight, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faGear } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prisma } from "@prisma/client";
 import { useRouter } from "next/router";
@@ -8,25 +8,26 @@ import { api } from "~/utils/api";
 
 export default function Home() {
   const router = useRouter();
+
   const budgetData = api.budgets.getAllData.useQuery();
   const creditAccounts = api.bankAccounts.getCreditAccounts.useQuery();
 
   return (
-    <div className="container flex max-w-md flex-col items-center justify-center gap-12 px-4 py-10">
+    <div className="container flex max-w-md flex-col items-center justify-center gap-12 p-4">
       <div className="flex w-full flex-col items-center gap-4">
         <Header
           title={"Hi, Matt"}
           subtitle={"March 2023"}
           icon={
             <FontAwesomeIcon
-              className="h-8 w-8 rounded-full bg-secondary-dark p-2 text-secondary-med"
-              icon={faUser}
+              className="h-6 w-6 text-primary-light hover:text-white"
+              icon={faGear}
             />
           }
         />
 
         {/* Chart block component */}
-        <div className="h-64 w-full rounded-xl bg-secondary-med"></div>
+        <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
 
         {/* Transactions component */}
         <div
@@ -39,7 +40,7 @@ export default function Home() {
               25 uncategorized
             </span>
           </div>
-          <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark group-hover:text-secondary-light">
+          <button className="flex h-fit items-center gap-2 rounded-lg bg-gradient-to-r from-secondary-dark to-secondary-med py-2 px-5 font-bold text-primary-dark group-hover:text-secondary-light">
             <span>View</span>
             <FontAwesomeIcon className="h-4 w-4" icon={faArrowRight} />
           </button>
@@ -52,7 +53,7 @@ export default function Home() {
         >
           <div className="flex justify-between">
             <h3 className="text-xl font-bold">Budget</h3>
-            <h3 className="text-md font-bold">
+            <h3 className="text-lg font-bold text-primary-light">
               {formatToPercentage(
                 budgetData.data?.spent,
                 budgetData.data?.goal
@@ -65,8 +66,8 @@ export default function Home() {
             {formatToCurrency(budgetData.data?.goal)}
           </span>
           <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
-            <div className="absolute h-full w-[85%] rounded-md bg-secondary-dark"></div>
-            <div className="absolute h-full w-[70%] rounded-md bg-secondary-med"></div>
+            {/* <div className="absolute h-full w-[85%] rounded-md bg-secondary-dark"></div> */}
+            <div className="absolute h-full w-[70%] rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"></div>
           </div>
         </div>
 
@@ -77,14 +78,14 @@ export default function Home() {
         >
           <div className="flex justify-between">
             <h3 className="text-xl font-bold">Funds</h3>
-            <h3 className="text-md font-bold">$438,200</h3>
+            <h3 className="text-lg font-bold text-primary-light">$438,200</h3>
           </div>
           <span className="text-sm text-primary-light group-hover:text-primary-med">
             $12,034 unallocated
           </span>
           <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
-            <div className="absolute h-full w-[50%] rounded-md bg-secondary-dark"></div>
-            <div className="absolute h-full w-[25%] rounded-md bg-secondary-med"></div>
+            {/* <div className="absolute h-full w-[50%] rounded-md bg-secondary-dark"></div> */}
+            <div className="absolute h-full w-[25%] rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"></div>
           </div>
         </div>
 
@@ -99,7 +100,7 @@ export default function Home() {
               12 linked accounts
             </span>
           </div>
-          <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark group-hover:text-secondary-light">
+          <button className="flex h-fit items-center gap-2 rounded-lg bg-gradient-to-r from-secondary-dark to-secondary-med py-2 px-5 font-bold text-primary-dark group-hover:text-secondary-light">
             <span>View</span>
             <FontAwesomeIcon className="h-4 w-4" icon={faArrowRight} />
           </button>
@@ -121,17 +122,13 @@ export default function Home() {
               >
                 <div className="flex items-center justify-between">
                   <h3 className="py-1 text-lg">{account.name}</h3>
-                  <span className="flex h-fit items-center justify-center rounded-lg bg-secondary-dark px-2 py-1 text-xs text-secondary-med">
+                  <span className="flex h-fit items-center justify-center rounded-lg bg-warning-med px-2 py-1 text-xs font-bold text-warning-dark">
                     Due 3d
                   </span>
                 </div>
                 <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
                   <div
-                    className={`absolute h-full w-0 rounded-md bg-secondary-dark`}
-                    style={{ width: utilization }}
-                  ></div>
-                  <div
-                    className={`absolute h-full w-0 rounded-md bg-secondary-med`}
+                    className={`absolute h-full w-0 rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med`}
                     style={{ width: utilization }}
                   ></div>
                 </div>
