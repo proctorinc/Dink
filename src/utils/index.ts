@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-export const formatToCurrency = (amount: Decimal | undefined | null) => {
+export const formatToCurrency = (amount: Prisma.Decimal | undefined | null) => {
   const USD = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
