@@ -8,7 +8,6 @@ enum AccountType {
   Depository = "depository",
   Loan = "loan",
   Investment = "investment",
-  Other = "other",
 }
 
 const AccountSubtypes = {
@@ -36,7 +35,6 @@ const AccountSubtypes = {
     "overdraft",
     "line of credit",
     "student",
-    "other",
   ],
   [AccountType.Investment]: [
     "529",
@@ -63,7 +61,6 @@ const AccountSubtypes = {
     "mutual fund",
     "non-custodial wallet",
     "non-taxable brokerage account",
-    "other",
     "other annuity",
     "other insurance",
     "pension",
@@ -89,7 +86,6 @@ const AccountSubtypes = {
     "utma",
     "variable annuity",
   ],
-  [AccountType.Other]: ["other"],
 };
 
 export const mockDataRouter = createTRPCRouter({
@@ -110,7 +106,6 @@ export const mockDataRouter = createTRPCRouter({
         AccountType.Depository,
         AccountType.Investment,
         AccountType.Loan,
-        AccountType.Other,
       ]);
       const subtype = faker.helpers.arrayElement(AccountSubtypes[type]);
 
@@ -128,6 +123,104 @@ export const mockDataRouter = createTRPCRouter({
           subtype: subtype,
           user: {
             connect: { id: input.userId },
+          },
+        },
+      });
+    }),
+  addMockFund: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.fund.create({
+        data: {
+          icon: "",
+          initial_amount: faker.datatype.float({ precision: 0.01 }),
+          name: `${faker.word.adjective()} ${faker.word.noun()}`,
+          user: {
+            connect: { id: input.userId },
+          },
+        },
+      });
+    }),
+  addMockBudget: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.budget.create({
+        data: {
+          icon: "",
+          goal: faker.datatype.float({ precision: 0.01 }),
+          name: `${faker.word.adjective()} ${faker.word.noun()}`,
+          user: {
+            connect: { id: input.userId },
+          },
+        },
+      });
+    }),
+  addMockTransaction: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        accountId: z.string(),
+        categoryId: z.string(),
+        budgetId: z.string(),
+        fundId: z.string(),
+      })
+    )
+    .mutation(({ input, ctx }) => {
+      const date = faker.date
+        .between("2023-01-01T00:00:00.000Z", new Date())
+        .toDateString();
+      return ctx.prisma.transaction.create({
+        data: {
+          account_owner: "",
+          amount: faker.datatype.float({ precision: 0.01 }),
+          authorized_datetime: date,
+          checkNumber: "",
+          date: date,
+          datetime: date,
+          isSavings: false,
+          isTransfer: false,
+          isoCurrencyCode: "",
+          address: faker.address.streetAddress(),
+          city: faker.address.city(),
+          country: faker.address.country(),
+          lat: faker.address.latitude(),
+          lon: faker.address.longitude(),
+          postal_code: faker.address.zipCode(),
+          region: "",
+          store_number: "",
+          merchantName: "",
+          name: "",
+          note: "",
+          paymentChannel: "",
+          by_order_of: "",
+          payee: "",
+          payer: "",
+          payment_method: faker.finance.transactionType(),
+          payment_processor: "",
+          ppd_id: "",
+          reason: "",
+          reference_number: faker.finance.mask(),
+          pending: false,
+          pendingTransactionId: "",
+          personalFinanceCategory: "",
+          transactionCode: "",
+          transactionId: "",
+          transactionType: "",
+          unofficialCurrencyCode: "",
+          user: {
+            connect: { id: input.userId },
+          },
+          account: {
+            connect: { id: input.accountId },
+          },
+          category: {
+            connect: { id: input.categoryId },
+          },
+          fundSource: {
+            connect: { id: input.fundId },
+          },
+          budgetSource: {
+            connect: { id: input.budgetId },
           },
         },
       });
