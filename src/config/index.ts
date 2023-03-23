@@ -1,8 +1,8 @@
 import {
   faCreditCard,
-  faLandmark,
   faChartLine,
-  faMoneyBillWave,
+  faFileInvoiceDollar,
+  faMoneyBill,
 } from "@fortawesome/free-solid-svg-icons";
 
 export enum AccountCategory {
@@ -20,8 +20,8 @@ export const accountCategories = [
 ];
 
 export const AccountCategoryIcons = {
-  [AccountCategory.Cash]: faMoneyBillWave,
+  [AccountCategory.Cash]: faMoneyBill,
   [AccountCategory.Credit]: faCreditCard,
   [AccountCategory.Investment]: faChartLine,
-  [AccountCategory.Loan]: faLandmark,
+  [AccountCategory.Loan]: faFileInvoiceDollar,
 };
