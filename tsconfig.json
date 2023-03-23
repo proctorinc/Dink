@@ -21,7 +21,12 @@
       "~/*": ["./src/*"],
       "@pages/*": ["src/pages/*"],
       "@utils/*": ["src/utils/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     ".eslintrc.cjs",
@@ -32,7 +37,8 @@
     "**/*.mjs",
     "jest.config.mjs",
     "src/__mocks__/server.ts",
-    "src/setupTests.mts"
+    "src/setupTests.mts",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
