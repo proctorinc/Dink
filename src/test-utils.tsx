@@ -1,12 +1,15 @@
-import { render } from "@testing-library/react";
-import type { RenderOptions, RenderResult } from "@testing-library/react";
+import { type ReactElement, type ReactNode } from "react";
+import { SessionProvider } from "next-auth/react";
+import {
+  type RenderOptions,
+  type RenderResult,
+  render,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ReactElement, ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, loggerLink } from "@trpc/react-query";
 import { trpcReact } from "./utils/api";
 import superjson from "superjson";
-import { SessionProvider } from "next-auth/react";
 
 type ProviderProps = {
   children: ReactNode;
