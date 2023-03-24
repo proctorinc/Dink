@@ -20,78 +20,76 @@ export default function BankAccounts() {
   }
 
   return (
-    <div className="container flex max-w-md flex-col items-center justify-center gap-12 p-4">
-      <div className="flex w-full flex-col items-center gap-4">
-        <Header
-          title="Accounts"
-          subtitle={`Net worth: ${formatToCurrency(accountData.data?.total)}`}
-          icon={
-            <FontAwesomeIcon
-              className="h-6 w-6 text-primary-light hover:text-white"
-              icon={faGear}
-            />
-          }
-        />
+    <>
+      <Header
+        title="Accounts"
+        subtitle={`Net worth: ${formatToCurrency(accountData.data?.total)}`}
+        icon={
+          <FontAwesomeIcon
+            className="h-6 w-6 text-primary-light hover:text-white"
+            icon={faGear}
+          />
+        }
+      />
 
-        {/* Chart block component */}
-        <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
+      {/* Chart block component */}
+      <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
 
-        {accountCategories.map((category) => (
+      {accountCategories.map((category) => (
+        <div
+          key={category}
+          className="flex w-full flex-col rounded-xl bg-primary-med"
+        >
           <div
-            key={category}
-            className="flex w-full flex-col rounded-xl bg-primary-med"
+            className="group flex items-center justify-between rounded-xl p-4 hover:bg-primary-light hover:text-primary-dark"
+            onClick={() => handleOpen(category)}
           >
-            <div
-              className="group flex items-center justify-between rounded-xl p-4 hover:bg-primary-light hover:text-primary-dark"
-              onClick={() => handleOpen(category)}
-            >
-              <div className="flex items-center gap-3">
-                <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-secondary-dark group-hover:bg-secondary-med">
-                  <FontAwesomeIcon
-                    className="h-5 w-5 text-secondary-med group-hover:text-secondary-light"
-                    icon={AccountCategoryIcons[category]}
-                  />
-                </div>
-                <h3 className="text-lg font-bold">
-                  {category === AccountCategory.Cash
-                    ? "Cash"
-                    : formatToTitleCase(category)}
-                </h3>
+            <div className="flex items-center gap-3">
+              <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-secondary-dark group-hover:bg-secondary-med">
+                <FontAwesomeIcon
+                  className="h-5 w-5 text-secondary-med group-hover:text-secondary-light"
+                  icon={AccountCategoryIcons[category]}
+                />
               </div>
-              <span className="text-lg font-bold text-primary-light group-hover:text-primary-med">
-                {formatToCurrency(accountData.data?.categories[category].total)}
-              </span>
+              <h3 className="text-lg font-bold">
+                {category === AccountCategory.Cash
+                  ? "Cash"
+                  : formatToTitleCase(category)}
+              </h3>
             </div>
-            {open === category && (
-              <div className="flex flex-col">
-                {accountData.data?.categories[category].accounts.map(
-                  (account) => (
-                    <div
-                      key={account.id}
-                      className="bg-red-500 group flex w-full items-center justify-between rounded-xl p-4 hover:bg-primary-light hover:text-primary-dark"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-secondary-dark">
-                          <div className="h-8 w-8 rounded-full bg-secondary-med" />
-                        </div>
-                        <div className="flex flex-col">
-                          <h3 className="text-md">{account.name}</h3>
-                          <span className="text-sm text-primary-light group-hover:text-primary-med">
-                            {account.official_name} - {account.mask}
-                          </span>
-                        </div>
-                      </div>
-                      <span className="text-lg text-primary-light group-hover:text-primary-med">
-                        {formatToCurrency(account.current)}
-                      </span>
-                    </div>
-                  )
-                )}
-              </div>
-            )}
+            <span className="text-lg font-bold text-primary-light group-hover:text-primary-med">
+              {formatToCurrency(accountData.data?.categories[category].total)}
+            </span>
           </div>
-        ))}
-      </div>
-    </div>
+          {open === category && (
+            <div className="flex flex-col">
+              {accountData.data?.categories[category].accounts.map(
+                (account) => (
+                  <div
+                    key={account.id}
+                    className="bg-red-500 group flex w-full items-center justify-between rounded-xl p-4 hover:bg-primary-light hover:text-primary-dark"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-secondary-dark">
+                        <div className="h-8 w-8 rounded-full bg-secondary-med" />
+                      </div>
+                      <div className="flex flex-col">
+                        <h3 className="text-md">{account.name}</h3>
+                        <span className="text-sm text-primary-light group-hover:text-primary-med">
+                          {account.official_name} - {account.mask}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-lg text-primary-light group-hover:text-primary-med">
+                      {formatToCurrency(account.current)}
+                    </span>
+                  </div>
+                )
+              )}
+            </div>
+          )}
+        </div>
+      ))}
+    </>
   );
 }
