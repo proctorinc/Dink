@@ -5,12 +5,16 @@ const NotFoundPage = () => {
 
   return (
     <>
-      <span>404 - This page is not Found</span>
+      <h1 className="pt-64 text-5xl font-extrabold text-white">404</h1>
+      <h1 className="text-5xl font-extrabold text-white">Not Found</h1>
+      <span className="text-md text-primary-light">
+        Oops, looks like you got turned around.
+      </span>
       <button
-        className="rounded-xl bg-primary-med px-4 py-2 hover:bg-primary-light"
+        className="flex h-fit items-center gap-2 rounded-lg bg-gradient-to-t from-secondary-dark to-secondary-med py-2 px-5 font-bold text-primary-dark group-hover:text-secondary-light"
         onClick={() => void router.push("/app")}
       >
-        Go Home
+        <span>Go Home</span>
       </button>
     </>
   );
