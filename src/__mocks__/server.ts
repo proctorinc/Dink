@@ -17,9 +17,6 @@ const handlers = [
     const operations = Object.values(req.params);
     const { input } = queryString.parse(req.url.search);
 
-    console.log(operations);
-    console.log(input);
-
     return res(
       ctx.status(200),
       ctx.json([jsonSucessResponse({ greeting: `Goodbye from TRPC` })])
