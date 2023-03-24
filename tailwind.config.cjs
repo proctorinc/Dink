@@ -22,9 +22,9 @@ const config = {
         light: "#f3eac9",
       },
       danger: {
-        dark: "#DA4167",
+        dark: "#961737",
         med: "#DA4167",
-        light: "#DA4167",
+        light: "#e58099",
       },
     },
   },
