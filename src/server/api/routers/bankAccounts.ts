@@ -45,6 +45,7 @@ export const bankAccountRouter = createTRPCRouter({
     });
 
     return {
+      count: allAccounts.length,
       total: sumAccountsBalance(allAccounts),
       categories: {
         [AccountCategory.Cash]: {
