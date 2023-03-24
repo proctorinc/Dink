@@ -11,7 +11,7 @@ const Header: FC<HeaderProps> = ({ title, subtitle, icon }) => {
     <div className="flex w-full items-center justify-between">
       <div className="flex flex-col">
         <h1 className="text-4xl font-bold">{title}</h1>
-        <h2 className="text-xl font-light text-primary-light">{subtitle}</h2>
+        <h2 className="text-2xl font-light text-primary-light">{subtitle}</h2>
       </div>
       {icon && (
         <div className="relative flex items-center justify-center">{icon}</div>
