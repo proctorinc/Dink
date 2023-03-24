@@ -1,4 +1,4 @@
-import { faArrowRight, faGear } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prisma } from "@prisma/client";
 import { useRouter } from "next/router";
@@ -9,21 +9,14 @@ import { api } from "~/utils/api";
 export default function Home() {
   const router = useRouter();
 
+  const accountData = api.bankAccounts.getAllData.useQuery();
   const budgetData = api.budgets.getAllData.useQuery();
+  const fundsData = api.funds.getAllData.useQuery();
   const creditAccounts = api.bankAccounts.getCreditAccounts.useQuery();
 
   return (
     <>
-      <Header
-        title={"Hi, Matt"}
-        subtitle={"March 2023"}
-        icon={
-          <FontAwesomeIcon
-            className="h-6 w-6 text-primary-light hover:text-white"
-            icon={faGear}
-          />
-        }
-      />
+      <Header title={"Hi, Matt"} subtitle={"March 2023"} />
 
       {/* Chart block component */}
       <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
@@ -36,7 +29,7 @@ export default function Home() {
         <div className="flex flex-col">
           <h3 className="text-xl font-bold">Transactions</h3>
           <span className="text-sm text-primary-light group-hover:text-primary-med">
-            25 uncategorized
+            ??? uncategorized
           </span>
         </div>
         <button className="flex h-fit items-center gap-2 rounded-lg bg-gradient-to-t from-secondary-dark to-secondary-med py-2 px-5 font-bold text-primary-dark group-hover:text-secondary-light">
@@ -75,10 +68,12 @@ export default function Home() {
       >
         <div className="flex justify-between">
           <h3 className="text-xl font-bold">Funds</h3>
-          <h3 className="text-lg font-bold text-primary-light">$438,200</h3>
+          <h3 className="text-lg font-bold text-primary-light">
+            {formatToCurrency(fundsData?.data?.amount)}
+          </h3>
         </div>
         <span className="text-sm text-primary-light group-hover:text-primary-med">
-          $12,034 unallocated
+          $??? unallocated
         </span>
         <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
           <div className="absolute h-full w-[25%] rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"></div>
@@ -93,7 +88,7 @@ export default function Home() {
         <div className="flex flex-col">
           <h3 className="text-xl font-bold">Accounts</h3>
           <span className="text-sm text-primary-light group-hover:text-primary-med">
-            12 linked accounts
+            {accountData.data?.count} linked accounts
           </span>
         </div>
         <button className="flex h-fit items-center gap-2 rounded-lg bg-gradient-to-t from-secondary-dark to-secondary-med py-2 px-5 font-bold text-primary-dark group-hover:text-secondary-light">
@@ -106,7 +101,7 @@ export default function Home() {
       <div className="flex w-full flex-col justify-between rounded-xl bg-primary-med">
         <h3 className="p-4 text-xl font-bold">Credit Cards</h3>
         {creditAccounts.data?.map((account) => {
-          const utilization = formatToPercentage(
+          const utilizationPercent = formatToPercentage(
             account.current,
             new Prisma.Decimal(account.limit ?? 0)
           );
@@ -119,13 +114,13 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <h3 className="py-1 text-lg">{account.name}</h3>
                 <span className="flex h-fit items-center justify-center rounded-lg bg-warning-med px-2 py-1 text-xs font-bold text-warning-dark">
-                  Due 3d
+                  Due ???d
                 </span>
               </div>
               <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
                 <div
                   className={`absolute h-full w-0 rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med`}
-                  style={{ width: utilization }}
+                  style={{ width: utilizationPercent }}
                 ></div>
               </div>
               <div className="flex justify-between py-1 text-sm text-primary-light group-hover:text-primary-med">
@@ -134,7 +129,7 @@ export default function Home() {
                   {formatToCurrency(new Prisma.Decimal(account.limit ?? 0))}{" "}
                   limit
                 </span>
-                <span>{utilization} utilization</span>
+                <span>{utilizationPercent} utilization</span>
               </div>
             </div>
           );

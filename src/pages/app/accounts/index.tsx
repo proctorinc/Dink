@@ -7,12 +7,13 @@ import {
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { api } from "~/utils/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Header from "~/components/ui/Header";
+import { useRouter } from "next/router";
 
 export default function BankAccounts() {
+  const router = useRouter();
   const [open, setOpen] = useState("");
-
   const accountData = api.bankAccounts.getAllData.useQuery();
 
   function handleOpen(type: AccountCategory) {
@@ -24,16 +25,20 @@ export default function BankAccounts() {
       <Header
         title="Accounts"
         subtitle={`Net worth: ${formatToCurrency(accountData.data?.total)}`}
-        icon={
-          <FontAwesomeIcon
-            className="h-6 w-6 text-primary-light hover:text-white"
-            icon={faGear}
-          />
-        }
       />
 
       {/* Chart block component */}
       <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
+
+      <div className="flex w-full items-center justify-between">
+        <button
+          disabled
+          className="flex h-fit items-center gap-1 rounded-lg bg-gradient-to-t from-secondary-dark to-secondary-med py-2 px-5 font-bold text-primary-dark group-hover:text-secondary-light"
+        >
+          <FontAwesomeIcon size="sm" className="h-4 w-4" icon={faPlus} />
+          <span>Account</span>
+        </button>
+      </div>
 
       {accountCategories.map((category) => (
         <div
@@ -68,6 +73,9 @@ export default function BankAccounts() {
                   <div
                     key={account.id}
                     className="bg-red-500 group flex w-full items-center justify-between rounded-xl p-4 hover:bg-primary-light hover:text-primary-dark"
+                    onClick={() =>
+                      void router.push(`/app/accounts/${account.id}`)
+                    }
                   >
                     <div className="flex items-center gap-2">
                       <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-secondary-dark">

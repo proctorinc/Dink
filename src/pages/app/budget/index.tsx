@@ -17,12 +17,6 @@ export default function Budgets() {
       <Header
         title="Budget"
         subtitle={`Left: ${formatToCurrency(budgetData.data?.leftover)}`}
-        icon={
-          <FontAwesomeIcon
-            className="h-6 w-6 text-primary-light hover:text-white"
-            icon={faGear}
-          />
-        }
       />
 
       {/* Budget total summary component */}

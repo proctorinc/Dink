@@ -1,29 +1,23 @@
-import { faGear, faMoneyBill1 } from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill1 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Header from "~/components/ui/Header";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { api } from "~/utils/api";
 
 export default function Funds() {
-  const funds = api.funds.getAll.useQuery();
+  const fundsData = api.funds.getAllData.useQuery();
 
   return (
     <>
       <Header
         title="Funds"
-        subtitle={"Total: $165,972.35"}
-        icon={
-          <FontAwesomeIcon
-            className="h-6 w-6 text-primary-light hover:text-white"
-            icon={faGear}
-          />
-        }
+        subtitle={`Total: ${formatToCurrency(fundsData?.data?.amount)}`}
       />
 
       {/* Chart block component */}
       <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
 
-      {funds?.data?.map((fund) => (
+      {fundsData?.data?.funds.map((fund) => (
         <div
           key={fund.id}
           className="group flex w-full flex-col rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
