@@ -127,8 +127,8 @@ export default function Home() {
 
       {/* Credit Cards component */}
       {!!creditAccounts.data && (
-        <div className="flex w-full flex-col justify-between rounded-xl bg-primary-med">
-          <h3 className="p-4 pb-2 text-xl font-bold">Credit Cards</h3>
+        <div className="flex w-full flex-col justify-between rounded-xl bg-primary-med py-4">
+          <h3 className="px-4 pb-2 text-xl font-bold">Credit Cards</h3>
           {creditAccounts.data?.map((account) => {
             const utilizationPercent = formatToPercentage(
               account.current,
@@ -137,7 +137,7 @@ export default function Home() {
             return (
               <div
                 key={account.id}
-                className="group cursor-pointer rounded-xl px-4 py-2 hover:bg-primary-light hover:text-primary-dark"
+                className="group cursor-pointer rounded-xl px-4 py-1 hover:bg-primary-light hover:text-primary-dark"
                 onClick={() => void router.push(`/accounts/${account.id}`)}
               >
                 <div className="flex items-center justify-between py-1">
