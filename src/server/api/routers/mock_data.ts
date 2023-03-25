@@ -170,74 +170,62 @@ export const mockDataRouter = createTRPCRouter({
         },
       });
     }),
-  // addMockTransaction: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       userId: z.string(),
-  //       accountId: z.string(),
-  //       categoryId: z.string(),
-  //       budgetId: z.string(),
-  //       fundId: z.string(),
-  //     })
-  //   )
-  //   .mutation(({ input, ctx }) => {
-  //     const date = faker.date
-  //       .between("2023-01-01T00:00:00.000Z", new Date())
-  //       .toDateString();
-  //     return ctx.prisma.transaction.create({
-  //       data: {
-  //         account_owner: "",
-  //         amount: faker.datatype.float({ precision: 0.01 }),
-  //         authorized_datetime: date,
-  //         checkNumber: "",
-  //         date: date,
-  //         datetime: date,
-  //         isSavings: false,
-  //         isTransfer: false,
-  //         isoCurrencyCode: "",
-  //         address: faker.address.streetAddress(),
-  //         city: faker.address.city(),
-  //         country: faker.address.country(),
-  //         lat: faker.address.latitude(),
-  //         lon: faker.address.longitude(),
-  //         postal_code: faker.address.zipCode(),
-  //         region: "",
-  //         store_number: "",
-  //         merchantName: "",
-  //         name: "",
-  //         note: "",
-  //         paymentChannel: "",
-  //         by_order_of: "",
-  //         payee: "",
-  //         payer: "",
-  //         payment_method: faker.finance.transactionType(),
-  //         payment_processor: "",
-  //         ppd_id: "",
-  //         reason: "",
-  //         reference_number: faker.finance.mask(),
-  //         pending: false,
-  //         pendingTransactionId: "",
-  //         personalFinanceCategory: "",
-  //         transactionCode: "",
-  //         transactionId: "",
-  //         transactionType: "",
-  //         unofficialCurrencyCode: "",
-  //         user: {
-  //           connect: { id: input.userId },
-  //         },
-  //         account: {
-  //           connect: { id: input.accountId },
-  //         },
-  //         category: {
-  //           connect: { id: input.categoryId },
-  //         },
-  //         fundSource: {
-  //           connect: { id: input.fundId },
-  //         },
-  //         budgetSource: {
-  //           connect: { id: input.budgetId },
-  //         },
-  //       },
-  // });
-  // }),
+  addMockTransaction: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        accountId: z.string(),
+      })
+    )
+    .mutation(({ input, ctx }) => {
+      const date = faker.date.between("2023-01-01T00:00:00.000Z", new Date());
+      const data = {
+        account_owner: "",
+        amount: faker.datatype.float({ precision: 0.01, max: 500, min: 0.01 }),
+        authorized_datetime: date.toDateString(),
+        checkNumber: "",
+        date: date,
+        datetime: date.toDateString(),
+        isSavings: false,
+        isTransfer: false,
+        isoCurrencyCode: "",
+        address: faker.address.streetAddress(),
+        city: faker.address.city(),
+        country: faker.address.country(),
+        lat: faker.address.latitude(),
+        lon: faker.address.longitude(),
+        postal_code: faker.address.zipCode(),
+        region: "",
+        store_number: "",
+        merchantName: faker.company.name(),
+        name: `${faker.word.adjective()} ${faker.word.noun()}`,
+        note: "",
+        paymentChannel: "",
+        by_order_of: "",
+        payee: "",
+        payer: "",
+        payment_method: faker.finance.transactionType(),
+        payment_processor: "",
+        ppd_id: "",
+        reason: "",
+        reference_number: faker.finance.mask(),
+        pending: false,
+        pendingTransactionId: "",
+        personalFinanceCategory: "",
+        transactionCode: "",
+        transactionId: faker.database.mongodbObjectId(),
+        transactionType: "",
+        unofficialCurrencyCode: "",
+        user: {
+          connect: { id: input.userId },
+        },
+        account: {
+          connect: { id: input.accountId },
+        },
+      };
+
+      return ctx.prisma.transaction.create({
+        data,
+      });
+    }),
 });
