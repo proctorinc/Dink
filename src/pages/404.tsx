@@ -11,8 +11,8 @@ const NotFoundPage = () => {
         Oops, looks like you got turned around.
       </span>
       <button
-        className="flex h-fit items-center gap-2 rounded-lg bg-gradient-to-t from-secondary-dark to-secondary-med py-2 px-5 font-bold text-primary-dark group-hover:text-secondary-light"
-        onClick={() => void router.push("/app")}
+        className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark group-hover:text-secondary-light"
+        onClick={() => void router.push("/")}
       >
         <span>Go Home</span>
       </button>
