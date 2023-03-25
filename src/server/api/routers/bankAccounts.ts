@@ -87,6 +87,23 @@ export const bankAccountRouter = createTRPCRouter({
       },
     });
   }),
+  getById: protectedProcedure
+    .input(
+      z.object({
+        accountId: z.string(),
+      })
+    )
+    .query(({ input, ctx }) => {
+      return ctx.prisma.bankAccount.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          id: input.accountId,
+        },
+        include: {
+          transactions: true,
+        },
+      });
+    }),
   delete: protectedProcedure
     .input(z.object({ accountId: z.string() }))
     .mutation(({ input, ctx }) => {
