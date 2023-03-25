@@ -1,4 +1,8 @@
-import { faCircleHalfStroke, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleHalfStroke,
+  faSpinner,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -21,22 +25,30 @@ const Navbar = () => {
           />
           <span>Dink</span>
         </button>
-        <button
-          className="h-8 w-8 rounded-full bg-secondary-dark text-secondary-med hover:bg-secondary-med hover:text-secondary-light"
-          onClick={() => void router.push("/profile")}
-        >
-          {sessionData?.user.image ? (
-            <Image
-              className="w-8 rounded-full ring ring-primary-med"
-              width={10}
-              height={10}
-              src={sessionData?.user.image ?? "/favicon.ico"}
-              alt="user-image"
-            />
-          ) : (
-            <FontAwesomeIcon size="lg" icon={faUser} />
-          )}
-        </button>
+        {sessionData?.user && (
+          <button
+            className="h-8 w-8 rounded-full bg-secondary-dark text-secondary-med hover:bg-secondary-med hover:text-secondary-light"
+            onClick={() => void router.push("/profile")}
+          >
+            {sessionData?.user.image ? (
+              <Image
+                className="w-8 rounded-full ring ring-primary-med"
+                width={10}
+                height={10}
+                src={sessionData?.user.image ?? "/favicon.ico"}
+                alt="user-image"
+              />
+            ) : (
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-med ring ring-primary-med">
+                <FontAwesomeIcon
+                  className="animate-spin"
+                  size="lg"
+                  icon={faSpinner}
+                />
+              </div>
+            )}
+          </button>
+        )}
       </div>
     </nav>
   );
