@@ -44,24 +44,36 @@ export const bankAccountRouter = createTRPCRouter({
       },
     });
 
+    const cashBalance = sumAccountsBalance(cashAccounts);
+    const creditBalance = sumAccountsBalance(creditAccounts);
+    const investmentBalance = sumAccountsBalance(investmentAccounts);
+    const loanBalance = sumAccountsBalance(loanAccounts);
+    const total = Prisma.Decimal.sub(
+      Prisma.Decimal.sub(
+        Prisma.Decimal.add(cashBalance, investmentBalance),
+        creditBalance
+      ),
+      loanBalance
+    );
+
     return {
       count: allAccounts.length,
-      total: sumAccountsBalance(allAccounts),
+      total: total,
       categories: {
         [AccountCategory.Cash]: {
-          total: sumAccountsBalance(cashAccounts),
+          total: cashBalance,
           accounts: cashAccounts,
         },
         [AccountCategory.Credit]: {
-          total: sumAccountsBalance(creditAccounts),
+          total: creditBalance,
           accounts: creditAccounts,
         },
         [AccountCategory.Investment]: {
-          total: sumAccountsBalance(investmentAccounts),
+          total: investmentBalance,
           accounts: investmentAccounts,
         },
         [AccountCategory.Loan]: {
-          total: sumAccountsBalance(loanAccounts),
+          total: loanBalance,
           accounts: loanAccounts,
         },
       },
