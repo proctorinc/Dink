@@ -1,5 +1,3 @@
-import { faGear } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthYearSelector";
 import {

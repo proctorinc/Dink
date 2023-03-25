@@ -19,35 +19,35 @@ const MobileNavbar = () => {
             <FontAwesomeIcon
               size="xl"
               icon={faBuildingColumns}
-              onClick={() => void router.push("/app/accounts")}
+              onClick={() => void router.push("/accounts")}
             />
           </button>
           <button className="h-10 w-10 rounded-full text-primary-light hover:bg-primary-light hover:text-primary-med">
             <FontAwesomeIcon
               size="xl"
               icon={faCalendarAlt}
-              onClick={() => void router.push("/app/budget")}
+              onClick={() => void router.push("/budget")}
             />
           </button>
           <button className="h-10 w-10 rounded-full text-primary-light hover:bg-primary-light hover:text-primary-med">
             <FontAwesomeIcon
               size="xl"
               icon={faHome}
-              onClick={() => void router.push("/app")}
+              onClick={() => void router.push("/")}
             />
           </button>
           <button className="h-10 w-10 rounded-full text-primary-light hover:bg-primary-light hover:text-primary-med">
             <FontAwesomeIcon
               size="xl"
               icon={faPiggyBank}
-              onClick={() => void router.push("/app/funds")}
+              onClick={() => void router.push("/funds")}
             />
           </button>
           <button className="h-10 w-10 rounded-full text-primary-light hover:bg-primary-light hover:text-primary-med">
             <FontAwesomeIcon
               size="xl"
               icon={faReceipt}
-              onClick={() => void router.push("/app/transactions")}
+              onClick={() => void router.push("/transactions")}
             />
           </button>
         </div>

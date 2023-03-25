@@ -6,14 +6,14 @@ const Login = () => {
   const router = useRouter();
 
   if (data) {
-    void router.push("/app");
+    void router.push("/");
   }
 
   return (
     <>
       <div className="flex flex-col items-center gap-2">
         <button
-          className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+          className="rounded-xl bg-primary-med py-2 px-5 font-bold text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med"
           onClick={() => void signIn()}
         >
           Login With Google
