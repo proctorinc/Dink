@@ -44,7 +44,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             />
           </div>
         ) : (
-          <div className="container flex max-w-md flex-col items-center justify-center gap-12 px-4 pb-28 sm:pb-4">
+          <div className="container flex max-w-md flex-col items-center justify-center gap-12 px-4 pb-28 pt-5 sm:pb-4">
             <div className="flex w-full flex-col items-center gap-4">
               <Component {...pageProps} />
             </div>
