@@ -1,7 +1,11 @@
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthYearSelector";
+import { formatToCurrency } from "~/utils";
+import { api } from "~/utils/api";
 
 const TransactionsPage = () => {
+  const transactionData = api.transactions.getAll.useQuery();
+
   return (
     <>
       <Header title="Transactions" subtitle="???" />
@@ -26,6 +30,19 @@ const TransactionsPage = () => {
         </button>
       </div>
       <MonthYearSelector />
+      {transactionData.data &&
+        transactionData.data.map((transaction) => {
+          return (
+            <div
+              key={transaction.id}
+              className="group flex w-full cursor-pointer items-center justify-between rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
+            >
+              <span>{transaction.name}</span>
+              <span>{formatToCurrency(transaction.amount)}</span>
+              <span>{transaction.date.toLocaleDateString()}</span>
+            </div>
+          );
+        })}
     </>
   );
 };
