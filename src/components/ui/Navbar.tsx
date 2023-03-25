@@ -1,8 +1,4 @@
-import {
-  faBars,
-  faCircleHalfStroke,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleHalfStroke, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -13,15 +9,11 @@ const Navbar = () => {
   const { data: sessionData } = useSession();
 
   return (
-    <nav className="absolute sticky top-0 z-50 flex w-full justify-center bg-primary-dark/90 py-2 px-4 text-primary-light backdrop-blur-md md:flex">
+    <nav className="absolute sticky top-0 z-50 flex w-full justify-center bg-primary-dark/90 py-2 pl-2 pr-4 text-primary-light backdrop-blur-sm md:flex">
       <div className="flex w-full max-w-lg items-center justify-center justify-between">
-        <FontAwesomeIcon
-          className="invisible h-8 w-8 rounded-full p-2 text-primary-light hover:bg-primary-light hover:text-primary-med sm:flex"
-          icon={faBars}
-        />
         <button
           className="flex items-center gap-2 rounded-xl py-1 px-3 text-3xl font-bold"
-          onClick={() => void router.push("/app")}
+          onClick={() => void router.push("/")}
         >
           <FontAwesomeIcon
             className="h-6 w-6 text-primary-light"
@@ -31,7 +23,7 @@ const Navbar = () => {
         </button>
         <button
           className="h-8 w-8 rounded-full bg-secondary-dark text-secondary-med hover:bg-secondary-med hover:text-secondary-light"
-          onClick={() => void router.push("/app/user")}
+          onClick={() => void router.push("/profile")}
         >
           {sessionData?.user.image ? (
             <Image
