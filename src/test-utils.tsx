@@ -45,6 +45,7 @@ const mockSession = {
     id: "test-id",
     image: "test-image.jpg",
     name: "Test User",
+    nickname: "Test Nickname",
   },
   expires: "2033-04-16T18:32:58.649Z",
 };
