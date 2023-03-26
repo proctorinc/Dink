@@ -1,7 +1,6 @@
 import {
   faCircleHalfStroke,
   faSpinner,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
