@@ -4,7 +4,11 @@ import { Prisma } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Header from "~/components/ui/Header";
-import { formatToCurrency, formatToPercentage } from "~/utils";
+import {
+  formatToCurrency,
+  formatToMonthYear,
+  formatToPercentage,
+} from "~/utils";
 import { api } from "~/utils/api";
 
 export default function Home() {
@@ -16,16 +20,11 @@ export default function Home() {
   const fundsData = api.funds.getAllData.useQuery();
   const creditAccounts = api.bankAccounts.getCreditAccounts.useQuery();
 
-  const monthYear = new Date().toLocaleDateString("en-us", {
-    month: "long",
-    year: "numeric",
-  });
-
   return (
     <>
       <Header
         title={`Hi, ${sessionData?.user?.nickname ?? ""}`}
-        subtitle={monthYear}
+        subtitle={formatToMonthYear(new Date())}
       />
 
       {/* Chart block component */}
