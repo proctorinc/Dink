@@ -87,7 +87,7 @@ export default function BankAccounts() {
         </div>
       ))}
       <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light">
-        <FontAwesomeIcon className="h-4 w-4" icon={faPlus} />
+        <FontAwesomeIcon className="sm" icon={faPlus} />
         <span>Account</span>
       </button>
     </>
