@@ -8,7 +8,15 @@ export const formatToCurrency = (amount: Prisma.Decimal | undefined | null) => {
   return amount ? USD.format(Number(amount)) : "$0.00";
 };
 
-export const formatToTitleCase = (str: string) => {
+export const formatToTitleCase = (str: string | undefined | null) => {
+  if (!str) {
+    return "";
+  }
+
+  if (str.length <= 3) {
+    return str.toUpperCase();
+  }
+
   return str
     .toLowerCase()
     .split(" ")
@@ -25,4 +33,11 @@ export const formatToPercentage = (
     return `${result}%`;
   }
   return "0%";
+};
+
+export const formatToMonthYear = (date: Date) => {
+  return date.toLocaleDateString("en-us", {
+    month: "long",
+    year: "numeric",
+  });
 };
