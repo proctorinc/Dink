@@ -1,4 +1,4 @@
-import { faMoneyBill1 } from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill1, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Header from "~/components/ui/Header";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
@@ -16,7 +16,15 @@ export default function Funds() {
 
       {/* Chart block component */}
       <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
-
+      {fundsData.isLoading && (
+        <div className="flex w-full justify-center">
+          <FontAwesomeIcon
+            className="animate-spin text-primary-light"
+            size="2xl"
+            icon={faSpinner}
+          />
+        </div>
+      )}
       {fundsData?.data?.funds.map((fund) => (
         <div
           key={fund.id}

@@ -1,3 +1,5 @@
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthYearSelector";
 import {
@@ -36,9 +38,16 @@ export default function Budgets() {
 
       {/* Chart block component */}
       <div className="h-40 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
-
       <MonthYearSelector />
-
+      {budgetData.isLoading && (
+        <div className="flex w-full justify-center">
+          <FontAwesomeIcon
+            className="animate-spin text-primary-light"
+            size="2xl"
+            icon={faSpinner}
+          />
+        </div>
+      )}
       {budgetData.data?.budgets.map((budget) => (
         <div
           key={budget.id}
