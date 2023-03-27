@@ -20,13 +20,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   const [loading, setLoading] = useState(false);
 
-  Router.events.on("routeChangeStart", () => {
-    setLoading(true);
-  });
+  // Router.events.on("routeChangeStart", () => {
+  //   setLoading(true);
+  // });
 
-  Router.events.on("routeChangeComplete", () => {
-    setLoading(false);
-  });
+  // Router.events.on("routeChangeComplete", () => {
+  //   setLoading(false);
+  // });
 
   return (
     <SessionProvider session={session}>
