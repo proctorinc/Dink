@@ -17,9 +17,13 @@ const CategorizePage = () => {
       onSuccess: () => ctx.invalidate(),
     });
 
+  const current = uncategorizedTransactions?.data
+    ? uncategorizedTransactions?.data[0]
+    : null;
+
   const selectById = (sourceId: string) => {
     categorizeTransaction.mutate({
-      id: uncategorizedTransactions.data[0]?.id,
+      id: current?.id ?? "",
       type,
       sourceId,
     });
