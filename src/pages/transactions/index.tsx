@@ -1,4 +1,8 @@
-import { faMagnifyingGlass, faTags } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faSpinner,
+  faTags,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import Header from "~/components/ui/Header";
@@ -34,6 +38,15 @@ const TransactionsPage = () => {
       </div>
       <MonthYearSelector />
       <div className="flex w-full flex-col gap-3">
+        {transactionData.isLoading && (
+          <div className="flex w-full justify-center">
+            <FontAwesomeIcon
+              className="animate-spin text-primary-light"
+              size="2xl"
+              icon={faSpinner}
+            />
+          </div>
+        )}
         {transactionData.data &&
           transactionData.data.map((transaction) => {
             return (
