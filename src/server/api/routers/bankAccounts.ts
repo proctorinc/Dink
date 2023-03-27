@@ -100,7 +100,12 @@ export const bankAccountRouter = createTRPCRouter({
           id: input.accountId,
         },
         include: {
-          transactions: true,
+          transactions: {
+            include: {
+              fundSource: true,
+              budgetSource: true,
+            },
+          },
         },
       });
     }),
