@@ -95,10 +95,11 @@ model Transaction {
   pending                 Boolean
   pendingTransactionId    String?
   personalFinanceCategory String?
-  fundSource              Fund?                 @relation(fields: [fundId], references: [id], onDelete: Cascade)
-  fundId                  String?
-  budgetSource            Budget?               @relation(fields: [budgetId], references: [id], onDelete: Cascade)
-  budgetId                String?
+  sourceType              String?
+  fundSource              Fund?                 @relation(fields: [fundSourceId], references: [id], onDelete: Cascade)
+  fundSourceId            String?
+  budgetSource            Budget?               @relation(fields: [budgetSourceId], references: [id], onDelete: Cascade)
+  budgetSourceId          String?
   transactionCode         String?
   transactionId           String                @unique
   transactionType         String
@@ -107,8 +108,8 @@ model Transaction {
   user                    User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@index([userId])
-  @@index([fundId])
-  @@index([budgetId])
+  @@index([fundSourceId])
+  @@index([budgetSourceId])
   @@index([accountId])
 }
 
