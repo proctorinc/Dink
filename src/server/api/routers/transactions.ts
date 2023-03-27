@@ -19,6 +19,9 @@ export const transactionsRouter = createTRPCRouter({
         userId: ctx.session.user.id,
         sourceType: null,
       },
+      include: {
+        account: true,
+      },
     });
   }),
   categorizeTransaction: protectedProcedure
