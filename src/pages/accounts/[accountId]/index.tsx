@@ -1,4 +1,4 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -18,6 +18,18 @@ const AccountPage = () => {
   const addMockTransaction = api.mockData.addMockTransaction.useMutation({
     onSuccess: () => ctx.invalidate(),
   });
+
+  if (accountData.isLoading) {
+    return (
+      <div className="flex w-full justify-center">
+        <FontAwesomeIcon
+          className="animate-spin text-primary-light"
+          size="2xl"
+          icon={faSpinner}
+        />
+      </div>
+    );
+  }
 
   return (
     <>
