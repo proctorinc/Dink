@@ -67,7 +67,13 @@ const AccountPage = () => {
                 <div className="flex flex-col gap-1">
                   <span className="text-lg font-bold">{transaction.name}</span>
                   <span className="text-xs text-primary-light group-hover:text-primary-med">
-                    {"Uncategorized"}
+                    {transaction.sourceType
+                      ? transaction.sourceType
+                      : "Uncategorized"}
+                    {transaction.sourceType === "fund" &&
+                      ` / ${transaction.fundSource?.name ?? ""}`}
+                    {transaction.sourceType === "budget" &&
+                      ` / ${transaction.budgetSource?.name ?? ""}`}
                   </span>
                 </div>
                 <div className="flex flex-col gap-1 text-right">
