@@ -19,6 +19,8 @@ export default function Home() {
   const budgetData = api.budgets.getAllData.useQuery();
   const fundsData = api.funds.getAllData.useQuery();
   const creditAccounts = api.bankAccounts.getCreditAccounts.useQuery();
+  const uncategorizedTransactions =
+    api.transactions.getUncategorized.useQuery();
 
   return (
     <>
@@ -38,10 +40,10 @@ export default function Home() {
         <div className="flex flex-col">
           <h3 className="text-xl font-bold">Transactions</h3>
           <span className="text-sm text-primary-light group-hover:text-primary-med">
-            ??? uncategorized
+            {uncategorizedTransactions?.data?.length ?? ""} uncategorized
           </span>
         </div>
-        <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark group-hover:text-secondary-light">
+        <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark group-hover:bg-secondary-light group-hover:text-secondary-med group-hover:text-secondary-light group-hover:ring group-hover:ring-secondary-med">
           <span>View</span>
           <FontAwesomeIcon className="h-4 w-4" icon={faArrowRight} />
         </button>
@@ -56,7 +58,7 @@ export default function Home() {
       >
         <div className="flex justify-between">
           <h3 className="text-xl font-bold">Budget</h3>
-          <h3 className="text-lg font-bold text-primary-light">
+          <h3 className="text-lg font-bold text-primary-light group-hover:text-primary-med">
             {formatToPercentage(budgetData.data?.spent, budgetData.data?.goal)}{" "}
             left
           </h3>
@@ -77,7 +79,7 @@ export default function Home() {
       >
         <div className="flex justify-between">
           <h3 className="text-xl font-bold">Funds</h3>
-          <h3 className="text-lg font-bold text-primary-light">
+          <h3 className="text-lg font-bold text-primary-light group-hover:text-primary-med">
             {formatToCurrency(fundsData?.data?.amount)}
           </h3>
         </div>
@@ -100,7 +102,7 @@ export default function Home() {
             {accountData.data?.count ?? "No"} linked accounts
           </span>
         </div>
-        <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark group-hover:text-secondary-light">
+        <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark group-hover:bg-secondary-light group-hover:text-secondary-med group-hover:text-secondary-light group-hover:ring group-hover:ring-secondary-med">
           <span>{accountData.data?.count ? "View" : "Link"}</span>
           <FontAwesomeIcon className="h-4 w-4" icon={faArrowRight} />
         </button>
