@@ -32,16 +32,24 @@ const CategorizePage = () => {
 
   return (
     <>
-      <BackHeader title="Categorize" />
+      <BackHeader title="Categorize Transactions" />
 
       {/* Chart block component */}
-      <div className="text-secondary-md flex h-40 w-full flex-col rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med p-4">
+      <div className="flex h-40 w-full flex-col items-center justify-center rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med p-4 text-secondary-light">
         {!!uncategorizedTransactions.data && (
           <>
-            <span>{uncategorizedTransactions.data[0]?.name}</span>
+            <span className="text-xl font-bold">{current?.name}</span>
             <span>
               {formatToCurrency(uncategorizedTransactions.data[0]?.amount)}
             </span>
+            <span>
+              {current?.date.toLocaleString("en-us", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
+            <span>Account: {current?.account ? current?.name : ""}</span>
           </>
         )}
       </div>
