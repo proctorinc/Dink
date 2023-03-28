@@ -144,11 +144,6 @@ export const mockDataRouter = createTRPCRouter({
       return ctx.prisma.fund.create({
         data: {
           icon: "",
-          initial_amount: faker.datatype.float({
-            precision: 0.01,
-            max: 75000,
-            min: 0,
-          }),
           name: `${faker.word.adjective()} ${faker.word.noun()}`,
           user: {
             connect: { id: input.userId },
@@ -181,7 +176,7 @@ export const mockDataRouter = createTRPCRouter({
       const date = faker.date.between("2023-01-01T00:00:00.000Z", new Date());
       const data = {
         account_owner: "",
-        amount: faker.datatype.float({ precision: 0.01, max: 500, min: 0.01 }),
+        amount: faker.datatype.float({ precision: 0.01, max: 250, min: 0.01 }),
         authorized_datetime: date.toDateString(),
         checkNumber: "",
         date: date,
