@@ -11,7 +11,7 @@ export default function Funds() {
     <>
       <Header
         title="Funds"
-        subtitle={`Total: ${formatToCurrency(fundsData?.data?.amount)}`}
+        subtitle={`Total: ${formatToCurrency(fundsData?.data?.total)}`}
       />
 
       {/* Chart block component */}
@@ -34,7 +34,8 @@ export default function Funds() {
             <div className="flex items-center gap-3">
               <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-secondary-dark group-hover:bg-secondary-med">
                 <FontAwesomeIcon
-                  className="h-5 w-5 text-secondary-med group-hover:text-secondary-light"
+                  className="text-secondary-med group-hover:text-secondary-light"
+                  size="lg"
                   icon={faMoneyBill1}
                 />
               </div>
@@ -43,7 +44,7 @@ export default function Funds() {
               </h3>
             </div>
             <span className="text-lg font-bold text-primary-light group-hover:text-primary-med">
-              {formatToCurrency(fund.initial_amount)}
+              {formatToCurrency(fund.amount)}
             </span>
           </div>
         </div>
