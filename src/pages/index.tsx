@@ -22,6 +22,20 @@ export default function Home() {
   const uncategorizedTransactions =
     api.transactions.getUncategorized.useQuery();
 
+  // TODO: Should ignore current month's money to avoid conflict with budget
+  const unallocatedFunds = Prisma.Decimal.sub(
+    accountData.data?.total ?? new Prisma.Decimal(0),
+    fundsData.data?.total ?? new Prisma.Decimal(0)
+  );
+  const percentAllocated = formatToPercentage(
+    fundsData.data?.total,
+    accountData.data?.total
+  );
+  const percentSpent = formatToPercentage(
+    budgetData?.data?.spent,
+    budgetData?.data?.goal
+  );
+
   return (
     <>
       <Header
@@ -44,7 +58,7 @@ export default function Home() {
           </span>
         </div>
         <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark group-hover:bg-secondary-light group-hover:text-secondary-med group-hover:text-secondary-light group-hover:ring group-hover:ring-secondary-med">
-          <span>View</span>
+          <span>Categorize</span>
           <FontAwesomeIcon className="h-4 w-4" icon={faArrowRight} />
         </button>
       </div>
@@ -60,7 +74,7 @@ export default function Home() {
           <h3 className="text-xl font-bold">Budget</h3>
           <h3 className="text-lg font-bold text-primary-light group-hover:text-primary-med">
             {formatToPercentage(budgetData.data?.spent, budgetData.data?.goal)}{" "}
-            left
+            Spent
           </h3>
         </div>
         <span className="text-sm text-primary-light group-hover:text-primary-med">
@@ -68,7 +82,10 @@ export default function Home() {
           {formatToCurrency(budgetData.data?.goal)}
         </span>
         <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
-          <div className="absolute h-full w-[70%] rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"></div>
+          <div
+            className="absolute h-full rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"
+            style={{ width: percentSpent }}
+          ></div>
         </div>
       </div>
 
@@ -80,14 +97,17 @@ export default function Home() {
         <div className="flex justify-between">
           <h3 className="text-xl font-bold">Funds</h3>
           <h3 className="text-lg font-bold text-primary-light group-hover:text-primary-med">
-            {formatToCurrency(fundsData?.data?.amount)}
+            {formatToCurrency(fundsData?.data?.total)}
           </h3>
         </div>
         <span className="text-sm text-primary-light group-hover:text-primary-med">
-          $??? unallocated
+          {formatToCurrency(unallocatedFunds)} unallocated
         </span>
         <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
-          <div className="absolute h-full w-[25%] rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"></div>
+          <div
+            className="absolute h-full rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"
+            style={{ width: percentAllocated }}
+          ></div>
         </div>
       </div>
 
