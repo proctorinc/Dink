@@ -135,9 +135,6 @@ const Home: NextPage = () => {
                         {fund.name}
                       </td>
                       <td className="border-slate-700 border p-2">
-                        {formatToCurrency(fund.initial_amount)}
-                      </td>
-                      <td className="border-slate-700 border p-2">
                         <button
                           className="rounded-full bg-white/10 px-2 font-semibold text-white no-underline transition hover:bg-white/20"
                           // onClick={() =>
