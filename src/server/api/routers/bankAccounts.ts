@@ -105,6 +105,9 @@ export const bankAccountRouter = createTRPCRouter({
               fundSource: true,
               budgetSource: true,
             },
+            orderBy: {
+              date: "desc",
+            },
           },
         },
       });
