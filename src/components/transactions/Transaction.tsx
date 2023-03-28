@@ -45,7 +45,6 @@ const Transaction: FC<TransactionProps> = ({ data: transaction }) => {
             {transaction.date.toLocaleString("en-us", {
               month: "short",
               day: "numeric",
-              year: "numeric",
             })}
           </span>
         </div>
