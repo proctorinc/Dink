@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Transaction from "~/components/transactions/Transaction";
-import BackHeader from "~/components/ui/BackHeader";
+import Header from "~/components/ui/Header";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { api } from "~/utils/api";
 
@@ -34,7 +34,8 @@ const AccountPage = () => {
 
   return (
     <>
-      <BackHeader
+      <Header
+        back
         title={accountData?.data?.name}
         subtitle={formatToCurrency(accountData?.data?.current)}
       />

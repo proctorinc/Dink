@@ -1,7 +1,7 @@
 import { faRedo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import BackHeader from "~/components/ui/BackHeader";
+import Header from "~/components/ui/Header";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
 
@@ -32,7 +32,7 @@ const CategorizePage = () => {
 
   return (
     <>
-      <BackHeader title="Categorize Transactions" />
+      <Header back title="Categorize" />
 
       {/* Chart block component */}
       <div className="flex h-40 w-full flex-col items-center justify-center rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med p-4 text-secondary-light">
