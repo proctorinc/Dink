@@ -44,7 +44,9 @@ const BudgetPage = () => {
       <Header back title={budgetData?.data?.name} />
       <div
         className="group flex w-full flex-col justify-between gap-1 rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
-        onClick={() => void router.push(`/budget/${budgetData?.data?.id}`)}
+        onClick={() =>
+          void router.push(`/budget/${budgetData?.data?.id ?? ""}`)
+        }
       >
         <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
           <div
