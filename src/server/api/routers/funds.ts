@@ -1,4 +1,5 @@
-import { type Fund, Prisma } from "@prisma/client";
+import { type Fund, Prisma, Transaction } from "@prisma/client";
+import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 type TransactionAmount = {
@@ -26,13 +27,32 @@ function sumFundTransactions(
     source_transactions: TransactionAmount[];
   })[]
 ) {
-  return funds.map((fund) => {
-    const { source_transactions, ...otherFields } = fund;
-    return {
-      ...otherFields,
-      amount: sumTransactions(source_transactions),
-    };
-  });
+  return funds.map((fund) => addAmountToFund(fund));
+}
+
+function addAmountToFund(
+  fund: Fund & {
+    source_transactions: TransactionAmount[];
+  }
+) {
+  const { source_transactions, ...otherFields } = fund;
+  return {
+    ...otherFields,
+    amount: sumTransactions(source_transactions),
+  };
+}
+
+function addAmountToFundWithTransactions(
+  fund: Fund & {
+    source_transactions: Transaction[];
+  }
+) {
+  const { source_transactions, ...otherFields } = fund;
+  return {
+    ...otherFields,
+    source_transactions,
+    amount: sumTransactions(source_transactions),
+  };
 }
 
 export const fundsRouter = createTRPCRouter({
@@ -58,4 +78,23 @@ export const fundsRouter = createTRPCRouter({
       funds: fundsWithAmounts,
     };
   }),
+  getById: protectedProcedure
+    .input(
+      z.object({
+        fundId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const fund = await ctx.prisma.fund.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          id: input.fundId,
+        },
+        include: {
+          source_transactions: true,
+        },
+      });
+
+      return fund ? addAmountToFundWithTransactions(fund) : fund;
+    }),
 });

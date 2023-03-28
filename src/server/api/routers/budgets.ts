@@ -1,4 +1,5 @@
-import { Prisma, type Budget } from "@prisma/client";
+import { Prisma, Transaction, type Budget } from "@prisma/client";
+import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 type TransactionAmount = {
@@ -29,6 +30,21 @@ function sumBudgetTransactions(
       leftover: Prisma.Decimal.sub(budget.goal, spent),
     };
   });
+}
+
+function addAmountToBudgetWithTransactions(
+  fund: Budget & {
+    source_transactions: Transaction[];
+  }
+) {
+  const { source_transactions, ...otherFields } = fund;
+  const spent = sumTransactions(source_transactions);
+  return {
+    ...otherFields,
+    source_transactions,
+    spent,
+    leftover: sumTransactions(source_transactions),
+  };
 }
 
 function sumBudgetGoals(budgets: Budget[]) {
@@ -68,4 +84,27 @@ export const budgetsRouter = createTRPCRouter({
       budgets: budgetsWithAmounts,
     };
   }),
+  getById: protectedProcedure
+    .input(
+      z.object({
+        budgetId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const budget = await ctx.prisma.budget.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          id: input.budgetId,
+        },
+        include: {
+          source_transactions: {
+            orderBy: {
+              date: "desc",
+            },
+          },
+        },
+      });
+
+      return budget ? addAmountToBudgetWithTransactions(budget) : budget;
+    }),
 });
