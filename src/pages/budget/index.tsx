@@ -48,23 +48,32 @@ export default function Budgets() {
           />
         </div>
       )}
-      {budgetData.data?.budgets.map((budget) => (
-        <div
-          key={budget.id}
-          className="group flex w-full flex-col justify-between gap-1 rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
-        >
-          <h3 className="text-xl font-bold">
-            {formatToTitleCase(budget.name)}
-          </h3>
-          <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
-            <div className="absolute h-full w-[40%] rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"></div>
+      {budgetData.data?.budgets.map((budget) => {
+        const percentSpent = formatToPercentage(budget.spent, budget.goal);
+        return (
+          <div
+            key={budget.id}
+            className="group flex w-full flex-col justify-between gap-1 rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
+          >
+            <h3 className="text-xl font-bold">
+              {formatToTitleCase(budget.name)}
+            </h3>
+            <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
+              <div
+                className="absolute h-full rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"
+                style={{ width: percentSpent }}
+              ></div>
+            </div>
+            <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
+              <span>
+                {formatToCurrency(budget.spent)} /{" "}
+                {formatToCurrency(budget.goal)}
+              </span>
+              <span>{formatToCurrency(budget.leftover)} left</span>
+            </div>
           </div>
-          <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
-            <span>$??? / {formatToCurrency(budget.goal)}</span>
-            <span>$??? left</span>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </>
   );
 }
