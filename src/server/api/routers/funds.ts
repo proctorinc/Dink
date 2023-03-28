@@ -1,4 +1,4 @@
-import { type Fund, Prisma, Transaction } from "@prisma/client";
+import { type Fund, Prisma, type Transaction } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
