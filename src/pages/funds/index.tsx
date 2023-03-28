@@ -1,10 +1,16 @@
-import { faMoneyBill1, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMoneyBill1,
+  faPlus,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
 import Header from "~/components/ui/Header";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { api } from "~/utils/api";
 
 export default function Funds() {
+  const router = useRouter();
   const fundsData = api.funds.getAllData.useQuery();
 
   return (
@@ -29,6 +35,7 @@ export default function Funds() {
         <div
           key={fund.id}
           className="group flex w-full flex-col rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
+          onClick={() => void router.push(`/funds/${fund.id}`)}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -49,6 +56,10 @@ export default function Funds() {
           </div>
         </div>
       ))}
+      <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light">
+        <FontAwesomeIcon className="sm" icon={faPlus} />
+        <span>Fund</span>
+      </button>
     </>
   );
 }
