@@ -1,5 +1,6 @@
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthYearSelector";
 import {
@@ -10,6 +11,7 @@ import {
 import { api } from "~/utils/api";
 
 export default function Budgets() {
+  const router = useRouter();
   const budgetData = api.budgets.getAllData.useQuery();
 
   return (
@@ -54,6 +56,7 @@ export default function Budgets() {
           <div
             key={budget.id}
             className="group flex w-full flex-col justify-between gap-1 rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
+            onClick={() => void router.push(`/budget/${budget.id}`)}
           >
             <h3 className="text-xl font-bold">
               {formatToTitleCase(budget.name)}
@@ -74,6 +77,10 @@ export default function Budgets() {
           </div>
         );
       })}
+      <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light">
+        <FontAwesomeIcon className="sm" icon={faPlus} />
+        <span>Budget</span>
+      </button>
     </>
   );
 }
