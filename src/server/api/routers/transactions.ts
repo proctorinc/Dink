@@ -7,6 +7,9 @@ export const transactionsRouter = createTRPCRouter({
       where: {
         userId: ctx.session.user.id,
       },
+      orderBy: {
+        date: "desc",
+      },
       include: {
         budgetSource: true,
         fundSource: true,
