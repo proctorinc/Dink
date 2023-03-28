@@ -42,7 +42,8 @@ export default function BankAccounts() {
             <div className="flex items-center gap-3">
               <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-secondary-dark group-hover:bg-secondary-med">
                 <FontAwesomeIcon
-                  className="h-5 w-5 text-secondary-med group-hover:text-secondary-light"
+                  className="text-secondary-med group-hover:text-secondary-light"
+                  size="lg"
                   icon={AccountCategoryIcons[category]}
                 />
               </div>
