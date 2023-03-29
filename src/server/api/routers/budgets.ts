@@ -60,30 +60,6 @@ function sumTotalBudgetSpent(budgets: (Budget & BudgetAmount)[]) {
 }
 
 export const budgetsRouter = createTRPCRouter({
-  // getAllData: protectedProcedure.query(async ({ ctx }) => {
-  //   const budgets = await ctx.prisma.budget.findMany({
-  //     where: {
-  //       userId: ctx.session.user.id,
-  //     },
-  //     include: {
-  //       source_transactions: {
-  //         select: {
-  //           amount: true,
-  //         },
-  //       },
-  //     },
-  //   });
-  //   const budgetsWithAmounts = sumBudgetTransactions(budgets);
-  //   const spent = sumTotalBudgetSpent(budgetsWithAmounts);
-  //   const goal = sumBudgetGoals(budgets);
-
-  //   return {
-  //     goal: goal,
-  //     spent: spent,
-  //     leftover: Prisma.Decimal.sub(goal, spent),
-  //     budgets: budgetsWithAmounts,
-  //   };
-  // }),
   getDataByMonth: protectedProcedure
     .input(
       z.object({
