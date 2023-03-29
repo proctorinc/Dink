@@ -4,12 +4,22 @@ import { formatToTitleCase } from "~/utils";
 import { useMonthContext } from "../hooks/useMonthContext";
 
 const MonthSelector = () => {
-  const { month, year, hasNextMonth, getNextMonth, getPreviousMonth } =
-    useMonthContext();
+  const {
+    month,
+    year,
+    hasNextMonth,
+    hasPreviousMonth,
+    getNextMonth,
+    getPreviousMonth,
+  } = useMonthContext();
 
   return (
     <div className="flex w-full items-center justify-between rounded-xl bg-primary-med py-2 px-2 text-primary-light">
-      <button className="h-8 w-8 rounded-full text-primary-light hover:bg-primary-light hover:text-primary-med">
+      <button
+        className={`${
+          !hasPreviousMonth ? "invisible" : ""
+        } h-8 w-8 rounded-full text-primary-light hover:bg-primary-light hover:text-primary-med`}
+      >
         <FontAwesomeIcon icon={faArrowLeft} onClick={getPreviousMonth} />
       </button>
       <span className="font-bold text-primary-light">
@@ -17,7 +27,7 @@ const MonthSelector = () => {
       </span>
       <button
         className={`${
-          !hasNextMonth() ? "invisible" : ""
+          !hasNextMonth ? "invisible" : ""
         } h-8 w-8 rounded-full text-primary-light hover:bg-primary-light hover:text-primary-med`}
       >
         <FontAwesomeIcon icon={faArrowRight} onClick={getNextMonth} />
