@@ -1,6 +1,7 @@
 import { faRedo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import { useMonthContext } from "~/components/hooks/useMonthContext";
 import Header from "~/components/ui/Header";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
@@ -9,7 +10,11 @@ const CategorizePage = () => {
   const [type, setType] = useState<string | null>(null);
   const ctx = api.useContext();
   const fundsData = api.funds.getAllData.useQuery();
-  const budgetData = api.budgets.getAllData.useQuery();
+  const { startOfMonth, endOfMonth } = useMonthContext();
+  const budgetData = api.budgets.getDataByMonth.useQuery({
+    startOfMonth,
+    endOfMonth,
+  });
   const uncategorizedTransactions =
     api.transactions.getUncategorized.useQuery();
   const categorizeTransaction =
