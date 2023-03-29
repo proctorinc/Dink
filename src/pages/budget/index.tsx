@@ -35,11 +35,11 @@ export default function Budgets() {
             <FontAwesomeIcon icon={faChevronLeft} />
           </button>
         </div>
-        <div className="flex w-full w-3/5 items-center justify-center p-2">
+        <div className="flex w-full w-3/5 items-center justify-center">
           <div className="relative flex aspect-square w-full items-center justify-center rounded-full bg-primary-med">
-            <div className="z-20 flex aspect-square w-[75%] flex-col items-center justify-center gap-1 rounded-full bg-primary-dark pb-2">
-              <h2 className="text-2xl font-bold">Overall</h2>
-              <span className="text-center text-xs text-primary-light">
+            <div className="z-20 flex aspect-square w-[75%] flex-col items-center justify-center gap-1 rounded-full bg-primary-dark">
+              <h2 className="text-3xl font-bold">Overall</h2>
+              <span className="text-center text-sm text-primary-light">
                 {formatToCurrency(budgetData.data?.spent)} /{" "}
                 {formatToCurrency(budgetData.data?.goal)}
               </span>
