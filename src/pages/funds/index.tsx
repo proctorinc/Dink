@@ -1,4 +1,6 @@
 import {
+  faCoins,
+  faGear,
   faMoneyBill1,
   faPlus,
   faSpinner,
@@ -24,7 +26,7 @@ export default function Funds() {
         <div className="flex w-2/3 flex-col gap-1">
           <div className="flex w-full items-center justify-center p-2">
             <div className="relative flex aspect-square w-full items-center justify-center rounded-full bg-primary-med">
-              <div className="z-20 flex aspect-square w-[75%] flex-col items-center justify-center gap-3 rounded-full bg-primary-dark"></div>
+              <div className="z-20 flex aspect-square w-[70%] flex-col items-center justify-center gap-3 rounded-full bg-primary-dark"></div>
               <div className="absolute bottom-0 h-[50%] w-full rounded-bl-full rounded-br-full bg-gradient-to-t from-secondary-dark to-secondary-med" />
               <div className="absolute right-0 h-full w-[50%] rounded-br-full rounded-tr-full bg-gradient-to-t from-secondary-dark to-secondary-med" />
             </div>
@@ -33,12 +35,25 @@ export default function Funds() {
         <div className="flex w-1/3 flex-col gap-1">
           <div className="flex w-full items-center justify-center p-2">
             <div className="relative flex aspect-square w-full items-center justify-center rounded-full bg-primary-med">
-              <div className="z-20 flex aspect-square w-[75%] flex-col items-center justify-center gap-3 rounded-full bg-primary-dark"></div>
+              <div className="z-20 flex aspect-square w-[60%] flex-col items-center justify-center gap-3 rounded-full bg-primary-dark"></div>
               <div className="absolute bottom-0 h-[50%] w-full rounded-bl-full rounded-br-full bg-gradient-to-t from-secondary-dark to-secondary-med" />
               <div className="absolute right-0 h-full w-[50%] rounded-br-full rounded-tr-full bg-gradient-to-t from-secondary-dark to-secondary-med" />
             </div>
           </div>
         </div>
+      </div>
+      <div className="flex w-full items-start justify-start gap-2">
+        <button className="flex h-10 items-center gap-2 rounded-lg bg-primary-med py-2 px-5 font-bold text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light">
+          <FontAwesomeIcon className="sm" icon={faGear} />
+        </button>
+        <button className="flex h-10 items-center gap-2 rounded-lg bg-primary-med py-2 px-5 font-bold text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light">
+          <FontAwesomeIcon className="sm" icon={faCoins} />
+          <span>Allocate</span>
+        </button>
+        <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light">
+          <FontAwesomeIcon className="sm" icon={faPlus} />
+          <span>Fund</span>
+        </button>
       </div>
 
       {fundsData.isLoading && (
@@ -75,10 +90,6 @@ export default function Funds() {
           </div>
         </div>
       ))}
-      <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light">
-        <FontAwesomeIcon className="sm" icon={faPlus} />
-        <span>Fund</span>
-      </button>
     </>
   );
 }

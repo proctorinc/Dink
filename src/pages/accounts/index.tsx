@@ -9,7 +9,7 @@ import { api } from "~/utils/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Header from "~/components/ui/Header";
 import { useRouter } from "next/router";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faGear, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function BankAccounts() {
   const router = useRouter();
@@ -28,7 +28,17 @@ export default function BankAccounts() {
       />
 
       {/* Chart block component */}
-      <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
+      <div className="h-52 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
+
+      <div className="flex w-full items-start justify-start gap-2">
+        <button className="flex h-10 items-center gap-2 rounded-lg bg-primary-med py-2 px-5 font-bold text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light">
+          <FontAwesomeIcon className="sm" icon={faGear} />
+        </button>
+        <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light">
+          <FontAwesomeIcon className="sm" icon={faPlus} />
+          <span>Account</span>
+        </button>
+      </div>
 
       {accountCategories.map((category) => (
         <div
@@ -87,10 +97,6 @@ export default function BankAccounts() {
           )}
         </div>
       ))}
-      <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light">
-        <FontAwesomeIcon className="sm" icon={faPlus} />
-        <span>Account</span>
-      </button>
     </>
   );
 }

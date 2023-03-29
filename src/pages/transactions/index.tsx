@@ -13,7 +13,7 @@ import { api } from "~/utils/api";
 
 const TransactionsPage = () => {
   const router = useRouter();
-  const { startOfMonth, endOfMonth } = useMonthContext();
+  const { month, year, startOfMonth, endOfMonth } = useMonthContext();
   const transactionData = api.transactions.getByMonth.useQuery({
     startOfMonth,
     endOfMonth,
@@ -21,9 +21,9 @@ const TransactionsPage = () => {
 
   return (
     <>
-      <Header title="Transactions" />
+      <Header title="Transactions" subtitle={`${month} ${year}`} />
       <div className="flex w-full gap-2">
-        <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light">
+        <button className="flex h-10 items-center gap-2 rounded-lg bg-primary-med py-2 px-5 font-bold text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light">
           <FontAwesomeIcon size="sm" icon={faMagnifyingGlass} />
           <span>Search</span>
         </button>
