@@ -1,10 +1,21 @@
 import { useRouter } from "next/router";
-import { formatToCurrency, formatToPercentage } from "~/utils";
+import {
+  formatToCurrency,
+  formatToPercentage,
+  getFirstDayOfMonth,
+  getLastDayOfMonth,
+} from "~/utils";
 import { api } from "~/utils/api";
 
 const BudgetSummary = () => {
   const router = useRouter();
-  const budgetData = api.budgets.getAllData.useQuery();
+  const today = new Date();
+  const startOfMonth = getFirstDayOfMonth(today);
+  const endOfMonth = getLastDayOfMonth(today);
+  const budgetData = api.budgets.getDataByMonth.useQuery({
+    startOfMonth,
+    endOfMonth,
+  });
 
   const percentSpent = formatToPercentage(
     budgetData?.data?.spent,

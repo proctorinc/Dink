@@ -1,8 +1,10 @@
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
+import { useMonthContext } from "~/components/hooks/useMonthContext";
 import NoSourceTransaction from "~/components/transactions/NoSourceTransaction";
 import Header from "~/components/ui/Header";
+import MonthYearSelector from "~/components/ui/MonthSelector";
 import { formatToCurrency, formatToPercentage } from "~/utils";
 import { api } from "~/utils/api";
 
@@ -10,8 +12,11 @@ const BudgetPage = () => {
   const router = useRouter();
   const { budgetId } = router.query;
   const strbudgetId = typeof budgetId === "string" ? budgetId : null;
+  const { startOfMonth, endOfMonth } = useMonthContext();
   const budgetData = api.budgets.getById.useQuery(
     {
+      startOfMonth,
+      endOfMonth,
       budgetId: strbudgetId ?? "",
     },
     {
@@ -62,6 +67,8 @@ const BudgetPage = () => {
           <span>{formatToCurrency(budgetData?.data?.leftover)} left</span>
         </div>
       </div>
+      <MonthYearSelector />
+
       <div className="w-full">
         <h2 className="text-left text-xl text-primary-light">Transactions</h2>
       </div>
