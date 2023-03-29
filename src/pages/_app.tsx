@@ -9,6 +9,8 @@ import Head from "next/head";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import Navbar from "~/components/ui/Navbar";
 import MobileNavbar from "~/components/ui/MobileNavbar";
+import { MonthProvider } from "~/context/MonthContext";
+import Layout from "~/components/ui/Layout";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -20,13 +22,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <Head>
         <title>Dink</title>
       </Head>
-      <main className="flex flex-col items-center text-white">
-        <div className="container flex max-w-md flex-col items-center justify-center gap-12 px-4 pb-28 pt-5 sm:pb-4">
-          <div className="flex w-full flex-col items-center gap-4">
-            <Component {...pageProps} />
-          </div>
-        </div>
-      </main>
+      <MonthProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </MonthProvider>
       <MobileNavbar />
     </SessionProvider>
   );
