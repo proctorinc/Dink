@@ -20,8 +20,27 @@ export default function Funds() {
         subtitle={`Total: ${formatToCurrency(fundsData?.data?.total)}`}
       />
 
-      {/* Chart block component */}
-      <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
+      <div className="flex w-full items-end">
+        <div className="flex w-2/3 flex-col gap-1">
+          <div className="flex w-full items-center justify-center p-2">
+            <div className="relative flex aspect-square w-full items-center justify-center rounded-full bg-primary-med">
+              <div className="z-20 flex aspect-square w-[75%] flex-col items-center justify-center gap-3 rounded-full bg-primary-dark"></div>
+              <div className="absolute bottom-0 h-[50%] w-full rounded-bl-full rounded-br-full bg-gradient-to-t from-secondary-dark to-secondary-med" />
+              <div className="absolute right-0 h-full w-[50%] rounded-br-full rounded-tr-full bg-gradient-to-t from-secondary-dark to-secondary-med" />
+            </div>
+          </div>
+        </div>
+        <div className="flex w-1/3 flex-col gap-1">
+          <div className="flex w-full items-center justify-center p-2">
+            <div className="relative flex aspect-square w-full items-center justify-center rounded-full bg-primary-med">
+              <div className="z-20 flex aspect-square w-[75%] flex-col items-center justify-center gap-3 rounded-full bg-primary-dark"></div>
+              <div className="absolute bottom-0 h-[50%] w-full rounded-bl-full rounded-br-full bg-gradient-to-t from-secondary-dark to-secondary-med" />
+              <div className="absolute right-0 h-full w-[50%] rounded-br-full rounded-tr-full bg-gradient-to-t from-secondary-dark to-secondary-med" />
+            </div>
+          </div>
+        </div>
+      </div>
+
       {fundsData.isLoading && (
         <div className="flex w-full justify-center">
           <FontAwesomeIcon
