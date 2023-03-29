@@ -51,9 +51,9 @@ const Transaction: FC<TransactionProps> = ({ data: transaction }) => {
       </div>
       {!transaction.sourceType && (
         <div className="pl-3">
-          <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-secondary-med group-hover:bg-secondary-med">
+          <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-secondary-dark group-hover:bg-secondary-med">
             <FontAwesomeIcon
-              className="text-secondary-light group-hover:text-secondary-light"
+              className="text-secondary-med group-hover:text-secondary-light"
               size="lg"
               icon={faTriangleExclamation}
             />
