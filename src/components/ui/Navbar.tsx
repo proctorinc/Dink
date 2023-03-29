@@ -31,7 +31,7 @@ const Navbar = () => {
           >
             {sessionData?.user.image ? (
               <Image
-                className="w-8 rounded-full ring ring-primary-med"
+                className="w-8 rounded-full border-2 border-primary-med"
                 width={10}
                 height={10}
                 src={sessionData?.user.image ?? "/favicon.ico"}
