@@ -10,8 +10,9 @@ type MonthContext = {
   year: string;
   startOfMonth: Date;
   endOfMonth: Date;
-  hasNextMonth: () => boolean;
-  hasPreviousMonth: () => boolean;
+  isCurrentMonth: boolean;
+  hasNextMonth: boolean;
+  hasPreviousMonth: boolean;
   getNextMonth: () => void;
   getPreviousMonth: () => void;
 };
@@ -21,18 +22,19 @@ const MonthContext = createContext<MonthContext>({
   year: "",
   startOfMonth: new Date(),
   endOfMonth: new Date(),
-  hasNextMonth: () => true,
-  hasPreviousMonth: () => true,
+  isCurrentMonth: true,
+  hasNextMonth: true,
+  hasPreviousMonth: true,
   getNextMonth: () => null,
   getPreviousMonth: () => null,
 });
 
 export const MonthProvider: FC<MonthProviderProps> = ({ children }) => {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(getFirstDayOfMonth(new Date()));
   const today = new Date();
 
   const getNextMonth = () => {
-    if (hasNextMonth()) {
+    if (hasNextMonth) {
       setDate(
         (prevDate) => new Date(prevDate.setMonth(prevDate.getMonth() + 1))
       );
@@ -42,17 +44,16 @@ export const MonthProvider: FC<MonthProviderProps> = ({ children }) => {
     setDate((prevDate) => new Date(prevDate.setMonth(prevDate.getMonth() - 1)));
   };
 
-  const hasNextMonth = () => {
-    return (
-      date.getFullYear() !== today.getFullYear() ||
-      (date.getFullYear() === today.getFullYear() &&
-        date.getMonth() <= today.getMonth())
-    );
-  };
+  const isCurrentMonth = date.getMonth() === today.getMonth();
 
-  const hasPreviousMonth = () => {
-    return true;
-  };
+  const hasNextMonth =
+    // If year is not this year, there is another month
+    // Otherwise there is a next month unless the month is the next month
+    date.getFullYear() !== today.getFullYear() ||
+    (date.getFullYear() === today.getFullYear() &&
+      date.getMonth() <= today.getMonth());
+
+  const hasPreviousMonth = true;
 
   const month = date.toLocaleString("en-US", {
     month: "long",
@@ -68,6 +69,7 @@ export const MonthProvider: FC<MonthProviderProps> = ({ children }) => {
     year,
     startOfMonth,
     endOfMonth,
+    isCurrentMonth,
     hasNextMonth,
     hasPreviousMonth,
     getNextMonth,
