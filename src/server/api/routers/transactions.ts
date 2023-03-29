@@ -16,6 +16,31 @@ export const transactionsRouter = createTRPCRouter({
       },
     });
   }),
+  getByMonth: protectedProcedure
+    .input(
+      z.object({
+        startOfMonth: z.date(),
+        endOfMonth: z.date(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      return ctx.prisma.transaction.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          date: {
+            gte: input.startOfMonth,
+            lte: input.endOfMonth,
+          },
+        },
+        orderBy: {
+          date: "desc",
+        },
+        include: {
+          budgetSource: true,
+          fundSource: true,
+        },
+      });
+    }),
   getUncategorized: protectedProcedure.query(async ({ ctx }) => {
     return ctx.prisma.transaction.findMany({
       where: {
