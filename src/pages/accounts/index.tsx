@@ -16,9 +16,9 @@ export default function BankAccounts() {
   const [open, setOpen] = useState("");
   const accountData = api.bankAccounts.getAllData.useQuery();
 
-  function handleOpen(type: AccountCategory) {
+  const handleOpen = (type: AccountCategory) => {
     setOpen((prev) => (prev === type ? "" : type));
-  }
+  };
 
   return (
     <>
@@ -32,10 +32,10 @@ export default function BankAccounts() {
 
       <div className="flex w-full items-start justify-start gap-2">
         <button className="flex h-10 items-center gap-2 rounded-lg bg-primary-med py-2 px-5 font-bold text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light">
-          <FontAwesomeIcon className="sm" icon={faGear} />
+          <FontAwesomeIcon icon={faGear} />
         </button>
         <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light">
-          <FontAwesomeIcon className="sm" icon={faPlus} />
+          <FontAwesomeIcon icon={faPlus} />
           <span>Account</span>
         </button>
       </div>
