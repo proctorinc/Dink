@@ -1,8 +1,7 @@
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import NoSourceTransaction from "~/components/transactions/NoSourceTransaction";
 import Header from "~/components/ui/Header";
+import Spinner from "~/components/ui/Spinner";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
 
@@ -20,15 +19,7 @@ const FundPage = () => {
   );
 
   if (fundData.isLoading) {
-    return (
-      <div className="flex w-full justify-center">
-        <FontAwesomeIcon
-          className="animate-spin text-primary-light"
-          size="2xl"
-          icon={faSpinner}
-        />
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (!fundData.data) {

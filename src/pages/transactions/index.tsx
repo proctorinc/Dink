@@ -1,14 +1,11 @@
-import {
-  faMagnifyingGlass,
-  faSpinner,
-  faTags,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faTags } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import { useMonthContext } from "~/components/hooks/useMonthContext";
 import Transaction from "~/components/transactions/Transaction";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthSelector";
+import Spinner from "~/components/ui/Spinner";
 import { api } from "~/utils/api";
 
 const TransactionsPage = () => {
@@ -39,15 +36,7 @@ const TransactionsPage = () => {
       </div>
       <MonthYearSelector />
       <div className="flex w-full flex-col gap-3">
-        {transactionData.isLoading && (
-          <div className="flex w-full justify-center">
-            <FontAwesomeIcon
-              className="animate-spin text-primary-light"
-              size="2xl"
-              icon={faSpinner}
-            />
-          </div>
-        )}
+        {transactionData.isLoading && <Spinner />}
         {transactionData.data &&
           transactionData.data.map((transaction) => (
             <Transaction key={transaction.id} data={transaction} />

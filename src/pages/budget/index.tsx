@@ -3,13 +3,14 @@ import {
   faChevronRight,
   faGear,
   faPlus,
-  faSpinner,
+  faRedo,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import { useMonthContext } from "~/components/hooks/useMonthContext";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthSelector";
+import Spinner from "~/components/ui/Spinner";
 import {
   formatToCurrency,
   formatToProgressPercentage,
@@ -19,8 +20,14 @@ import { api } from "~/utils/api";
 
 export default function Budgets() {
   const router = useRouter();
-  const { month, year, startOfMonth, endOfMonth, isCurrentMonth } =
-    useMonthContext();
+  const {
+    month,
+    year,
+    setCurrentMonth,
+    startOfMonth,
+    endOfMonth,
+    isCurrentMonth,
+  } = useMonthContext();
   const budgetData = api.budgets.getDataByMonth.useQuery({
     startOfMonth,
     endOfMonth,
@@ -65,6 +72,15 @@ export default function Budgets() {
             <span>Budget</span>
           </button>
         )}
+        {!isCurrentMonth && (
+          <button
+            className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light"
+            onClick={setCurrentMonth}
+          >
+            <FontAwesomeIcon className="sm" icon={faRedo} />
+            <span>Current</span>
+          </button>
+        )}
       </div>
       <MonthYearSelector />
       <div className="group flex w-full flex-col justify-between gap-1 rounded-xl bg-primary-med py-2 px-4 hover:bg-primary-light hover:text-primary-dark">
@@ -80,15 +96,7 @@ export default function Budgets() {
           <span>??? left</span>
         </div>
       </div>
-      {budgetData.isLoading && (
-        <div className="flex w-full justify-center">
-          <FontAwesomeIcon
-            className="animate-spin text-primary-light"
-            size="2xl"
-            icon={faSpinner}
-          />
-        </div>
-      )}
+      {budgetData.isLoading && <Spinner />}
       {budgetData.data?.budgets.map((budget) => {
         const percentSpent = formatToProgressPercentage(
           budget.spent,

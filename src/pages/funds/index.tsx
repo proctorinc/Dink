@@ -3,11 +3,11 @@ import {
   faGear,
   faMoneyBill1,
   faPlus,
-  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import Header from "~/components/ui/Header";
+import Spinner from "~/components/ui/Spinner";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { api } from "~/utils/api";
 
@@ -56,15 +56,7 @@ export default function Funds() {
         </button>
       </div>
 
-      {fundsData.isLoading && (
-        <div className="flex w-full justify-center">
-          <FontAwesomeIcon
-            className="animate-spin text-primary-light"
-            size="2xl"
-            icon={faSpinner}
-          />
-        </div>
-      )}
+      {fundsData.isLoading && <Spinner />}
       {fundsData?.data?.funds.map((fund) => (
         <div
           key={fund.id}

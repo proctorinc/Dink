@@ -1,9 +1,10 @@
-import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Transaction from "~/components/transactions/Transaction";
 import Header from "~/components/ui/Header";
+import Spinner from "~/components/ui/Spinner";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { api } from "~/utils/api";
 
@@ -21,15 +22,7 @@ const AccountPage = () => {
   });
 
   if (accountData.isLoading) {
-    return (
-      <div className="flex w-full justify-center">
-        <FontAwesomeIcon
-          className="animate-spin text-primary-light"
-          size="2xl"
-          icon={faSpinner}
-        />
-      </div>
-    );
+    return <Spinner />;
   }
 
   return (
