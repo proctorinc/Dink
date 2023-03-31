@@ -14,9 +14,10 @@ const Header: FC<HeaderProps> = ({ title, subtitle, back }) => {
 
   return (
     <div className="flex w-full items-center justify-between">
-      <div className="flex items-center gap-4">
+      <div className="flex gap-4">
         {back && (
           <FontAwesomeIcon
+            className="pt-2"
             icon={faArrowLeft}
             size="xl"
             onClick={() => void router.back()}
