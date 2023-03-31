@@ -13,6 +13,7 @@ type MonthContext = {
   isCurrentMonth: boolean;
   hasNextMonth: boolean;
   hasPreviousMonth: boolean;
+  setCurrentMonth: () => void;
   getNextMonth: () => void;
   getPreviousMonth: () => void;
 };
@@ -25,6 +26,7 @@ const MonthContext = createContext<MonthContext>({
   isCurrentMonth: true,
   hasNextMonth: true,
   hasPreviousMonth: true,
+  setCurrentMonth: () => null,
   getNextMonth: () => null,
   getPreviousMonth: () => null,
 });
@@ -43,18 +45,18 @@ export const MonthProvider: FC<MonthProviderProps> = ({ children }) => {
   const getPreviousMonth = () => {
     setDate((prevDate) => new Date(prevDate.setMonth(prevDate.getMonth() - 1)));
   };
-
+  const setCurrentMonth = () => {
+    setDate(getFirstDayOfMonth(new Date()));
+  };
   const isCurrentMonth = date.getMonth() === today.getMonth();
-
+  // If year is not this year, there is another month
+  // Otherwise there is a next month unless the month is the next month
   const hasNextMonth =
-    // If year is not this year, there is another month
-    // Otherwise there is a next month unless the month is the next month
     date.getFullYear() !== today.getFullYear() ||
     (date.getFullYear() === today.getFullYear() &&
       date.getMonth() <= today.getMonth());
 
   const hasPreviousMonth = true;
-
   const month = date.toLocaleString("en-US", {
     month: "long",
   });
@@ -69,6 +71,7 @@ export const MonthProvider: FC<MonthProviderProps> = ({ children }) => {
     year,
     startOfMonth,
     endOfMonth,
+    setCurrentMonth,
     isCurrentMonth,
     hasNextMonth,
     hasPreviousMonth,
