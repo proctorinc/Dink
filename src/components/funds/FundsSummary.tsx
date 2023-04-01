@@ -26,20 +26,23 @@ const FundsSummary = () => {
 
   return (
     <Card onClick={() => void router.push("/funds")}>
-      <Card.Header>
-        <h3 className="text-xl font-bold">Funds</h3>
-        <h3 className="text-lg font-bold text-primary-light group-hover:text-primary-med">
-          {formatToCurrency(fundsData?.data?.total)}
-        </h3>
-      </Card.Header>
       <Card.Body>
+        <Card.Group
+          className="w-full justify-between text-xl font-bold"
+          horizontal
+        >
+          <h3 className="text-xl font-bold">Funds</h3>
+          <h3 className="text-lg font-bold text-primary-light group-hover:text-primary-med">
+            {formatToCurrency(fundsData?.data?.total)}
+          </h3>
+        </Card.Group>
+        <span className="text-sm text-primary-light group-hover:text-primary-med">
+          {formatToCurrency(fundsData.data?.unallocatedTotal)} unallocated
+        </span>
         <ProgressBar
           value={fundsData.data?.total}
           goal={fundsData.data?.unallocatedTotal}
         />
-        <span className="text-sm text-primary-light group-hover:text-primary-med">
-          {formatToCurrency(fundsData.data?.unallocatedTotal)} unallocated
-        </span>
       </Card.Body>
     </Card>
   );

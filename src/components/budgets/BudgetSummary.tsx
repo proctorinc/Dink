@@ -39,22 +39,25 @@ const BudgetSummary = () => {
 
   return (
     <Card onClick={() => void router.push("/budget")}>
-      <Card.Header>
-        <h3>Budget</h3>
-        <h3 className="text-lg text-primary-light group-hover:text-primary-med">
-          {formatToPercentage(budgetData.data?.spent, budgetData.data?.goal)}{" "}
-          Spent
-        </h3>
-      </Card.Header>
       <Card.Body>
-        <ProgressBar
-          value={budgetData.data?.spent}
-          goal={budgetData.data?.goal}
-        />
+        <Card.Group
+          className="w-full justify-between text-xl font-bold"
+          horizontal
+        >
+          <h3>Budget</h3>
+          <h3 className="text-lg text-primary-light group-hover:text-primary-med">
+            {formatToPercentage(budgetData.data?.spent, budgetData.data?.goal)}{" "}
+            Spent
+          </h3>
+        </Card.Group>
         <span className="text-sm text-primary-light group-hover:text-primary-med">
           {formatToCurrency(budgetData.data?.spent)} /{" "}
           {formatToCurrency(budgetData.data?.goal)}
         </span>
+        <ProgressBar
+          value={budgetData.data?.spent}
+          goal={budgetData.data?.goal}
+        />
       </Card.Body>
     </Card>
   );
