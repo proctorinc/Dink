@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import { useMonthContext } from "~/components/hooks/useMonthContext";
 import Transaction from "~/components/transactions/Transaction";
+import { ButtonBar } from "~/components/ui/Button";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthSelector";
 import Spinner from "~/components/ui/Spinner";
@@ -19,7 +20,7 @@ const TransactionsPage = () => {
   return (
     <>
       <Header title="Transactions" subtitle={`${month} ${year}`} />
-      <div className="flex w-full gap-2">
+      <ButtonBar>
         <button className="flex h-10 items-center gap-2 rounded-lg bg-primary-med py-2 px-5 font-bold text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light">
           <FontAwesomeIcon size="sm" icon={faMagnifyingGlass} />
           <span>Search</span>
@@ -33,7 +34,7 @@ const TransactionsPage = () => {
           <FontAwesomeIcon size="sm" icon={faTags} />
           <span>Categorize</span>
         </button>
-      </div>
+      </ButtonBar>
       <MonthYearSelector />
       <div className="flex w-full flex-col gap-3">
         {transactionData.isLoading && <Spinner />}

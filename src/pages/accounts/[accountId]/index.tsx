@@ -30,31 +30,33 @@ const AccountPage = () => {
       <Header
         back
         title={accountData?.data?.name}
-        subtitle={formatToCurrency(accountData?.data?.current)}
+        subtitle={`Total: ${formatToCurrency(accountData?.data?.current)}`}
       />
-      <span className="flex h-fit items-center justify-center rounded-lg bg-primary-med px-2 py-1 text-xs font-bold text-primary-light">
-        {accountData?.data?.official_name}
-      </span>
-      <span className="text-md text-primary-light">
-        {formatToTitleCase(accountData?.data?.type)} /{" "}
-        {formatToTitleCase(accountData?.data?.subtype)} /{" "}
-        {accountData?.data?.mask}
-      </span>
-      <button
-        className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light"
-        disabled={!sessionData?.user && typeof accountId !== "string"}
-        onClick={() => {
-          if (sessionData?.user && typeof accountId === "string") {
-            void addMockTransaction.mutate({
-              accountId,
-              userId: sessionData?.user.id,
-            });
-          }
-        }}
-      >
-        <FontAwesomeIcon className="h-4 w-4" icon={faPlus} />
-        <span>Add Demo Transaction</span>
-      </button>
+      <div className="flex w-full flex-col gap-2">
+        <span className="flex h-fit w-fit items-center rounded-lg bg-primary-med px-2 py-1 text-xs font-bold text-primary-light">
+          {accountData?.data?.official_name}
+        </span>
+        <span className="text-md text-primary-light">
+          {formatToTitleCase(accountData?.data?.type)} /{" "}
+          {formatToTitleCase(accountData?.data?.subtype)} /{" "}
+          {accountData?.data?.mask}
+        </span>
+        <button
+          className="flex h-fit w-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light"
+          disabled={!sessionData?.user && typeof accountId !== "string"}
+          onClick={() => {
+            if (sessionData?.user && typeof accountId === "string") {
+              void addMockTransaction.mutate({
+                accountId,
+                userId: sessionData?.user.id,
+              });
+            }
+          }}
+        >
+          <FontAwesomeIcon className="h-4 w-4" icon={faPlus} />
+          <span>Transaction</span>
+        </button>
+      </div>
       <div className="w-full">
         <h2 className="text-left text-xl text-primary-light">Transactions</h2>
       </div>

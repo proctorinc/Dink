@@ -6,20 +6,18 @@ import {
   faRedo,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/router";
+import { Prisma } from "@prisma/client";
+import Budget from "~/components/budgets";
 import { useMonthContext } from "~/components/hooks/useMonthContext";
+import { ButtonBar } from "~/components/ui/Button";
+import Button from "~/components/ui/Button/Button";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthSelector";
 import Spinner from "~/components/ui/Spinner";
-import {
-  formatToCurrency,
-  formatToProgressPercentage,
-  formatToTitleCase,
-} from "~/utils";
+import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
 
 export default function Budgets() {
-  const router = useRouter();
   const {
     month,
     year,
@@ -32,6 +30,15 @@ export default function Budgets() {
     startOfMonth,
     endOfMonth,
   });
+  const income = {
+    spent: new Prisma.Decimal(0),
+    leftover: new Prisma.Decimal(0),
+    id: "income",
+    goal: new Prisma.Decimal(0),
+    icon: "",
+    name: "Income",
+    userId: "",
+  };
 
   return (
     <>
@@ -61,77 +68,24 @@ export default function Budgets() {
           </button>
         </div>
       </div>
-
-      <div className="flex w-full items-start justify-start gap-2">
-        <button className="flex h-10 items-center gap-2 rounded-lg bg-primary-med py-2 px-5 font-bold text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light">
-          <FontAwesomeIcon className="sm" icon={faGear} />
-        </button>
-        {isCurrentMonth && (
-          <button className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light">
-            <FontAwesomeIcon className="sm" icon={faPlus} />
-            <span>Budget</span>
-          </button>
-        )}
+      <ButtonBar>
+        <Button icon={faGear} />
+        {isCurrentMonth && <Button title="Budget" icon={faPlus} active />}
         {!isCurrentMonth && (
-          <button
-            className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light"
+          <Button
+            title="Current"
+            icon={faRedo}
             onClick={setCurrentMonth}
-          >
-            <FontAwesomeIcon className="sm" icon={faRedo} />
-            <span>Current</span>
-          </button>
+            active
+          />
         )}
-      </div>
+      </ButtonBar>
       <MonthYearSelector />
-      <div className="group flex w-full flex-col justify-between gap-1 rounded-xl bg-primary-med py-2 px-4 hover:bg-primary-light hover:text-primary-dark">
-        <h3 className="text-lg font-bold">Income</h3>
-        <div className="relative h-4 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
-          <div
-            className="absolute h-full rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"
-            style={{ width: "50%" }}
-          ></div>
-        </div>
-        <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
-          <span>??? / ???</span>
-          <span>??? left</span>
-        </div>
-      </div>
+      <Budget data={income} />
       {budgetData.isLoading && <Spinner />}
-      {budgetData.data?.budgets.map((budget) => {
-        const percentSpent = formatToProgressPercentage(
-          budget.spent,
-          budget.goal
-        );
-        return (
-          <div
-            key={budget.id}
-            className="group flex w-full flex-col justify-between gap-1 rounded-xl bg-primary-med py-2 px-4 hover:bg-primary-light hover:text-primary-dark"
-            onClick={() => void router.push(`/budget/${budget.id}`)}
-          >
-            <h3 className="text-lg font-bold">
-              {formatToTitleCase(budget.name)}
-            </h3>
-            <div className="relative h-4 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
-              <div
-                className="absolute h-full rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"
-                style={{ width: percentSpent }}
-              ></div>
-            </div>
-            <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
-              <span>
-                {formatToCurrency(budget.spent)} /{" "}
-                {formatToCurrency(budget.goal)}
-              </span>
-              {Number(budget.leftover) >= 0 && (
-                <span>{formatToCurrency(budget.leftover)} left</span>
-              )}
-              {Number(budget.leftover) < 0 && (
-                <span>{formatToCurrency(budget.leftover)} over</span>
-              )}
-            </div>
-          </div>
-        );
-      })}
+      {budgetData.data?.budgets.map((budget) => (
+        <Budget key={budget.id} data={budget} />
+      ))}
     </>
   );
 }

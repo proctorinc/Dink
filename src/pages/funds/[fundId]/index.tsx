@@ -31,7 +31,7 @@ const FundPage = () => {
       <Header
         back
         title={fundData?.data?.name}
-        subtitle={formatToCurrency(fundData?.data?.amount)}
+        subtitle={`Total: ${formatToCurrency(fundData?.data?.amount)}`}
       />
       <div className="w-full">
         <h2 className="text-left text-xl text-primary-light">Transactions</h2>
