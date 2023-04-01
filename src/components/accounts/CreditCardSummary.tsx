@@ -28,7 +28,7 @@ const CreditCardSummary = () => {
 
   return (
     <Card>
-      <Card.Header>
+      <Card.Header size="xl">
         <h3>Credit Cards</h3>
       </Card.Header>
       {creditAccounts.data?.map((account) => {
@@ -39,7 +39,7 @@ const CreditCardSummary = () => {
         return (
           <Card
             key={account.id}
-            style="sm"
+            size="sm"
             onClick={() => void router.push(`/accounts/${account.id}`)}
           >
             <Card.Header>

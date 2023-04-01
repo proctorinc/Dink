@@ -18,14 +18,14 @@ const Budget: FC<BudgetProps> = ({ data: budget }) => {
   return (
     <Card
       key={budget.id}
-      style="sm"
+      size="sm"
       onClick={() => void router.push(`/budget/${budget.id}`)}
     >
       <Card.Header>
         <h3 className="text-lg">{formatToTitleCase(budget.name)}</h3>
       </Card.Header>
       <Card.Body>
-        <ProgressBar style="sm" value={budget.spent} goal={budget.goal} />
+        <ProgressBar size="sm" value={budget.spent} goal={budget.goal} />
         <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
           <span>
             {formatToCurrency(budget.spent)} / {formatToCurrency(budget.goal)}
