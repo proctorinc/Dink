@@ -4,10 +4,10 @@ import {
   faMoneyBill1,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
-import { ButtonBar } from "~/components/ui/Button";
+import { ButtonBar, IconButton } from "~/components/ui/Button";
 import Button from "~/components/ui/Button/Button";
+import Card from "~/components/ui/Card";
 import Header from "~/components/ui/Header";
 import Spinner from "~/components/ui/Spinner";
 import {
@@ -63,20 +63,13 @@ export default function Funds() {
       </ButtonBar>
       {fundsData.isLoading && <Spinner />}
       {fundsData?.data?.funds.map((fund) => (
-        <div
+        <Card
           key={fund.id}
-          className="group flex w-full flex-col rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
           onClick={() => void router.push(`/funds/${fund.id}`)}
         >
-          <div className="flex items-center justify-between">
+          <Card.Header size="xl">
             <div className="flex items-center gap-3">
-              <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-secondary-dark group-hover:bg-secondary-med">
-                <FontAwesomeIcon
-                  className="text-secondary-med group-hover:text-secondary-light"
-                  size="lg"
-                  icon={faMoneyBill1}
-                />
-              </div>
+              <IconButton icon={faMoneyBill1} size="sm" style="secondary" />
               <h3 className="text-lg font-bold">
                 {formatToTitleCase(fund.name)}
               </h3>
@@ -84,8 +77,8 @@ export default function Funds() {
             <span className="text-lg font-bold text-primary-light group-hover:text-primary-med">
               {formatToCurrency(fund.amount)}
             </span>
-          </div>
-        </div>
+          </Card.Header>
+        </Card>
       ))}
     </>
   );
