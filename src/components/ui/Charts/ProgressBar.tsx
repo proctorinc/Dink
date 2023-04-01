@@ -5,13 +5,13 @@ import { formatToProgressPercentage } from "~/utils";
 type ProgressBarProps = {
   value?: Prisma.Decimal;
   goal?: Prisma.Decimal;
-  style?: "sm";
+  size?: "sm";
 };
 
-export const ProgressBar: FC<ProgressBarProps> = ({ value, goal, style }) => {
+export const ProgressBar: FC<ProgressBarProps> = ({ value, goal, size }) => {
   const percentComplete = formatToProgressPercentage(value, goal);
 
-  const barHeight = style === "sm" ? "h-4" : "h-6";
+  const barHeight = size === "sm" ? "h-4" : "h-6";
 
   return (
     <div
