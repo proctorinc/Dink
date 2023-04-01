@@ -2,12 +2,12 @@ import { type FC, type ReactNode } from "react";
 
 export type CardBodyProps = {
   children: ReactNode;
-  style?: "sm";
+  size?: "sm";
   horizontal?: boolean;
 };
 
-const CardBody: FC<CardBodyProps> = ({ style, horizontal, children }) => {
-  const verticalPadding = style === "sm" ? "py-2" : "py-4";
+const CardBody: FC<CardBodyProps> = ({ size, horizontal, children }) => {
+  const verticalPadding = size === "sm" ? "py-2" : "py-4";
   const orientation = horizontal
     ? "items-center justify-between"
     : "flex-col justify-center";

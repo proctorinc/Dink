@@ -2,20 +2,20 @@ import { type MouseEventHandler, type FC, type ReactNode } from "react";
 
 export type CardHeaderProps = {
   children: ReactNode;
-  style?: "sm" | "xl";
+  size?: "sm" | "xl";
   onClick?: MouseEventHandler<HTMLDivElement>;
 };
 
-const CardHeader: FC<CardHeaderProps> = ({ style, children, onClick }) => {
+const CardHeader: FC<CardHeaderProps> = ({ size, children, onClick }) => {
   let verticalPadding = "pt-4";
 
   const clickable = !!onClick
     ? "group hover:bg-primary-light hover:text-primary-dark cursor-pointer"
     : "";
 
-  if (style === "xl") {
+  if (size === "xl") {
     verticalPadding = "py-4";
-  } else if (style === "sm") {
+  } else if (size === "sm") {
     verticalPadding = "pt-2";
   }
 

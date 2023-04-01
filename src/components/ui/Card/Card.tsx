@@ -2,6 +2,7 @@ import { Children, cloneElement, type FC, type ReactNode } from "react";
 import CardAction, { type CardActionProps } from "./CardAction";
 import CardBody, { type CardBodyProps } from "./CardBody";
 import CardCollapse, { type CardCollapseProps } from "./CardCollapse";
+import CardGroup, { type CardGroupProps } from "./CardGroup";
 import CardHeader, { type CardHeaderProps } from "./CardHeader";
 
 type CardProps = {
@@ -9,12 +10,13 @@ type CardProps = {
   children: ReactNode;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   horizontal?: boolean;
-  style?: "sm";
+  size?: "sm";
 };
 
 type CardSubcomponents = {
   Header: FC<CardHeaderProps>;
   Body: FC<CardBodyProps>;
+  Group: FC<CardGroupProps>;
   Action: FC<CardActionProps>;
   Collapse: FC<CardCollapseProps>;
 };
@@ -23,7 +25,7 @@ const Card: FC<CardProps> & CardSubcomponents = ({
   className,
   children,
   onClick,
-  style,
+  size,
 }) => {
   const clickable = !!onClick
     ? "group hover:bg-primary-light hover:text-primary-dark cursor-pointer"
@@ -32,9 +34,9 @@ const Card: FC<CardProps> & CardSubcomponents = ({
 
   const renderChildren = () => {
     return Children.map(children, (child) => {
-      if (!!style) {
+      if (!!size && child !== undefined && child !== null) {
         return cloneElement(child, {
-          style,
+          size,
         });
       }
       return child;
@@ -50,6 +52,7 @@ const Card: FC<CardProps> & CardSubcomponents = ({
 
 Card.Header = CardHeader;
 Card.Body = CardBody;
+Card.Group = CardGroup;
 Card.Action = CardAction;
 Card.Collapse = CardCollapse;
 
