@@ -1,8 +1,8 @@
 import { faMagnifyingGlass, faTags } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
-import { useMonthContext } from "~/components/hooks/useMonthContext";
-import Transaction from "~/components/transactions/Transaction";
+import { useMonthContext } from "~/hooks/useMonthContext";
+import Transaction from "~/features/transactions/components/Transaction";
 import { ButtonBar } from "~/components/ui/Button";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthSelector";

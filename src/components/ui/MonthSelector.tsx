@@ -1,7 +1,7 @@
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { formatToTitleCase } from "~/utils";
-import { useMonthContext } from "../hooks/useMonthContext";
+import { useMonthContext } from "~/hooks/useMonthContext";
 
 const MonthSelector = () => {
   const {

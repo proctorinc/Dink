@@ -2,10 +2,10 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
-import Card from "../ui/Card";
-import { ProgressBar } from "../ui/Charts";
+import Card from "../../../components/ui/Card";
+import { ProgressBar } from "../../../components/ui/Charts";
 
-const FundsSummary = () => {
+export const FundsSummary = () => {
   const router = useRouter();
   const fundsData = api.funds.getAllData.useQuery();
 
@@ -47,5 +47,3 @@ const FundsSummary = () => {
     </Card>
   );
 };
-
-export default FundsSummary;

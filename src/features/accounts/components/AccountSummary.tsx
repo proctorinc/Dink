@@ -1,10 +1,10 @@
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import Button from "../ui/Button";
-import Card from "../ui/Card";
+import Button from "../../../components/ui/Button";
+import Card from "../../../components/ui/Card";
 
-const AccountSummary = () => {
+export const AccountSummary = () => {
   const router = useRouter();
 
   const accountData = api.bankAccounts.getAllData.useQuery();
@@ -28,5 +28,3 @@ const AccountSummary = () => {
     </Card>
   );
 };
-
-export default AccountSummary;

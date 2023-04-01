@@ -2,6 +2,7 @@ import { faEdit, faToggleOn } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import Button from "~/components/ui/Button";
 import Header from "~/components/ui/Header";
 
 const UserPage = () => {
@@ -50,19 +51,8 @@ const UserPage = () => {
           <FontAwesomeIcon className="" size="xl" icon={faToggleOn} />
         </div>
       </div>
-      <button
-        className="rounded-xl bg-primary-med py-2 px-5 font-bold text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med"
-        onClick={() => void signOut()}
-      >
-        Log out
-      </button>
-      <button
-        disabled
-        className="rounded-xl bg-danger-med py-2 px-5 font-bold text-danger-dark hover:bg-danger-light hover:text-danger-med hover:ring hover:ring-danger-med"
-        onClick={() => void signOut()}
-      >
-        Delete Account
-      </button>
+      <Button title="Log Out" onClick={() => void signOut()} />
+      <Button title="Delete Account" />
     </>
   );
 };

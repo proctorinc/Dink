@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { api } from "~/utils/api";
-import Button from "../ui/Button";
-import Card from "../ui/Card";
+import Button from "../../../components/ui/Button";
+import Card from "../../../components/ui/Card";
 
-const TransactionsSummary = () => {
+export const TransactionsSummary = () => {
   const router = useRouter();
   const uncategorizedTransactions =
     api.transactions.getUncategorized.useQuery();
@@ -26,5 +26,3 @@ const TransactionsSummary = () => {
     </Card>
   );
 };
-
-export default TransactionsSummary;

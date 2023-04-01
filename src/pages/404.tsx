@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import Button from "~/components/ui/Button";
 
 const NotFoundPage = () => {
   const router = useRouter();
@@ -10,12 +11,9 @@ const NotFoundPage = () => {
       <span className="text-md text-primary-light">
         Oops, looks like you got turned around.
       </span>
-      <button
-        className="flex h-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark group-hover:text-secondary-light"
-        onClick={() => void router.push("/")}
-      >
+      <Button onClick={() => void router.push("/")}>
         <span>Go Home</span>
-      </button>
+      </Button>
     </>
   );
 };

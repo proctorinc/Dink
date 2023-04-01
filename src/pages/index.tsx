@@ -1,11 +1,10 @@
 import { useSession } from "next-auth/react";
-import AccountSummary from "~/components/accounts/AccountSummary";
-import CreditCardSummary from "~/components/accounts/CreditCardSummary";
-import BudgetSummary from "~/components/budgets/BudgetSummary";
-import FundsSummary from "~/components/funds/FundsSummary";
-import TransactionsSummary from "~/components/transactions/TransactionsSummary";
 import Header from "~/components/ui/Header";
 import { formatToMonthYear } from "~/utils";
+import { BudgetSummary } from "~/features/budgets";
+import { TransactionsSummary } from "~/features/transactions";
+import { FundsSummary } from "~/features/funds";
+import { AccountSummary, CreditCardSummary } from "~/features/accounts";
 
 export default function Home() {
   const { data: sessionData } = useSession();

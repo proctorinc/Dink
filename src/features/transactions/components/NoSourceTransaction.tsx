@@ -9,7 +9,7 @@ type NoSourceTransactionProps = {
   data: Transaction;
 };
 
-const NoSourceTransaction: FC<NoSourceTransactionProps> = ({
+export const NoSourceTransaction: FC<NoSourceTransactionProps> = ({
   data: transaction,
 }) => {
   const router = useRouter();
@@ -56,5 +56,3 @@ const NoSourceTransaction: FC<NoSourceTransactionProps> = ({
     </div>
   );
 };
-
-export default NoSourceTransaction;

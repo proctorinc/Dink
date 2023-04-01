@@ -7,8 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prisma } from "@prisma/client";
-import Budget from "~/components/budgets";
-import { useMonthContext } from "~/components/hooks/useMonthContext";
+import { useMonthContext } from "~/hooks/useMonthContext";
 import { ButtonBar } from "~/components/ui/Button";
 import Button from "~/components/ui/Button/Button";
 import Header from "~/components/ui/Header";
@@ -16,6 +15,7 @@ import MonthYearSelector from "~/components/ui/MonthSelector";
 import Spinner from "~/components/ui/Spinner";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
+import Budget from "~/features/budgets";
 
 export default function Budgets() {
   const {

@@ -3,10 +3,10 @@ import { Prisma } from "@prisma/client";
 import { useRouter } from "next/router";
 import { formatToCurrency, formatToPercentage } from "~/utils";
 import { api } from "~/utils/api";
-import Card from "../ui/Card";
-import { Tag } from "../ui/Tag";
+import Card from "../../../components/ui/Card";
+import { Tag } from "../../../components/ui/Tag";
 
-const CreditCardSummary = () => {
+export const CreditCardSummary = () => {
   const router = useRouter();
 
   const creditAccounts = api.bankAccounts.getCreditAccounts.useQuery();
@@ -68,5 +68,3 @@ const CreditCardSummary = () => {
     </Card>
   );
 };
-
-export default CreditCardSummary;

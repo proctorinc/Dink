@@ -1,5 +1,8 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
+import Button from "~/components/ui/Button";
+import Card from "~/components/ui/Card";
+import { ProgressBar } from "~/components/ui/Charts";
 import {
   formatToCurrency,
   formatToPercentage,
@@ -7,11 +10,8 @@ import {
   getLastDayOfMonth,
 } from "~/utils";
 import { api } from "~/utils/api";
-import Button from "../ui/Button";
-import Card from "../ui/Card";
-import { ProgressBar } from "../ui/Charts";
 
-const BudgetSummary = () => {
+export const BudgetSummary = () => {
   const router = useRouter();
   const today = new Date();
   const startOfMonth = getFirstDayOfMonth(today);
@@ -62,5 +62,3 @@ const BudgetSummary = () => {
     </Card>
   );
 };
-
-export default BudgetSummary;

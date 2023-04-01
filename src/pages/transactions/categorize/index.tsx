@@ -1,7 +1,7 @@
 import { faRedo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useMonthContext } from "~/components/hooks/useMonthContext";
+import { useMonthContext } from "~/hooks/useMonthContext";
 import Header from "~/components/ui/Header";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";

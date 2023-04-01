@@ -34,7 +34,15 @@ const Card: FC<CardProps> & CardSubcomponents = ({
 
   const renderChildren = () => {
     return Children.map(children, (child) => {
-      if (!!size && child !== undefined && child !== null) {
+      if (
+        !!size &&
+        typeof child !== "string" &&
+        typeof child !== "number" &&
+        typeof child !== "boolean" &&
+        child !== undefined &&
+        child !== null
+      ) {
+        // @ts-ignore
         return cloneElement(child, {
           size,
         });

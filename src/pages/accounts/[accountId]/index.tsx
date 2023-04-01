@@ -2,7 +2,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Transaction from "~/components/transactions/Transaction";
+import Transaction from "~/features/transactions/components/Transaction";
 import Header from "~/components/ui/Header";
 import Spinner from "~/components/ui/Spinner";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
