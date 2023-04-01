@@ -7,10 +7,10 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import { MonthProvider } from "~/context/MonthContext";
-import Navbar from "~/components/ui/Navbar";
-import MobileNavbar from "~/components/ui/MobileNavbar";
+import Navbar from "~/components/ui/Nav/Navbar";
+import MobileNavbar from "~/components/ui/Nav/MobileNavbar";
 import Layout from "~/components/ui/Layout";
-import Sidebar from "~/components/ui/Sidebar";
+import Sidebar from "~/components/ui/Nav/Sidebar";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
