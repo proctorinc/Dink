@@ -13,17 +13,22 @@ const Header: FC<HeaderProps> = ({ title, subtitle, back }) => {
   const router = useRouter();
 
   return (
-    <div className="flex w-full items-center justify-between">
-      <div className="flex gap-4">
-        {back && (
+    <div className="flex w-full flex-col">
+      {back && (
+        <div
+          className="flex items-center gap-2 py-2 text-xs font-bold text-primary-light"
+          onClick={() => void router.back()}
+        >
           <FontAwesomeIcon
-            className="pt-2"
+            className="float-left pt-2"
             icon={faArrowLeft}
             size="xl"
-            onClick={() => void router.back()}
           />
-        )}
-        <div className="flex flex-col">
+          <span className="pt-2 text-xl">back</span>
+        </div>
+      )}
+      <div className="flex gap-4">
+        <div className="flex flex-col gap-1">
           <h1 className="text-4xl font-bold">{title}</h1>
           {subtitle && (
             <h2 className="text-2xl font-light text-primary-light">
