@@ -1,5 +1,6 @@
 import { type Fund, Prisma, type Transaction } from "@prisma/client";
 import { z } from "zod";
+import { AccountCategory } from "~/config";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 type TransactionAmount = {
@@ -69,12 +70,37 @@ export const fundsRouter = createTRPCRouter({
         },
       },
     });
-    const fundsWithAmounts = sumFundTransactions(funds);
+    const accountTotals = await ctx.prisma.bankAccount.groupBy({
+      by: ["type"],
+      _sum: {
+        current: true,
+      },
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
 
-    console.log(sumTotalFundAmount(fundsWithAmounts));
+    const fundsWithAmounts = sumFundTransactions(funds);
+    const fundsTotal = sumTotalFundAmount(fundsWithAmounts);
+    const accountsTotalBalance = accountTotals.reduce((acc, account) => {
+      if (
+        account.type === AccountCategory.Cash ||
+        account.type === AccountCategory.Investment
+      ) {
+        return Prisma.Decimal.add(
+          acc,
+          account._sum.current ?? new Prisma.Decimal(0)
+        );
+      }
+      return Prisma.Decimal.sub(
+        acc,
+        account._sum.current ?? new Prisma.Decimal(0)
+      );
+    }, new Prisma.Decimal(0));
 
     return {
-      total: sumTotalFundAmount(fundsWithAmounts),
+      total: fundsTotal,
+      unallocatedTotal: Prisma.Decimal.sub(accountsTotalBalance, fundsTotal),
       funds: fundsWithAmounts,
     };
   }),

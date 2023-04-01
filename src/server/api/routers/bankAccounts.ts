@@ -16,6 +16,7 @@ export const bankAccountRouter = createTRPCRouter({
         userId: ctx.session.user.id,
       },
     });
+
     const cashAccounts = await ctx.prisma.bankAccount.findMany({
       where: {
         userId: ctx.session.user.id,
