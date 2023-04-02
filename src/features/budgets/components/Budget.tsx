@@ -15,6 +15,21 @@ export type BudgetProps = {
 const Budget: FC<BudgetProps> = ({ data: budget }) => {
   const router = useRouter();
 
+  if (budget.goal === budget.leftover) {
+    return (
+      <Card>
+        <Card.Body horizontal>
+          <h3 className="text-lg font-bold">
+            {formatToTitleCase(budget.name)}
+          </h3>
+          <span className="font-bold text-primary-light">
+            {formatToCurrency(budget.goal)}
+          </span>
+        </Card.Body>
+      </Card>
+    );
+  }
+
   return (
     <Card
       key={budget.id}
