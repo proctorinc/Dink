@@ -59,8 +59,8 @@ model TransactionCategory {
 
 model Transaction {
   id                      String                @id @default(cuid())
-  account                 BankAccount           @relation(fields: [accountId], references: [id])
-  accountId               String
+  account                 BankAccount?          @relation(fields: [accountId], references: [id])
+  accountId               String?
   account_owner           String?
   amount                  Decimal              @db.Decimal(10, 2)
   authorized_datetime     String?
@@ -70,7 +70,7 @@ model Transaction {
   datetime                String?
   isSavings               Boolean?
   isTransfer              Boolean
-  isoCurrencyCode         String
+  isoCurrencyCode         String                @default("USD")
   address                 String?
   city                    String?
   country                 String?
@@ -81,8 +81,8 @@ model Transaction {
   store_number            String?
   merchantName            String?
   name                    String
-  note                    String
-  paymentChannel          String
+  note                    String                @default("")
+  paymentChannel          String?
   by_order_of             String?
   payee                   String?
   payer                   String?
@@ -100,8 +100,8 @@ model Transaction {
   budgetSource            Budget?               @relation(fields: [budgetSourceId], references: [id], onDelete: Cascade)
   budgetSourceId          String?
   transactionCode         String?
-  transactionId           String                @unique
-  transactionType         String
+  transactionId           String
+  transactionType         String?
   unofficialCurrencyCode  String?
   userId                  String
   user                    User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
