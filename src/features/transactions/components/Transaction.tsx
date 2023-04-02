@@ -3,8 +3,8 @@ import { type Budget, type Fund, Transaction } from "@prisma/client";
 import { useRouter } from "next/router";
 import { type FC } from "react";
 import { formatToCurrency } from "~/utils";
-import { IconButton } from "../../../components/ui/Button";
-import Card from "../../../components/ui/Card";
+import { IconButton } from "~/components/ui/Button";
+import Card from "~/components/ui/Card";
 
 type TransactionProps = {
   data: Transaction & {

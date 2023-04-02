@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { api } from "~/utils/api";
-import Button from "../../../components/ui/Button";
-import Card from "../../../components/ui/Card";
+import Button from "~/components/ui/Button";
+import Card from "~/components/ui/Card";
 
 export const TransactionsSummary = () => {
   const router = useRouter();

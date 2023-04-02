@@ -2,8 +2,8 @@ import { type Budget, type Prisma } from "@prisma/client";
 import { useRouter } from "next/router";
 import { type FC } from "react";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
-import Card from "../../../components/ui/Card";
-import { ProgressBar } from "../../../components/ui/Charts";
+import Card from "~/components/ui/Card";
+import { ProgressBar } from "~/components/ui/Charts";
 
 export type BudgetProps = {
   data: Budget & {

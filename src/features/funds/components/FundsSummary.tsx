@@ -2,8 +2,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
-import Card from "../../../components/ui/Card";
-import { ProgressBar } from "../../../components/ui/Charts";
+import Card from "~/components/ui/Card";
+import { ProgressBar } from "~/components/ui/Charts";
 
 export const FundsSummary = () => {
   const router = useRouter();

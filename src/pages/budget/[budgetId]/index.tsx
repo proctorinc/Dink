@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useMonthContext } from "~/hooks/useMonthContext";
-import NoSourceTransaction from "~/features/transactions/components/NoSourceTransaction";
+import { NoSourceTransaction } from "~/features/transactions";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthSelector";
 import Spinner from "~/components/ui/Spinner";

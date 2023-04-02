@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import NoSourceTransaction from "~/features/transactions/components/NoSourceTransaction";
+import { NoSourceTransaction } from "~/features/transactions";
 import Header from "~/components/ui/Header";
 import Spinner from "~/components/ui/Spinner";
 import { formatToCurrency } from "~/utils";

@@ -1,6 +1,6 @@
-import { type IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { type FC } from "react";
-import Button from "../Button/Button";
+import { type IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import Button from "~/components/ui/Button";
 
 export type CardActionProps = {
   title: string;

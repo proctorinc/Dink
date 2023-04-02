@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import {
   faBuildingColumns,
   faCalendarAlt,
@@ -5,8 +6,7 @@ import {
   faPiggyBank,
   faReceipt,
 } from "@fortawesome/free-solid-svg-icons";
-import { useRouter } from "next/router";
-import { IconButton } from "../Button";
+import { IconButton } from "~/components/ui/Button";
 
 const Sidebar = () => {
   const router = useRouter();
