@@ -23,7 +23,7 @@ const Sidebar = () => {
     <aside className="fixed left-[10%] top-1/2 hidden -translate-y-1/2 text-white sm:flex">
       <div className="flex flex-col gap-3">
         {routes.map((route) => (
-          <button
+          <div
             key={route.path}
             className="group flex items-center gap-3"
             onClick={() => void router.push(route.path)}
@@ -37,7 +37,7 @@ const Sidebar = () => {
             <span className="invisible select-none font-bold text-primary-light group-hover:visible">
               {route.name}
             </span>
-          </button>
+          </div>
         ))}
       </div>
     </aside>
