@@ -10,6 +10,8 @@ type ButtonProps = {
   title?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   iconRight?: boolean;
+  disabled?: boolean;
+  size?: "sm";
 };
 
 const Button: FC<ButtonProps> = ({
@@ -18,15 +20,26 @@ const Button: FC<ButtonProps> = ({
   icon,
   onClick,
   iconRight,
+  disabled,
+  size,
 }) => {
-  const colors = active
-    ? "bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light"
-    : "bg-primary-med py-2 px-5 font-bold text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light";
+  let buttonColors =
+    "bg-primary-med text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light";
+
+  if (disabled) {
+    buttonColors = "text-primary-med ring ring-primary-med";
+  } else if (active) {
+    buttonColors =
+      "bg-secondary-med text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light";
+  }
+
+  const buttonSize = size === "sm" ? "px-2 text-xs py-1" : "h-10 py-2 px-5";
 
   return (
     <button
-      className={`flex h-10 items-center justify-center gap-2 rounded-lg ${colors}`}
+      className={`${buttonColors} ${buttonSize} flex items-center justify-center gap-2 rounded-lg font-bold`}
       onClick={onClick}
+      disabled={disabled}
     >
       {icon && !iconRight && <FontAwesomeIcon icon={icon} />}
       {title && <span>{title}</span>}
