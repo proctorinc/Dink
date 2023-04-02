@@ -90,4 +90,34 @@ export const transactionsRouter = createTRPCRouter({
     console.log(data);
     return data;
   }),
+  createFundAllocation: protectedProcedure
+    .input(
+      z.object({
+        fundId: z.string(),
+        name: z.string(),
+        amount: z.number(),
+      })
+    )
+    .mutation(({ input, ctx }) => {
+      const today = new Date();
+      const data = {
+        name: input.name,
+        note: "",
+        isTransfer: true,
+        transactionId: "allocation",
+        amount: input.amount,
+        date: today,
+        pending: false,
+        user: {
+          connect: { id: ctx.session.user.id },
+        },
+        fundSource: {
+          connect: { id: input.fundId },
+        },
+        sourceType: "allocation",
+      };
+      return ctx.prisma.transaction.create({
+        data,
+      });
+    }),
 });

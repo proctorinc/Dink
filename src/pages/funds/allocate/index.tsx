@@ -5,7 +5,7 @@ import {
   faTag,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Fund as FundType, Prisma } from "@prisma/client";
+import { type Fund as FundType, Prisma } from "@prisma/client";
 import { useState } from "react";
 import Button from "~/components/ui/Button";
 import Card from "~/components/ui/Card";

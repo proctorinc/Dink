@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { getFirstDayOfMonth } from "~/utils";
 
 enum AccountType {
   Credit = "credit",
@@ -173,7 +174,10 @@ export const mockDataRouter = createTRPCRouter({
       })
     )
     .mutation(({ input, ctx }) => {
-      const date = faker.date.between("2023-01-01T00:00:00.000Z", new Date());
+      const date = faker.date.between(
+        getFirstDayOfMonth(new Date()),
+        new Date()
+      );
       const data = {
         account_owner: "",
         amount: faker.datatype.float({ precision: 0.01, max: 250, min: 0.01 }),
