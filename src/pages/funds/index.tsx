@@ -5,16 +5,12 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import { ButtonBar, IconButton } from "~/components/ui/Button";
+import { ButtonBar } from "~/components/ui/Button";
 import Button from "~/components/ui/Button/Button";
-import Card from "~/components/ui/Card";
 import Header from "~/components/ui/Header";
 import Spinner from "~/components/ui/Spinner";
-import {
-  formatToCurrency,
-  formatToPercentage,
-  formatToTitleCase,
-} from "~/utils";
+import Fund from "~/features/funds";
+import { formatToCurrency, formatToPercentage } from "~/utils";
 import { api } from "~/utils/api";
 
 export default function Funds() {
@@ -58,27 +54,20 @@ export default function Funds() {
       </div>
       <ButtonBar>
         <Button icon={faGear} />
-        <Button title="Allocate" icon={faCoins} />
+        <Button
+          title="Allocate"
+          icon={faCoins}
+          onClick={() => void router.push("/funds/allocate")}
+        />
         <Button title="Fund" icon={faPlus} active />
       </ButtonBar>
       {fundsData.isLoading && <Spinner />}
       {fundsData?.data?.funds.map((fund) => (
-        <Card
+        <Fund
           key={fund.id}
+          data={fund}
           onClick={() => void router.push(`/funds/${fund.id}`)}
-        >
-          <Card.Header size="xl">
-            <div className="flex items-center gap-3">
-              <IconButton icon={faMoneyBill1} size="sm" style="secondary" />
-              <h3 className="text-lg font-bold">
-                {formatToTitleCase(fund.name)}
-              </h3>
-            </div>
-            <span className="text-lg font-bold text-primary-light group-hover:text-primary-med">
-              {formatToCurrency(fund.amount)}
-            </span>
-          </Card.Header>
-        </Card>
+        />
       ))}
     </>
   );
