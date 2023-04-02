@@ -1,4 +1,10 @@
-import { Children, cloneElement, type FC, type ReactNode } from "react";
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  type FC,
+  type ReactNode,
+} from "react";
 import CardAction, { type CardActionProps } from "./CardAction";
 import CardBody, { type CardBodyProps } from "./CardBody";
 import CardCollapse, { type CardCollapseProps } from "./CardCollapse";
@@ -21,6 +27,10 @@ type CardSubcomponents = {
   Collapse: FC<CardCollapseProps>;
 };
 
+type sizeableComponent = {
+  size?: string;
+};
+
 const Card: FC<CardProps> & CardSubcomponents = ({
   className,
   children,
@@ -34,15 +44,7 @@ const Card: FC<CardProps> & CardSubcomponents = ({
 
   const renderChildren = () => {
     return Children.map(children, (child) => {
-      if (
-        !!size &&
-        typeof child !== "string" &&
-        typeof child !== "number" &&
-        typeof child !== "boolean" &&
-        child !== undefined &&
-        child !== null
-      ) {
-        // @ts-ignore
+      if (!!size && isValidElement<sizeableComponent>(child)) {
         return cloneElement(child, {
           size,
         });
