@@ -104,7 +104,7 @@ export const transactionsRouter = createTRPCRouter({
         name: input.name,
         note: "",
         isTransfer: true,
-        transactionId: "allocation",
+        transactionId: "savings",
         amount: input.amount,
         date: today,
         pending: false,
