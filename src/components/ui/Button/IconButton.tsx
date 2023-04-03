@@ -5,7 +5,7 @@ import { type MouseEventHandler, type FC } from "react";
 type IconButtonProps = {
   icon: IconDefinition;
   active?: boolean;
-  style?: "secondary";
+  style?: "secondary" | "primary";
   size?: "sm";
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
