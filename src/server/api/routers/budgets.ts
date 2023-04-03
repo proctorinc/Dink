@@ -128,4 +128,18 @@ export const budgetsRouter = createTRPCRouter({
 
       return budget ? addAmountToBudgetWithTransactions(budget) : budget;
     }),
+  create: protectedProcedure
+    .input(z.object({ name: z.string(), goal: z.number(), icon: z.string() }))
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.budget.create({
+        data: {
+          icon: input.icon,
+          name: input.name,
+          goal: input.goal,
+          user: {
+            connect: { id: ctx.session.user.id },
+          },
+        },
+      });
+    }),
 });

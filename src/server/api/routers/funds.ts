@@ -123,4 +123,17 @@ export const fundsRouter = createTRPCRouter({
 
       return fund ? addAmountToFundWithTransactions(fund) : fund;
     }),
+  create: protectedProcedure
+    .input(z.object({ name: z.string(), icon: z.string() }))
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.fund.create({
+        data: {
+          icon: input.icon,
+          name: input.name,
+          user: {
+            connect: { id: ctx.session.user.id },
+          },
+        },
+      });
+    }),
 });
