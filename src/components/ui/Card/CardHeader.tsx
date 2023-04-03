@@ -21,7 +21,7 @@ const CardHeader: FC<CardHeaderProps> = ({ size, children, onClick }) => {
 
   return (
     <div
-      className={`${clickable} ${verticalPadding} flex w-full justify-between rounded-xl px-4 text-xl font-bold`}
+      className={`${clickable} ${verticalPadding} flex w-full items-center justify-between rounded-xl px-4 text-xl font-bold`}
       onClick={onClick}
     >
       {children}
