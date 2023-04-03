@@ -6,7 +6,7 @@ type ButtonBarProps = {
 
 export const ButtonBar: FC<ButtonBarProps> = ({ children }) => {
   return (
-    <div className="flex w-full items-start justify-start gap-2 overflow-y-visible overflow-x-scroll">
+    <div className="-m-1 flex w-full items-start justify-start gap-2 overflow-y-visible overflow-x-scroll p-1">
       {children}
     </div>
   );
