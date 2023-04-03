@@ -40,7 +40,7 @@ const Card: FC<CardProps> & CardSubcomponents = ({
   const clickable = !!onClick
     ? "group hover:bg-primary-light hover:text-primary-dark cursor-pointer"
     : "";
-  const cardStyle = `flex flex-col ${clickable} flex w-full rounded-xl bg-primary-med`;
+  const cardStyle = `flex flex-col w-full rounded-xl bg-primary-med ${clickable}`;
 
   const renderChildren = () => {
     return Children.map(children, (child) => {
