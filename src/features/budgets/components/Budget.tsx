@@ -4,6 +4,9 @@ import { type FC } from "react";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import Card from "~/components/ui/Card";
 import { ProgressBar } from "~/components/ui/Charts";
+import { IconButton } from "~/components/ui/Button";
+import useIcons from "~/hooks/useIcons";
+import { faMoneyBill1 } from "@fortawesome/free-solid-svg-icons";
 
 export type BudgetProps = {
   data: Budget & {
@@ -14,14 +17,21 @@ export type BudgetProps = {
 
 const Budget: FC<BudgetProps> = ({ data: budget }) => {
   const router = useRouter();
+  const { convertToIcon } = useIcons();
+  const icon = convertToIcon(budget?.icon) ?? faMoneyBill1;
 
   if (budget.goal === budget.leftover) {
     return (
-      <Card>
+      <Card onClick={() => void router.push(`/budget/${budget.id}`)}>
         <Card.Body horizontal>
-          <h3 className="text-lg font-bold">
-            {formatToTitleCase(budget.name)}
-          </h3>
+          <Card.Group size="sm">
+            <Card.Group horizontal>
+              <IconButton icon={icon} size="sm" style="secondary" />
+              <h3 className="text-lg font-bold">
+                {formatToTitleCase(budget.name)}
+              </h3>
+            </Card.Group>
+          </Card.Group>
           <span className="font-bold text-primary-light">
             {formatToCurrency(budget.goal)}
           </span>
@@ -37,7 +47,10 @@ const Budget: FC<BudgetProps> = ({ data: budget }) => {
       onClick={() => void router.push(`/budget/${budget.id}`)}
     >
       <Card.Header>
-        <h3 className="text-lg">{formatToTitleCase(budget.name)}</h3>
+        <Card.Group horizontal>
+          <IconButton icon={icon} size="sm" style="secondary" />
+          <h3 className="text-lg">{formatToTitleCase(budget.name)}</h3>
+        </Card.Group>
       </Card.Header>
       <Card.Body>
         <ProgressBar size="sm" value={budget.spent} goal={budget.goal} />
