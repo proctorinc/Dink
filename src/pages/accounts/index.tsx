@@ -8,7 +8,7 @@ import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { api } from "~/utils/api";
 import Header from "~/components/ui/Header";
 import { useRouter } from "next/router";
-import { faGear, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ButtonBar, IconButton } from "~/components/ui/Button";
 import Button from "~/components/ui/Button/Button";
 import Card from "~/components/ui/Card";
@@ -33,7 +33,6 @@ export default function BankAccounts() {
       <div className="h-52 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
 
       <ButtonBar>
-        <Button icon={faGear} />
         <Button icon={faPlus} title="Account" active />
       </ButtonBar>
 
