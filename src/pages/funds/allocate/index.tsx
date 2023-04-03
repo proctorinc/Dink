@@ -1,13 +1,14 @@
 import {
+  faAngleRight,
   faCheck,
   faDollarSign,
+  faPencil,
   faRedo,
-  faTag,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type Fund as FundType, Prisma } from "@prisma/client";
 import { useState } from "react";
-import Button from "~/components/ui/Button";
+import Button, { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import Header from "~/components/ui/Header";
 import Fund from "~/features/funds";
@@ -23,13 +24,11 @@ export default function AllocateFundsPage() {
   const [amount, setAmount] = useState(0);
   const [name, setName] = useState("");
 
-  const isValidAmount =
-    fundsData.data &&
-    amount > 0 &&
-    new Prisma.Decimal(amount) <= fundsData.data.unallocatedTotal;
+  const isValidData = fundsData.data && !!fund && !!name && amount > 0;
+  // new Prisma.Decimal(amount) <= fundsData.data.unallocatedTotal;
 
   const allocateFunds = () => {
-    if (!!fund && !!name && isValidAmount) {
+    if (isValidData) {
       const result = createAllocation.mutate({ fundId: fund.id, amount, name });
       console.log(result);
       setFund(null);
@@ -52,33 +51,38 @@ export default function AllocateFundsPage() {
           <h3>{fund ? "Fund:" : "Select Fund:"}</h3>
         </Card.Header>
         <Card.Collapse open={!!fund}>
-          {fund && <Fund data={fund} onClick={() => setFund(null)} />}
+          <Card onClick={() => setFund(null)}>
+            <div className="flex gap-3">
+              {fund && <Fund data={fund} />}
+              <IconButton icon={faAngleRight} />
+            </div>
+          </Card>
         </Card.Collapse>
         <Card.Collapse
           open={!fund}
-          className="max-h-1/4 overflow-y-scroll rounded-xl"
+          className="max-h-64 overflow-y-scroll rounded-xl"
         >
-          <div className="w-full rounded-xl">
+          <Card.Group size="sm">
             {fundsData?.data?.funds.map((fund) => (
               <Fund key={fund.id} data={fund} onClick={() => setFund(fund)} />
             ))}
-          </div>
+          </Card.Group>
         </Card.Collapse>
       </Card>
       <Card>
         <Card.Body horizontal>
           <Card.Group>
-            <label htmlFor="amount-input" className="font-bold">
+            <label htmlFor="name-input" className="font-bold">
               Name:
             </label>
             <Card.Group horizontal>
               <span className="text-2xl font-bold text-primary-light">
-                <FontAwesomeIcon icon={faTag} />
+                <FontAwesomeIcon icon={faPencil} />
               </span>
               <input
                 id="name-input"
-                placeholder="Enter name..."
-                className="bg-primary-med text-xl font-bold text-primary-light placeholder-primary-light"
+                placeholder="..."
+                className="bg-primary-med text-xl font-bold text-primary-light placeholder-primary-light focus:placeholder-primary-med"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
               />
@@ -105,13 +109,13 @@ export default function AllocateFundsPage() {
         <Button
           title="Reselect"
           icon={faRedo}
-          disabled={!fund || !isValidAmount}
+          disabled={!isValidData}
           onClick={() => setFund(null)}
         />
         <Button
           title="Allocate"
           icon={faCheck}
-          disabled={!fund || !isValidAmount}
+          disabled={!isValidData}
           active
           onClick={allocateFunds}
         />
