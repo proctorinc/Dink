@@ -1,4 +1,9 @@
 import {
+  type IconDefinition,
+  faBank,
+  faCar,
+  faHouse,
+  faMoneyBill1,
   faCreditCard,
   faChartLine,
   faFileInvoiceDollar,
@@ -25,3 +30,12 @@ export const AccountCategoryIcons = {
   [AccountCategory.Investment]: faChartLine,
   [AccountCategory.Loan]: faFileInvoiceDollar,
 };
+
+export const iconMap = new Map<string, IconDefinition>(
+  Object.entries({
+    "dollar-bill": faMoneyBill1,
+    bank: faBank,
+    house: faHouse,
+    car: faCar,
+  })
+);
