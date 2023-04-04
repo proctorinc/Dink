@@ -1,10 +1,17 @@
-import { faRedo } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarAlt,
+  faPiggyBank,
+  faRedo,
+} from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useMonthContext } from "~/hooks/useMonthContext";
 import Header from "~/components/ui/Header";
-import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
+import { NoSourceTransaction } from "~/features/transactions";
+import Card from "~/components/ui/Card";
+import Budget from "~/features/budgets";
+import Fund from "~/features/funds";
+import Button, { IconButton } from "~/components/ui/Button";
 
 const CategorizePage = () => {
   const [type, setType] = useState<string | null>(null);
@@ -39,81 +46,66 @@ const CategorizePage = () => {
     <>
       <Header back title="Categorize" />
 
-      {/* Chart block component */}
-      <div className="flex h-40 w-full flex-col items-center justify-center rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med p-4 text-secondary-light">
+      <div className="flex w-full flex-col gap-2">
+        <h2 className="text-left text-xl text-primary-light">Transaction:</h2>
         {!!uncategorizedTransactions.data && (
-          <>
-            <span className="text-xl font-bold">{current?.name}</span>
-            <span>
-              {formatToCurrency(uncategorizedTransactions.data[0]?.amount)}
-            </span>
-            <span>
-              {current?.date.toLocaleString("en-us", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </span>
-            <span>Account: {current?.account ? current?.name : ""}</span>
-          </>
+          <NoSourceTransaction data={uncategorizedTransactions.data[0]} />
         )}
       </div>
-
-      {!type && (
-        <div className="flex w-full flex-col gap-2">
-          <h2 className="text-left text-xl text-primary-light">
-            Choose a category:
-          </h2>
-          <div
-            className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-primary-med px-4 py-2 text-center hover:bg-primary-light hover:text-primary-dark"
-            onClick={() => setType("fund")}
-          >
-            <span className="text-xl font-bold">Fund</span>
-          </div>
-          <div
-            className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-primary-med px-4 py-2 text-center hover:bg-primary-light hover:text-primary-dark"
-            onClick={() => setType("budget")}
-          >
-            <span className="text-xl font-bold">Budget</span>
-          </div>
-        </div>
-      )}
-      {!!type && (
-        <div className="flex w-full flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <h2 className="text-left text-xl text-primary-light">
-              Choose a {type}:
-            </h2>
-            <button
-              className="flex h-fit items-center justify-center gap-2 rounded-lg bg-secondary-med px-2 py-1 text-xs font-bold text-secondary-dark"
-              onClick={() => setType(null)}
-            >
-              <FontAwesomeIcon icon={faRedo} />
-              Back
-            </button>
-          </div>
-          {type === "budget" &&
-            budgetData?.data?.budgets.map((budget) => (
-              <div
-                key={budget.id}
-                className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-primary-med px-4 py-2 text-center hover:bg-primary-light hover:text-primary-dark"
-                onClick={() => selectById(budget.id)}
-              >
-                <span className="text-xl font-bold">{budget.name}</span>
-              </div>
-            ))}
-          {type === "fund" &&
-            fundsData?.data?.funds.map((fund) => (
-              <div
-                key={fund.id}
-                className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-primary-med px-4 py-2 text-center hover:bg-primary-light hover:text-primary-dark"
-                onClick={() => selectById(fund.id)}
-              >
-                <span className="text-xl font-bold">{fund.name}</span>
-              </div>
-            ))}
-        </div>
-      )}
+      <Card>
+        <Card.Header>
+          <h3>Choose a {type ?? "category"}:</h3>
+        </Card.Header>
+        <Card.Collapse open={!type}>
+          <Card onClick={() => setType("fund")}>
+            <Card.Header size="xl">
+              <Card.Group horizontal>
+                <IconButton icon={faPiggyBank} style="secondary" />
+                <h3>Fund</h3>
+              </Card.Group>
+            </Card.Header>
+          </Card>
+          <Card onClick={() => setType("budget")}>
+            <Card.Header size="xl">
+              <Card.Group horizontal>
+                <IconButton icon={faCalendarAlt} style="secondary" />
+                <h3>Budget</h3>
+              </Card.Group>
+            </Card.Header>
+          </Card>
+        </Card.Collapse>
+        <Card.Collapse
+          open={type === "budget"}
+          className="max-h-64 overflow-y-scroll rounded-xl"
+        >
+          {budgetData?.data?.budgets.map((budget) => (
+            <Budget
+              key={budget.id}
+              data={budget}
+              onClick={() => selectById(budget.id)}
+            />
+          ))}
+        </Card.Collapse>
+        <Card.Collapse
+          open={type === "fund"}
+          className="max-h-64 overflow-y-scroll rounded-xl"
+        >
+          {fundsData?.data?.funds.map((fund) => (
+            <Fund
+              key={fund.id}
+              data={fund}
+              onClick={() => selectById(fund.id)}
+            />
+          ))}
+        </Card.Collapse>
+      </Card>
+      <Button
+        title="Undo"
+        icon={faRedo}
+        active
+        disabled={!type}
+        onClick={() => setType(null)}
+      />
     </>
   );
 };
