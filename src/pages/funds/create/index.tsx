@@ -1,5 +1,6 @@
 import { faCheck, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import Button, { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
@@ -8,6 +9,7 @@ import useIcons from "~/hooks/useIcons";
 import { api } from "~/utils/api";
 
 export default function CreateFundPage() {
+  const router = useRouter();
   const { icons } = useIcons();
 
   const createFund = api.funds.create.useMutation();
@@ -18,10 +20,8 @@ export default function CreateFundPage() {
 
   const allocateFunds = () => {
     if (isValidData) {
-      const result = createFund.mutate({ name, icon: selectedIcon });
-      console.log(result);
-
-      setName("");
+      createFund.mutate({ name, icon: selectedIcon });
+      void router.push("/funds");
     }
   };
 
@@ -29,7 +29,7 @@ export default function CreateFundPage() {
     <>
       <Header back title={`Create Fund`} />
       <Card>
-        <Card.Body horizontal>
+        <Card.Body>
           <Card.Group>
             <label htmlFor="amount-input" className="font-bold">
               Name:
@@ -49,7 +49,7 @@ export default function CreateFundPage() {
             <label htmlFor="amount-input" className="font-bold">
               Icon:
             </label>
-            <Card.Group horizontal>
+            <Card.Group horizontal className="h-40 flex-wrap overflow-y-scroll">
               {icons.map((icon) => (
                 <IconButton
                   key={icon.name}
