@@ -20,4 +20,16 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+  updateNickname: protectedProcedure
+    .input(z.object({ name: z.string() }))
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.user.update({
+        data: {
+          nickname: input.name,
+        },
+        where: {
+          id: ctx.session.user.id,
+        },
+      });
+    }),
 });
