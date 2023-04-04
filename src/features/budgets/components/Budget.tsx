@@ -1,6 +1,6 @@
 import { type Budget, type Prisma } from "@prisma/client";
 import { useRouter } from "next/router";
-import { type FC } from "react";
+import { type MouseEventHandler, type FC } from "react";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import Card from "~/components/ui/Card";
 import { ProgressBar } from "~/components/ui/Charts";
@@ -13,16 +13,21 @@ export type BudgetProps = {
     spent: Prisma.Decimal;
     leftover: Prisma.Decimal;
   };
+  onClick?: MouseEventHandler<HTMLDivElement>;
 };
 
-const Budget: FC<BudgetProps> = ({ data: budget }) => {
+const Budget: FC<BudgetProps> = ({ data: budget, onClick }) => {
   const router = useRouter();
   const { convertToIcon } = useIcons();
   const icon = convertToIcon(budget?.icon) ?? faMoneyBill1;
 
+  const navigateToBudget = () => {
+    void router.push(`/budget/${budget?.id ?? ""}`);
+  };
+
   if (budget.goal === budget.leftover) {
     return (
-      <Card onClick={() => void router.push(`/budget/${budget.id}`)}>
+      <Card onClick={onClick ?? navigateToBudget}>
         <Card.Body horizontal>
           <Card.Group size="sm">
             <Card.Group horizontal>
@@ -41,11 +46,7 @@ const Budget: FC<BudgetProps> = ({ data: budget }) => {
   }
 
   return (
-    <Card
-      key={budget.id}
-      size="sm"
-      onClick={() => void router.push(`/budget/${budget.id}`)}
-    >
+    <Card key={budget.id} size="sm" onClick={onClick ?? navigateToBudget}>
       <Card.Header>
         <Card.Group horizontal>
           <IconButton icon={icon} size="sm" style="secondary" />

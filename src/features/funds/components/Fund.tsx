@@ -5,6 +5,7 @@ import Card from "~/components/ui/Card";
 import { faPiggyBank } from "@fortawesome/free-solid-svg-icons";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import useIcons from "~/hooks/useIcons";
+import { useRouter } from "next/router";
 
 type FundProps = {
   data?: Fund & {
@@ -14,11 +15,16 @@ type FundProps = {
 };
 
 const Fund: FC<FundProps> = ({ data: fund, onClick }) => {
+  const router = useRouter();
   const { convertToIcon } = useIcons();
   const icon = convertToIcon(fund?.icon) ?? faPiggyBank;
 
+  const navigateToFund = () => {
+    void router.push(`/funds/${fund?.id ?? ""}`);
+  };
+
   return (
-    <Card onClick={onClick}>
+    <Card onClick={onClick ?? navigateToFund}>
       <Card.Header size="xl">
         <Card.Group horizontal size="xl">
           <IconButton icon={icon} size="sm" style="secondary" />
