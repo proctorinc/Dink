@@ -1,12 +1,42 @@
-import { faEdit, faToggleOn } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faSquareCheck,
+  faSquareXmark,
+  faToggleOn,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import Button from "~/components/ui/Button";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import Button, { ButtonBar, IconButton } from "~/components/ui/Button";
+import Card from "~/components/ui/Card";
 import Header from "~/components/ui/Header";
+import Spinner from "~/components/ui/Spinner";
+import { api } from "~/utils/api";
 
 const UserPage = () => {
+  const router = useRouter();
   const { data: sessionData } = useSession();
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState("");
+
+  const updateNickname = api.users.updateNickname.useMutation({
+    onSuccess: () => router.reload(),
+  });
+
+  const updateProfile = () => {
+    if (name !== sessionData?.user.nickname && name !== "") {
+      updateNickname.mutate({ name });
+    } else {
+      setEditing(false);
+    }
+  };
+
+  if (!sessionData?.user) {
+    return <Spinner />;
+  }
+
   return (
     <>
       <Header title="Profile" subtitle={""} />
@@ -20,17 +50,43 @@ const UserPage = () => {
         />
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
-            {!sessionData?.user.nickname && (
-              <span className="rounded-xl bg-primary-med px-3 py-1 text-sm font-bold text-primary-light">
-                Add nickname
-              </span>
-            )}
-            {!!sessionData?.user.nickname && (
-              <h2 className="text-2xl text-white">
-                {sessionData.user.nickname}
+            {!editing && (
+              <h2 className="text-3xl font-bold text-white">
+                {sessionData.user.nickname ?? "Add Nickname"}
               </h2>
             )}
-            <FontAwesomeIcon className="text-primary-light" icon={faEdit} />
+            {editing && (
+              <Card size="sm">
+                <Card.Body horizontal>
+                  <input
+                    id="name-input"
+                    placeholder={"Enter name..."}
+                    className="bg-primary-med text-xl font-bold text-primary-light placeholder-primary-light"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                  />
+                  {name.length > 0 && (
+                    <IconButton
+                      icon={faSquareCheck}
+                      onClick={() => updateProfile()}
+                    />
+                  )}
+                  {name.length === 0 && (
+                    <IconButton
+                      icon={faSquareXmark}
+                      onClick={() => setEditing(false)}
+                    />
+                  )}
+                </Card.Body>
+              </Card>
+            )}
+            {!editing && (
+              <IconButton
+                icon={faEdit}
+                size="sm"
+                onClick={() => setEditing(true)}
+              />
+            )}
           </div>
           <h2 className="text-xl font-light text-primary-light">
             {sessionData?.user.email}
@@ -51,8 +107,10 @@ const UserPage = () => {
           <FontAwesomeIcon className="" size="xl" icon={faToggleOn} />
         </div>
       </div>
-      <Button title="Log Out" onClick={() => void signOut()} />
-      <Button title="Delete Account" />
+      <ButtonBar>
+        <Button title="Log Out" onClick={() => void signOut()} />
+        <Button title="Delete Account" />
+      </ButtonBar>
     </>
   );
 };
