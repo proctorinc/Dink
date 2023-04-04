@@ -4,14 +4,15 @@ import { NoSourceTransaction } from "~/features/transactions";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthSelector";
 import Spinner from "~/components/ui/Spinner";
-import { formatToCurrency, formatToPercentage } from "~/utils";
+import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
+import { PieChart } from "~/components/ui/Charts";
 
 const BudgetPage = () => {
   const router = useRouter();
   const { budgetId } = router.query;
   const strbudgetId = typeof budgetId === "string" ? budgetId : null;
-  const { startOfMonth, endOfMonth } = useMonthContext();
+  const { month, year, startOfMonth, endOfMonth } = useMonthContext();
   const budgetData = api.budgets.getById.useQuery(
     {
       startOfMonth,
@@ -22,10 +23,10 @@ const BudgetPage = () => {
       enabled: !!budgetId,
     }
   );
-  const percentSpent = formatToPercentage(
-    budgetData?.data?.spent,
-    budgetData?.data?.goal
-  );
+  const chartData = [
+    { name: "Spent", amount: budgetData.data?.spent },
+    { name: "Left", amount: budgetData.data?.leftover },
+  ];
 
   if (budgetData.isLoading) {
     return <Spinner />;
@@ -37,26 +38,20 @@ const BudgetPage = () => {
 
   return (
     <>
-      <Header back title={budgetData?.data?.name} />
-      <div
-        className="group flex w-full flex-col justify-between gap-1 rounded-xl bg-primary-med p-4 hover:bg-primary-light hover:text-primary-dark"
-        onClick={() =>
-          void router.push(`/budget/${budgetData?.data?.id ?? ""}`)
-        }
-      >
-        <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
-          <div
-            className="absolute h-full rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"
-            style={{ width: percentSpent }}
-          ></div>
+      <Header
+        back
+        title={budgetData?.data?.name}
+        subtitle={`${month} ${year}`}
+      />
+      <div className="relative flex h-52 w-full flex-col items-center justify-center pb-5">
+        <div className="absolute flex flex-col items-center justify-center text-xl font-bold">
+          <h2 className="text-xl font-bold">Spending</h2>
         </div>
-        <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
-          <span>
-            {formatToCurrency(budgetData?.data?.spent)} /{" "}
-            {formatToCurrency(budgetData?.data?.goal)}
-          </span>
-          <span>{formatToCurrency(budgetData?.data?.leftover)} left</span>
-        </div>
+        <PieChart data={chartData} progress />
+        <span className="absolute bottom-0 font-bold text-primary-light">
+          {formatToCurrency(budgetData.data?.spent)} of{" "}
+          {formatToCurrency(budgetData.data?.goal)}
+        </span>
       </div>
       <MonthYearSelector />
 
