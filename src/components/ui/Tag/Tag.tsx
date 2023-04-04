@@ -20,7 +20,7 @@ export const Tag: FC<TagProps> = ({ text, color }) => {
     <>
       {text && (
         <span
-          className={`${tagColor} flex h-fit items-center justify-center rounded-lg  px-2 py-1 text-xs font-bold`}
+          className={`${tagColor} flex h-fit w-fit items-center justify-center rounded-lg  px-2 py-1 text-xs font-bold`}
         >
           {text}
         </span>
