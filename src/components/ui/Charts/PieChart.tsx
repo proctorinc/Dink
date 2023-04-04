@@ -1,5 +1,5 @@
-import { ResponsivePie } from "@nivo/pie";
 import { type FC } from "react";
+import { ResponsivePie } from "@nivo/pie";
 
 type PieChartProps = {
   data: unknown[];
@@ -31,18 +31,12 @@ export const PieChart: FC<PieChartProps> = ({ data, progress }) => {
       arcLabelsSkipAngle={15}
       arcLabelsTextColor="#FFF"
       arcLabel="id"
-      arcLabelsComponent={({ datum: data }) => (
-        <div className="z-50 flex h-10 w-20 p-10 text-xl font-bold text-white text-white">
-          <span>
-            hello {data.id} {data.formattedValue}
-          </span>
-        </div>
-      )}
+      enableArcLabels={false}
       tooltip={({ datum: data }) => (
         <div className="flex w-fit items-center gap-2 rounded-xl bg-primary-med px-3 py-1 font-bold shadow-2xl">
           <div
             style={{ backgroundColor: data.color }}
-            className="aspect-square h-6 rounded-sm"
+            className="aspect-square h-6 rounded-sm border-2 border-primary-light"
           />
           <div className="flex flex-col">
             <span>{data.id}</span>
