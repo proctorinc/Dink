@@ -43,7 +43,7 @@ function addAmountToBudgetWithTransactions(
     ...otherFields,
     source_transactions,
     spent,
-    leftover: sumTransactions(source_transactions),
+    leftover: Prisma.Decimal.sub(fund.goal, spent),
   };
 }
 
