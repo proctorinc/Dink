@@ -1,3 +1,4 @@
+import { type SizeProp } from "@fortawesome/fontawesome-svg-core";
 import { type IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type MouseEventHandler, type FC } from "react";
@@ -6,7 +7,7 @@ type IconButtonProps = {
   icon: IconDefinition;
   active?: boolean;
   style?: "secondary" | "primary";
-  size?: "sm";
+  size?: "sm" | "xs";
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
@@ -17,8 +18,19 @@ export const IconButton: FC<IconButtonProps> = ({
   size,
   onClick,
 }) => {
-  const buttonSize = size === "sm" ? "w-8" : "w-10";
-  const iconSize = size === "sm" ? "sm" : "xl";
+  let buttonSize = "w-10";
+  if (size === "sm") {
+    buttonSize = "w-8";
+  } else if (size === "xs") {
+    buttonSize = "w-4";
+  }
+  let iconSize: SizeProp = "xl";
+  if (size === "sm") {
+    iconSize = "sm";
+  } else if (size === "xs") {
+    iconSize = "xs";
+  }
+
   let iconStyle =
     "text-primary-light hover:bg-primary-light hover:text-primary-med";
 
