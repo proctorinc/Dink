@@ -2,6 +2,52 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const transactionsRouter = createTRPCRouter({
+  search: protectedProcedure
+    .input(
+      z.object({
+        filterMonthly: z.boolean(),
+        startOfMonth: z.date(),
+        endOfMonth: z.date(),
+        includeSavings: z.boolean(),
+        includeCategorized: z.boolean(),
+        includeUncategorized: z.boolean(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const monthFilter = {
+        date: {
+          gte: input.startOfMonth,
+          lte: input.endOfMonth,
+        },
+      };
+      return ctx.prisma.transaction.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          ...(input.filterMonthly ? monthFilter : {}),
+          OR: [
+            {
+              ...(input.includeSavings ? { sourceType: "savings" } : {}),
+            },
+            {
+              ...(input.includeUncategorized ? { sourceType: null } : {}),
+            },
+            {
+              ...(input.includeCategorized ? { sourceType: "fund" } : {}),
+            },
+            {
+              ...(input.includeCategorized ? { sourceType: "budget" } : {}),
+            },
+          ],
+        },
+        orderBy: {
+          date: "desc",
+        },
+        include: {
+          budgetSource: true,
+          fundSource: true,
+        },
+      });
+    }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
     return ctx.prisma.transaction.findMany({
       where: {
@@ -114,7 +160,7 @@ export const transactionsRouter = createTRPCRouter({
         fundSource: {
           connect: { id: input.fundId },
         },
-        sourceType: "allocation",
+        sourceType: "savings",
       };
       return ctx.prisma.transaction.create({
         data,
