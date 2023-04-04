@@ -15,12 +15,13 @@ export default function Funds() {
   const fundsData = api.funds.getAllData.useQuery();
 
   const percentAllocated = formatToPercentage(
-    Prisma.Decimal.sub(
+    fundsData?.data?.total,
+    Prisma.Decimal.add(
       fundsData.data?.total ?? new Prisma.Decimal(0),
       fundsData.data?.unallocatedTotal ?? new Prisma.Decimal(0)
-    ),
-    fundsData.data?.total
+    )
   );
+
   const isFundsEmpty = fundsData?.data?.funds.length === 0;
 
   const chartData = [
