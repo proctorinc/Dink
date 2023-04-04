@@ -2,6 +2,7 @@ import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { formatToTitleCase } from "~/utils";
 import { useMonthContext } from "~/hooks/useMonthContext";
+import Button from "./Button";
 
 const MonthSelector = () => {
   const {
@@ -14,7 +15,7 @@ const MonthSelector = () => {
   } = useMonthContext();
 
   return (
-    <div className="flex w-full items-center justify-between rounded-xl bg-primary-med py-2 px-2 text-primary-light">
+    <div className="flex w-full items-center justify-between rounded-xl bg-primary-med py-1 px-2 text-primary-light">
       <button
         className={`${
           !hasPreviousMonth ? "invisible" : ""
@@ -22,9 +23,9 @@ const MonthSelector = () => {
       >
         <FontAwesomeIcon icon={faArrowLeft} onClick={getPreviousMonth} />
       </button>
-      <span className="font-bold text-primary-light">
-        {formatToTitleCase(month)} {formatToTitleCase(year)}
-      </span>
+      <Button
+        title={`${formatToTitleCase(month)} ${formatToTitleCase(year)}`}
+      />
       <button
         className={`${
           !hasNextMonth ? "invisible" : ""
