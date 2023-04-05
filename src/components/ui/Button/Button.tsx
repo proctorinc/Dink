@@ -5,7 +5,7 @@ import { type FC, type ReactNode } from "react";
 type ButtonProps = {
   primary?: boolean;
   icon?: IconDefinition;
-  active?: boolean;
+  style?: "primary" | "secondary" | "warning" | "danger";
   children?: ReactNode;
   title?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -16,7 +16,7 @@ type ButtonProps = {
 
 const Button: FC<ButtonProps> = ({
   title,
-  active,
+  style,
   icon,
   onClick,
   iconRight,
@@ -26,11 +26,21 @@ const Button: FC<ButtonProps> = ({
   let buttonColors =
     "bg-primary-med text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light";
 
-  if (disabled) {
+  if (disabled && style === "warning") {
+    buttonColors = "text-warning-med ring ring-warning-med";
+  } else if (disabled && style === "danger") {
+    buttonColors = "text-danger-med ring ring-danger-med";
+  } else if (disabled) {
     buttonColors = "text-primary-med ring ring-primary-med";
-  } else if (active) {
+  } else if (style === "secondary") {
     buttonColors =
       "bg-secondary-med text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light";
+  } else if (style === "warning") {
+    buttonColors =
+      "bg-warning-med text-warning-dark hover:bg-warning-light hover:text-warning-med hover:ring hover:ring-warning-med group-hover:text-warning-light";
+  } else if (style === "danger") {
+    buttonColors =
+      "bg-danger-med text-danger-dark hover:bg-danger-light hover:text-danger-med hover:ring hover:ring-danger-med group-hover:text-danger-light";
   }
 
   const buttonSize = size === "sm" ? "px-2 text-xs py-1" : "h-10 py-2 px-5";
