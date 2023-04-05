@@ -7,9 +7,12 @@ import Spinner from "~/components/ui/Spinner";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
 import { PieChart } from "~/components/ui/Charts";
+import { faMoneyBill1 } from "@fortawesome/free-solid-svg-icons";
+import useIcons from "~/hooks/useIcons";
 
 const BudgetPage = () => {
   const router = useRouter();
+  const { convertToIcon } = useIcons();
   const { budgetId } = router.query;
   const strbudgetId = typeof budgetId === "string" ? budgetId : null;
   const { month, year, startOfMonth, endOfMonth } = useMonthContext();
@@ -23,6 +26,7 @@ const BudgetPage = () => {
       enabled: !!budgetId,
     }
   );
+  const icon = convertToIcon(budgetData.data?.icon) ?? faMoneyBill1;
   const chartData = [
     { name: "Spent", amount: budgetData.data?.spent },
     { name: "Left", amount: budgetData.data?.leftover },
@@ -42,6 +46,7 @@ const BudgetPage = () => {
         back
         title={budgetData?.data?.name}
         subtitle={`${month} ${year}`}
+        icon={icon}
       />
       <div className="relative flex h-52 w-full flex-col items-center justify-center pb-5">
         <div className="absolute flex flex-col items-center justify-center text-xl font-bold">
