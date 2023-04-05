@@ -25,7 +25,12 @@ const CardAction: FC<CardActionProps> = ({
           </span>
         )}
       </div>
-      <Button title={actionText} icon={actionIcon} active iconRight />
+      <Button
+        title={actionText}
+        icon={actionIcon}
+        style="secondary"
+        iconRight
+      />
     </>
   );
 };

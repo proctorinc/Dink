@@ -10,9 +10,12 @@ import { api } from "~/utils/api";
 
 export default function CreateFundPage() {
   const router = useRouter();
+  const ctx = api.useContext();
   const { icons } = useIcons();
 
-  const createFund = api.funds.create.useMutation();
+  const createFund = api.funds.create.useMutation({
+    onSuccess: () => void ctx.invalidate(),
+  });
   const [name, setName] = useState("");
   const [selectedIcon, setSelectedIcon] = useState(icons[0]?.name ?? "");
 
@@ -67,7 +70,7 @@ export default function CreateFundPage() {
           title="Create"
           icon={faCheck}
           disabled={!isValidData}
-          active
+          style="secondary"
           onClick={allocateFunds}
         />
       </div>

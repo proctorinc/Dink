@@ -55,13 +55,13 @@ export default function Funds() {
         <Button
           title="Fund"
           icon={faPlus}
-          active={isFundsEmpty}
+          style={isFundsEmpty ? "secondary" : "primary"}
           onClick={() => void router.push("/funds/create")}
         />
         <Button
           title="Allocate"
           icon={faCoins}
-          active={!isFundsEmpty}
+          style={isFundsEmpty ? "primary" : "secondary"}
           onClick={() => void router.push("/funds/allocate")}
         />
       </ButtonBar>

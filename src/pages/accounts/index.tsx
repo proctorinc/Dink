@@ -33,7 +33,7 @@ export default function BankAccounts() {
       <div className="h-52 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
 
       <ButtonBar>
-        <Button icon={faPlus} title="Account" active />
+        <Button icon={faPlus} title="Account" style="secondary" />
       </ButtonBar>
 
       {accountCategories.map((category) => (

@@ -87,7 +87,7 @@ export default function CreateBudgetPage() {
           title="Create"
           icon={faCheck}
           disabled={!isValidData}
-          active
+          style="secondary"
           onClick={handleConfirm}
         />
       </div>

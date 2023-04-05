@@ -31,7 +31,7 @@ export const BudgetSummary = () => {
               No budgets created
             </span>
           </div>
-          <Button title="Add" icon={faPlus} active />
+          <Button title="Add" icon={faPlus} style="secondary" />
         </Card.Body>
       </Card>
     );

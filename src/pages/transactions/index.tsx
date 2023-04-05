@@ -51,14 +51,14 @@ const TransactionsPage = () => {
             title="All"
             size="sm"
             icon={filterMonthly ? faSquare : faSquareCheck}
-            active={!filterMonthly}
+            style={filterMonthly ? "secondary" : "primary"}
             onClick={() => setFilterMonthly(false)}
           />
           <Button
             title="Monthly"
             size="sm"
             icon={filterMonthly ? faSquareCheck : faSquare}
-            active={filterMonthly}
+            style={filterMonthly ? "primary" : "secondary"}
             onClick={() => setFilterMonthly(true)}
           />
         </div>
@@ -71,8 +71,10 @@ const TransactionsPage = () => {
                 ? faSquareCheck
                 : faSquare
             }
-            active={
+            style={
               includeCategorized && includeSavings && includeUncategorized
+                ? "secondary"
+                : "primary"
             }
             onClick={() => {
               if (
@@ -94,21 +96,21 @@ const TransactionsPage = () => {
             title="Savings"
             size="sm"
             icon={includeSavings ? faSquareCheck : faSquare}
-            active={includeSavings}
+            style={includeSavings ? "secondary" : "primary"}
             onClick={() => setIncludeSavings((prev) => !prev)}
           />
           <Button
             title="Categorized"
             size="sm"
             icon={includeCategorized ? faSquareCheck : faSquare}
-            active={includeCategorized}
+            style={includeCategorized ? "secondary" : "primary"}
             onClick={() => setIncludeCategorized((prev) => !prev)}
           />
           <Button
             title="Uncategorized"
             size="sm"
             icon={includeUncategorized ? faSquareCheck : faSquare}
-            active={includeUncategorized}
+            style={includeUncategorized ? "secondary" : "primary"}
             onClick={() => setIncludeUncategorized((prev) => !prev)}
           />
         </div>

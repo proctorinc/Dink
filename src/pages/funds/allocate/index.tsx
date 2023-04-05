@@ -111,7 +111,7 @@ export default function AllocateFundsPage() {
         title="Allocate"
         icon={faCheck}
         disabled={!isValidData}
-        active
+        style="secondary"
         onClick={allocateFunds}
       />
     </>

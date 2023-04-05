@@ -21,7 +21,12 @@ export const TransactionsSummary = () => {
             {uncategorizedTransactions?.data?.length ?? ""} uncategorized
           </span>
         </div>
-        <Button title="Categorize" icon={faArrowRight} active iconRight />
+        <Button
+          title="Categorize"
+          icon={faArrowRight}
+          style="secondary"
+          iconRight
+        />
       </Card.Body>
     </Card>
   );

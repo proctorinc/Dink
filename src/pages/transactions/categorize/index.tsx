@@ -102,7 +102,7 @@ const CategorizePage = () => {
       <Button
         title="Undo"
         icon={faRedo}
-        active
+        style="secondary"
         disabled={!type}
         onClick={() => setType(null)}
       />

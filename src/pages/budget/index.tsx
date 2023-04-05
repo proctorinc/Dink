@@ -77,7 +77,7 @@ export default function Budgets() {
           <Button
             title="Budget"
             icon={faPlus}
-            active
+            style="secondary"
             onClick={() => void router.push("/budget/create")}
           />
         )}
@@ -86,7 +86,7 @@ export default function Budgets() {
             title="Current"
             icon={faRedo}
             onClick={setCurrentMonth}
-            active
+            style="secondary"
           />
         )}
       </ButtonBar>

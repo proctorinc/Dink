@@ -11,7 +11,11 @@ const NotFoundPage = () => {
       <span className="text-md text-primary-light">
         Oops, looks like you got turned around.
       </span>
-      <Button title="Go Home" active onClick={() => void router.push("/")} />
+      <Button
+        title="Go Home"
+        style="secondary"
+        onClick={() => void router.push("/")}
+      />
     </>
   );
 };

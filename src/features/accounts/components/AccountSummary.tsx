@@ -21,7 +21,7 @@ export const AccountSummary = () => {
         <Button
           title={accountData.data?.count ? "View" : "Link"}
           icon={faArrowRight}
-          active
+          style="secondary"
           iconRight
         />
       </Card.Body>
