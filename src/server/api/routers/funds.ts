@@ -136,4 +136,24 @@ export const fundsRouter = createTRPCRouter({
         },
       });
     }),
+  delete: protectedProcedure
+    .input(z.object({ fundId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.transaction.updateMany({
+        where: {
+          fundSourceId: input.fundId,
+          userId: ctx.session.user.id,
+        },
+        data: {
+          sourceType: null,
+          fundSourceId: null,
+        },
+      });
+      return ctx.prisma.fund.deleteMany({
+        where: {
+          id: input.fundId,
+          userId: ctx.session.user.id,
+        },
+      });
+    }),
 });
