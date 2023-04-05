@@ -59,7 +59,7 @@ model TransactionCategory {
 
 model Transaction {
   id                      String                @id @default(cuid())
-  account                 BankAccount?          @relation(fields: [accountId], references: [id])
+  account                 BankAccount?          @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId               String?
   account_owner           String?
   amount                  Decimal              @db.Decimal(10, 2)
