@@ -95,9 +95,9 @@ model Transaction {
   pendingTransactionId    String?
   personalFinanceCategory String?
   sourceType              String?
-  fundSource              Fund?                 @relation(fields: [fundSourceId], references: [id], onDelete: Cascade)
+  fundSource              Fund?                 @relation(fields: [fundSourceId], references: [id])
   fundSourceId            String?
-  budgetSource            Budget?               @relation(fields: [budgetSourceId], references: [id], onDelete: Cascade)
+  budgetSource            Budget?               @relation(fields: [budgetSourceId], references: [id])
   budgetSourceId          String?
   transactionCode         String?
   transactionId           String
