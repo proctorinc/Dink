@@ -7,15 +7,25 @@ import Spinner from "~/components/ui/Spinner";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
 import { PieChart } from "~/components/ui/Charts";
-import { faMoneyBill1 } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleUp,
+  faGear,
+  faMoneyBill1,
+} from "@fortawesome/free-solid-svg-icons";
 import useIcons from "~/hooks/useIcons";
+import Button, { ButtonBar } from "~/components/ui/Button";
+import { useState } from "react";
+import ConfirmDelete from "~/components/ui/ConfirmDelete";
 
 const BudgetPage = () => {
   const router = useRouter();
-  const { convertToIcon } = useIcons();
   const { budgetId } = router.query;
-  const strbudgetId = typeof budgetId === "string" ? budgetId : null;
+  const ctx = api.useContext();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const { convertToIcon } = useIcons();
   const { month, year, startOfMonth, endOfMonth } = useMonthContext();
+
+  const strbudgetId = typeof budgetId === "string" ? budgetId : null;
   const budgetData = api.budgets.getById.useQuery(
     {
       startOfMonth,
@@ -26,11 +36,19 @@ const BudgetPage = () => {
       enabled: !!budgetId,
     }
   );
+  const deleteBudget = api.budgets.delete.useMutation({
+    onSuccess: () => void ctx.invalidate(),
+  });
   const icon = convertToIcon(budgetData.data?.icon) ?? faMoneyBill1;
   const chartData = [
     { name: "Spent", amount: budgetData.data?.spent },
     { name: "Left", amount: budgetData.data?.leftover },
   ];
+
+  const handleDeleteBudget = () => {
+    deleteBudget.mutate({ budgetId: budgetData?.data?.id ?? "" });
+    void router.push("/budget");
+  };
 
   if (budgetData.isLoading) {
     return <Spinner />;
@@ -58,8 +76,21 @@ const BudgetPage = () => {
           {formatToCurrency(budgetData.data?.goal)}
         </span>
       </div>
+      <ButtonBar>
+        <Button
+          icon={settingsOpen ? faAngleUp : faGear}
+          onClick={() => setSettingsOpen((prev) => !prev)}
+        />
+      </ButtonBar>
+      {settingsOpen && (
+        <ButtonBar>
+          <ConfirmDelete
+            confirmationText={budgetData?.data?.name ?? "delete budget"}
+            onDelete={handleDeleteBudget}
+          />
+        </ButtonBar>
+      )}
       <MonthYearSelector />
-
       <div className="w-full">
         <h2 className="text-left text-xl text-primary-light">Transactions</h2>
       </div>
