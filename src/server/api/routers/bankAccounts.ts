@@ -116,9 +116,10 @@ export const bankAccountRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ accountId: z.string() }))
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.bankAccount.delete({
+      return ctx.prisma.bankAccount.deleteMany({
         where: {
           id: input.accountId,
+          userId: ctx.session.user.id,
         },
       });
     }),
