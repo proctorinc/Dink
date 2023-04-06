@@ -38,7 +38,7 @@ export const IconButton: FC<IconButtonProps> = ({
     iconStyle = "bg-secondary-light text-secondary-med";
   } else if (style === "secondary") {
     iconStyle =
-      "bg-secondary-dark text-secondary-med group-hover:bg-secondary-light group-hover:text-secondary-med";
+      "bg-secondary-dark text-secondary-med group-hover:bg-secondary-med group-hover:text-secondary-light";
   } else if (active) {
     iconStyle = "bg-primary-light text-primary-med";
   }
