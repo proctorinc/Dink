@@ -12,6 +12,7 @@ type ButtonProps = {
   iconRight?: boolean;
   disabled?: boolean;
   size?: "sm";
+  className?: string;
 };
 
 const Button: FC<ButtonProps> = ({
@@ -22,6 +23,7 @@ const Button: FC<ButtonProps> = ({
   iconRight,
   disabled,
   size,
+  className,
 }) => {
   let buttonColors =
     "bg-primary-med text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light";
@@ -47,7 +49,9 @@ const Button: FC<ButtonProps> = ({
 
   return (
     <button
-      className={`${buttonColors} ${buttonSize} flex items-center justify-center gap-2 rounded-lg font-bold`}
+      className={`${buttonColors} ${buttonSize} flex items-center justify-center gap-2 rounded-lg font-bold ${
+        className ?? ""
+      }`}
       onClick={onClick}
       disabled={disabled}
     >
