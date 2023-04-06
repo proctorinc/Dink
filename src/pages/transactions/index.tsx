@@ -1,4 +1,5 @@
 import {
+  faFilter,
   faMagnifyingGlass,
   faSquareCheck,
   faTags,
@@ -7,7 +8,7 @@ import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import { useRouter } from "next/router";
 import { useMonthContext } from "~/hooks/useMonthContext";
 import Transaction from "~/features/transactions";
-import Button, { ButtonBar } from "~/components/ui/Button";
+import Button, { ButtonBar, IconButton } from "~/components/ui/Button";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthSelector";
 import Spinner from "~/components/ui/Spinner";
@@ -18,6 +19,9 @@ import { useState } from "react";
 const TransactionsPage = () => {
   const router = useRouter();
   const { month, year, startOfMonth, endOfMonth } = useMonthContext();
+  const [search, setSearch] = useState("");
+  const [searchEnabled, setSearchEnabled] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [filterMonthly, setFilterMonthly] = useState(true);
   const [includeSavings, setIncludeSavings] = useState(false);
   const [includeCategorized, setIncludeCategorized] = useState(true);
@@ -36,92 +40,134 @@ const TransactionsPage = () => {
     <>
       <Header title="Transactions" subtitle={`${month} ${year}`} />
       <ButtonBar>
-        <Button title="Search" icon={faMagnifyingGlass} />
+        <Button
+          icon={faMagnifyingGlass}
+          style={searchEnabled ? "secondary" : "primary"}
+          onClick={() => setSearchEnabled((prev) => !prev)}
+        />
+        <Button
+          icon={faFilter}
+          style={filtersOpen ? "secondary" : "primary"}
+          onClick={() => setFiltersOpen((prev) => !prev)}
+        />
         <Button
           title="Categorize"
           icon={faTags}
+          style="secondary"
           onClick={() => {
             void router.push("/transactions/categorize");
           }}
         />
       </ButtonBar>
-      <div className="flex w-full flex-col gap-2">
-        <div className="flex gap-2">
-          <Button
-            title="All"
-            size="sm"
-            icon={filterMonthly ? faSquare : faSquareCheck}
-            style={filterMonthly ? "secondary" : "primary"}
-            onClick={() => setFilterMonthly(false)}
-          />
-          <Button
-            title="Monthly"
-            size="sm"
-            icon={filterMonthly ? faSquareCheck : faSquare}
-            style={filterMonthly ? "primary" : "secondary"}
-            onClick={() => setFilterMonthly(true)}
-          />
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            title="Any"
-            size="sm"
-            icon={
-              includeCategorized && includeSavings && includeUncategorized
-                ? faSquareCheck
-                : faSquare
-            }
-            style={
-              includeCategorized && includeSavings && includeUncategorized
-                ? "secondary"
-                : "primary"
-            }
-            onClick={() => {
-              if (
-                includeCategorized &&
-                includeSavings &&
-                includeUncategorized
-              ) {
-                setIncludeCategorized(false);
-                setIncludeSavings(false);
-                setIncludeUncategorized(false);
-              } else {
-                setIncludeCategorized(true);
-                setIncludeSavings(true);
-                setIncludeUncategorized(true);
-              }
-            }}
-          />
-          <Button
-            title="Savings"
-            size="sm"
-            icon={includeSavings ? faSquareCheck : faSquare}
-            style={includeSavings ? "secondary" : "primary"}
-            onClick={() => setIncludeSavings((prev) => !prev)}
-          />
-          <Button
-            title="Categorized"
-            size="sm"
-            icon={includeCategorized ? faSquareCheck : faSquare}
-            style={includeCategorized ? "secondary" : "primary"}
-            onClick={() => setIncludeCategorized((prev) => !prev)}
-          />
-          <Button
-            title="Uncategorized"
-            size="sm"
-            icon={includeUncategorized ? faSquareCheck : faSquare}
-            style={includeUncategorized ? "secondary" : "primary"}
-            onClick={() => setIncludeUncategorized((prev) => !prev)}
-          />
-        </div>
-      </div>
+      {filtersOpen && (
+        <Card>
+          <Card.Body>
+            <Card.Group>
+              <span className="text-md font-bold">Time</span>
+              <Card.Group horizontal>
+                <Button
+                  title="All"
+                  size="sm"
+                  icon={filterMonthly ? faSquare : faSquareCheck}
+                  style={filterMonthly ? "primary" : "secondary"}
+                  onClick={() => setFilterMonthly(false)}
+                />
+                <Button
+                  title="Monthly"
+                  size="sm"
+                  icon={filterMonthly ? faSquareCheck : faSquare}
+                  style={filterMonthly ? "secondary" : "primary"}
+                  onClick={() => setFilterMonthly(true)}
+                />
+              </Card.Group>
+              <span className="text-md font-bold">Include Types</span>
+              <Card.Group horizontal>
+                <Button
+                  title="All"
+                  size="sm"
+                  icon={
+                    includeCategorized && includeSavings && includeUncategorized
+                      ? faSquareCheck
+                      : faSquare
+                  }
+                  style={
+                    includeCategorized && includeSavings && includeUncategorized
+                      ? "secondary"
+                      : "primary"
+                  }
+                  onClick={() => {
+                    if (
+                      includeCategorized &&
+                      includeSavings &&
+                      includeUncategorized
+                    ) {
+                      setIncludeCategorized(false);
+                      setIncludeSavings(false);
+                      setIncludeUncategorized(false);
+                    } else {
+                      setIncludeCategorized(true);
+                      setIncludeSavings(true);
+                      setIncludeUncategorized(true);
+                    }
+                  }}
+                />
+                <Button
+                  title="Categorized"
+                  size="sm"
+                  icon={includeCategorized ? faSquareCheck : faSquare}
+                  style={includeCategorized ? "secondary" : "primary"}
+                  onClick={() => setIncludeCategorized((prev) => !prev)}
+                />
+                <Button
+                  title="Uncategorized"
+                  size="sm"
+                  icon={includeUncategorized ? faSquareCheck : faSquare}
+                  style={includeUncategorized ? "secondary" : "primary"}
+                  onClick={() => setIncludeUncategorized((prev) => !prev)}
+                />
+                <Button
+                  title="Savings"
+                  size="sm"
+                  icon={includeSavings ? faSquareCheck : faSquare}
+                  style={includeSavings ? "secondary" : "primary"}
+                  onClick={() => setIncludeSavings((prev) => !prev)}
+                />
+              </Card.Group>
+            </Card.Group>
+          </Card.Body>
+        </Card>
+      )}
+      {searchEnabled && (
+        <Card size="sm">
+          <Card.Body>
+            <Card.Group horizontal>
+              <span className="text-2xl font-bold text-primary-light">
+                <IconButton icon={faMagnifyingGlass} size="xs" />
+              </span>
+              <input
+                id="name-input"
+                autoFocus
+                placeholder="Enter name..."
+                className="text-md flex-grow bg-primary-med font-bold text-primary-light placeholder-primary-light"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </Card.Group>
+          </Card.Body>
+        </Card>
+      )}
       {filterMonthly && <MonthYearSelector />}
       <div className="flex w-full flex-col gap-3">
         {transactionData.isLoading && <Spinner />}
         {transactionData?.data?.length === 0 && (
           <Card>
             <Card.Header size="xl">
-              <p>None</p>
+              <Card.Group>
+                <span>None</span>
+                <span className="text-xs text-primary-light">
+                  Try using different filters
+                </span>
+              </Card.Group>
             </Card.Header>
           </Card>
         )}
