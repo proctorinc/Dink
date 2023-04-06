@@ -149,7 +149,7 @@ export const transactionsRouter = createTRPCRouter({
       const data = {
         name: input.name,
         note: "",
-        isTransfer: true,
+        isTransfer: false,
         transactionId: "savings",
         amount: input.amount,
         date: today,
