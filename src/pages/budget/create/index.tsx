@@ -2,6 +2,8 @@ import {
   faCheck,
   faDollarSign,
   faPencil,
+  faSquare,
+  faSquareCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
@@ -9,6 +11,7 @@ import { useState } from "react";
 import Button, { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import Header from "~/components/ui/Header";
+import Fund from "~/features/funds";
 import useIcons from "~/hooks/useIcons";
 import { api } from "~/utils/api";
 
@@ -17,18 +20,27 @@ export default function CreateBudgetPage() {
   const ctx = api.useContext();
   const { icons } = useIcons();
 
+  const [name, setName] = useState("");
+  const [goal, setGoal] = useState(0);
+  const [isSavings, setIsSavings] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState(icons[0]?.name ?? "");
+  const [fundId, setFundId] = useState<string | null>(null);
+
   const createBudget = api.budgets.create.useMutation({
     onSuccess: () => void ctx.invalidate(),
   });
-  const [name, setName] = useState("");
-  const [goal, setGoal] = useState(0);
-  const [selectedIcon, setSelectedIcon] = useState(icons[0]?.name ?? "");
-
+  const fundsData = api.funds.getAllData.useQuery();
   const isValidData = !!name && !!selectedIcon && goal != 0;
 
   const handleConfirm = () => {
     if (isValidData) {
-      createBudget.mutate({ name, goal, icon: selectedIcon });
+      createBudget.mutate({
+        name,
+        goal,
+        isSavings,
+        icon: selectedIcon,
+        fundId,
+      });
       void router.push("/budget");
     }
   };
@@ -69,6 +81,37 @@ export default function CreateBudgetPage() {
                 onChange={(event) => setGoal(Number(event.target.value))}
               />
             </Card.Group>
+            <label htmlFor="amount-input" className="font-bold">
+              Savings Transfer:
+            </label>
+            <Card.Group horizontal>
+              <Button
+                title="No"
+                icon={isSavings ? faSquare : faSquareCheck}
+                style={isSavings ? "primary" : "secondary"}
+                onClick={() => setIsSavings(false)}
+              />
+              <Button
+                title="Yes"
+                icon={isSavings ? faSquareCheck : faSquare}
+                style={isSavings ? "secondary" : "primary"}
+                onClick={() => setIsSavings(true)}
+              />
+            </Card.Group>
+            <Card.Collapse
+              open={isSavings}
+              className="max-h-64 overflow-y-scroll rounded-xl"
+            >
+              <Card.Group size="sm">
+                {fundsData?.data?.funds.map((fund) => (
+                  <Fund
+                    key={fund.id}
+                    data={fund}
+                    onClick={() => setFundId(fund.id)}
+                  />
+                ))}
+              </Card.Group>
+            </Card.Collapse>
             <label htmlFor="amount-input" className="font-bold">
               Icon:
             </label>

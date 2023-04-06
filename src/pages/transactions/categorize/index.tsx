@@ -74,11 +74,8 @@ const CategorizePage = () => {
             </Card.Header>
           </Card>
         </Card.Collapse>
-        <Card.Collapse
-          open={type === "budget"}
-          className="max-h-64 overflow-y-scroll rounded-xl"
-        >
-          {budgetData?.data?.budgets.map((budget) => (
+        <Card.Collapse open={type === "budget"} className="rounded-xl">
+          {budgetData?.data?.budgets.spending.map((budget) => (
             <Budget
               key={budget.id}
               data={budget}
@@ -86,10 +83,7 @@ const CategorizePage = () => {
             />
           ))}
         </Card.Collapse>
-        <Card.Collapse
-          open={type === "fund"}
-          className="max-h-64 overflow-y-scroll rounded-xl"
-        >
+        <Card.Collapse open={type === "fund"} className="rounded-xl">
           {fundsData?.data?.funds.map((fund) => (
             <Fund
               key={fund.id}

@@ -40,6 +40,9 @@ export default function Budgets() {
     icon: "",
     name: "Income",
     userId: "",
+    isSavings: false,
+    savingsFundId: null,
+    savingsFund: null,
   };
 
   const chartData = [
@@ -90,12 +93,26 @@ export default function Budgets() {
           />
         )}
       </ButtonBar>
+      <></>
       <MonthYearSelector />
-      <Budget data={income} />
       {budgetData.isLoading && <Spinner />}
-      {budgetData.data?.budgets.map((budget) => (
-        <Budget key={budget.id} data={budget} />
-      ))}
+      {budgetData.isSuccess && (
+        <>
+          <h3 className="w-full text-left font-bold text-primary-light">
+            Spending
+          </h3>
+          <Budget data={income} />
+          {budgetData.data?.budgets.spending.map((budget) => (
+            <Budget key={budget.id} data={budget} />
+          ))}
+          <h3 className="w-full text-left font-bold text-primary-light">
+            Savings
+          </h3>
+          {budgetData.data?.budgets.savings.map((budget) => (
+            <Budget key={budget.id} data={budget} />
+          ))}
+        </>
+      )}
     </>
   );
 }
