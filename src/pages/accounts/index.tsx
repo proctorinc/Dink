@@ -15,11 +15,19 @@ import Card from "~/components/ui/Card";
 
 export default function BankAccounts() {
   const router = useRouter();
+  const ctx = api.useContext();
   const [open, setOpen] = useState("");
   const accountData = api.bankAccounts.getAllData.useQuery();
+  const createDemoAccount = api.mockData.addMockBankAccount.useMutation({
+    onSuccess: () => void ctx.invalidate(),
+  });
 
   const handleOpen = (type: AccountCategory) => {
     setOpen((prev) => (prev === type ? "" : type));
+  };
+
+  const handleCreateAccount = () => {
+    createDemoAccount.mutate();
   };
 
   return (
@@ -33,7 +41,12 @@ export default function BankAccounts() {
       <div className="h-52 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
 
       <ButtonBar>
-        <Button icon={faPlus} title="Account" style="secondary" />
+        <Button
+          icon={faPlus}
+          title="Account"
+          style="secondary"
+          onClick={handleCreateAccount}
+        />
       </ButtonBar>
 
       {accountCategories.map((category) => (
