@@ -1,5 +1,4 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleUp, faGear, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Transaction from "~/features/transactions";
@@ -7,19 +6,31 @@ import Header from "~/components/ui/Header";
 import Spinner from "~/components/ui/Spinner";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { api } from "~/utils/api";
+import Button, { ButtonBar } from "~/components/ui/Button";
+import { useState } from "react";
+import ConfirmDelete from "~/components/ui/ConfirmDelete";
 
 const AccountPage = () => {
   const router = useRouter();
   const ctx = api.useContext();
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const { data: sessionData } = useSession();
   const { accountId } = router.query;
   const strAccountId = typeof accountId === "string" ? accountId : null;
   const accountData = api.bankAccounts.getById.useQuery({
     accountId: strAccountId ?? "",
   });
+  const deleteAccount = api.bankAccounts.delete.useMutation({
+    onSuccess: () => void ctx.invalidate(),
+  });
   const addMockTransaction = api.mockData.addMockTransaction.useMutation({
     onSuccess: () => ctx.invalidate(),
   });
+
+  const handleDeleteAccount = () => {
+    deleteAccount.mutate({ accountId: accountData?.data?.id ?? "" });
+    void router.push("/accounts");
+  };
 
   if (accountData.isLoading) {
     return <Spinner />;
@@ -41,9 +52,16 @@ const AccountPage = () => {
           {formatToTitleCase(accountData?.data?.subtype)} /{" "}
           {accountData?.data?.mask}
         </span>
-        <button
-          className="flex h-fit w-fit items-center gap-2 rounded-lg bg-secondary-med py-2 px-5 font-bold text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light"
-          disabled={!sessionData?.user && typeof accountId !== "string"}
+      </div>
+      <ButtonBar>
+        <Button
+          icon={settingsOpen ? faAngleUp : faGear}
+          onClick={() => setSettingsOpen((prev) => !prev)}
+        />
+        <Button
+          title="Transaction"
+          icon={faPlus}
+          style="secondary"
           onClick={() => {
             if (sessionData?.user && typeof accountId === "string") {
               void addMockTransaction.mutate({
@@ -52,11 +70,16 @@ const AccountPage = () => {
               });
             }
           }}
-        >
-          <FontAwesomeIcon className="h-4 w-4" icon={faPlus} />
-          <span>Transaction</span>
-        </button>
-      </div>
+        />
+      </ButtonBar>
+      {settingsOpen && (
+        <ButtonBar>
+          <ConfirmDelete
+            confirmationText={accountData?.data?.name ?? "delete account"}
+            onDelete={handleDeleteAccount}
+          />
+        </ButtonBar>
+      )}
       <div className="w-full">
         <h2 className="text-left text-xl text-primary-light">Transactions</h2>
       </div>
