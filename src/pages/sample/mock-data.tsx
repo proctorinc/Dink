@@ -42,7 +42,7 @@ const Home: NextPage = () => {
                 </button>
                 <button
                   className="rounded-full bg-white/10 px-2 font-semibold text-white no-underline transition hover:bg-white/20"
-                  onClick={() => addMockBankAccount.mutate({ userId: user.id })}
+                  onClick={() => addMockBankAccount.mutate()}
                 >
                   Add Bank
                 </button>
