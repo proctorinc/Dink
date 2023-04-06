@@ -14,9 +14,12 @@ import { api } from "~/utils/api";
 
 export default function CreateBudgetPage() {
   const router = useRouter();
+  const ctx = api.useContext();
   const { icons } = useIcons();
 
-  const createBudget = api.budgets.create.useMutation();
+  const createBudget = api.budgets.create.useMutation({
+    onSuccess: () => void ctx.invalidate(),
+  });
   const [name, setName] = useState("");
   const [goal, setGoal] = useState(0);
   const [selectedIcon, setSelectedIcon] = useState(icons[0]?.name ?? "");
@@ -69,7 +72,7 @@ export default function CreateBudgetPage() {
             <label htmlFor="amount-input" className="font-bold">
               Icon:
             </label>
-            <Card.Group horizontal>
+            <Card.Group horizontal className="h-40 flex-wrap overflow-y-scroll">
               {icons.map((icon) => (
                 <IconButton
                   key={icon.name}
