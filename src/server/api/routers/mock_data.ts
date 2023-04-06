@@ -99,46 +99,44 @@ export const mockDataRouter = createTRPCRouter({
       },
     });
   }),
-  addMockBankAccount: protectedProcedure
-    .input(z.object({ userId: z.string() }))
-    .mutation(({ input, ctx }) => {
-      const type = faker.helpers.arrayElement([
-        AccountType.Credit,
-        AccountType.Depository,
-        AccountType.Investment,
-        AccountType.Loan,
-      ]);
-      const subtype = faker.helpers.arrayElement(AccountSubtypes[type]);
-      const limit = Number(
-        faker.datatype.bigInt({
-          max: 12000,
-          min: 400,
-        })
-      );
+  addMockBankAccount: protectedProcedure.mutation(({ ctx }) => {
+    const type = faker.helpers.arrayElement([
+      AccountType.Credit,
+      AccountType.Depository,
+      AccountType.Investment,
+      AccountType.Loan,
+    ]);
+    const subtype = faker.helpers.arrayElement(AccountSubtypes[type]);
+    const limit = Number(
+      faker.datatype.bigInt({
+        max: 12000,
+        min: 400,
+      })
+    );
 
-      return ctx.prisma.bankAccount.create({
-        data: {
-          available: null,
-          current:
-            type === AccountType.Credit
-              ? faker.datatype.float({ precision: 0.01, max: limit })
-              : type === AccountType.Investment
-              ? faker.datatype.float({ precision: 0.01 })
-              : faker.datatype.float({ precision: 0.01, max: 15000 }),
-          iso_currency_code: "USD",
-          limit: type === AccountType.Credit ? limit : null,
-          unofficial_currency_code: null,
-          mask: faker.finance.mask(4, false, false),
-          name: faker.finance.accountName(),
-          official_name: faker.finance.creditCardIssuer(),
-          type: type,
-          subtype: subtype,
-          user: {
-            connect: { id: input.userId },
-          },
+    return ctx.prisma.bankAccount.create({
+      data: {
+        available: null,
+        current:
+          type === AccountType.Credit
+            ? faker.datatype.float({ precision: 0.01, max: limit })
+            : type === AccountType.Investment
+            ? faker.datatype.float({ precision: 0.01 })
+            : faker.datatype.float({ precision: 0.01, max: 15000 }),
+        iso_currency_code: "USD",
+        limit: type === AccountType.Credit ? limit : null,
+        unofficial_currency_code: null,
+        mask: faker.finance.mask(4, false, false),
+        name: faker.finance.accountName(),
+        official_name: faker.finance.creditCardIssuer(),
+        type: type,
+        subtype: subtype,
+        user: {
+          connect: { id: ctx.session.user.id },
         },
-      });
-    }),
+      },
+    });
+  }),
   addMockFund: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .mutation(({ input, ctx }) => {
