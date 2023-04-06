@@ -7,9 +7,11 @@ import {
   faReceipt,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconButton } from "~/components/ui/Button";
+import { useSession } from "next-auth/react";
 
 const Sidebar = () => {
   const router = useRouter();
+  const { data: sessionData } = useSession();
 
   const routes = [
     { path: "/accounts", name: "Accounts", icon: faBuildingColumns },
@@ -18,6 +20,10 @@ const Sidebar = () => {
     { path: "/funds", name: "Funds", icon: faPiggyBank },
     { path: "/transactions", name: "Transactions", icon: faReceipt },
   ];
+
+  if (!sessionData) {
+    return <></>;
+  }
 
   return (
     <aside className="fixed left-[10%] top-1/2 hidden -translate-y-1/2 text-white sm:flex">
