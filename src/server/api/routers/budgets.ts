@@ -142,4 +142,24 @@ export const budgetsRouter = createTRPCRouter({
         },
       });
     }),
+  delete: protectedProcedure
+    .input(z.object({ budgetId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.transaction.updateMany({
+        where: {
+          budgetSourceId: input.budgetId,
+          userId: ctx.session.user.id,
+        },
+        data: {
+          sourceType: null,
+          fundSourceId: null,
+        },
+      });
+      return ctx.prisma.budget.deleteMany({
+        where: {
+          id: input.budgetId,
+          userId: ctx.session.user.id,
+        },
+      });
+    }),
 });
