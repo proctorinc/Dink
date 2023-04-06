@@ -21,7 +21,10 @@ export const BudgetSummary = () => {
     endOfMonth,
   });
 
-  if (budgetData.data?.budgets.length === 0) {
+  if (
+    budgetData.data?.budgets.spending.length === 0 ||
+    budgetData.data?.budgets.savings.length
+  ) {
     return (
       <Card onClick={() => void router.push("/budget")}>
         <Card.Body horizontal>

@@ -1,6 +1,7 @@
 import { Prisma, type Transaction, type Budget } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { formatToCurrency } from "~/utils";
 
 type TransactionAmount = {
   amount: Prisma.Decimal;
@@ -68,9 +69,10 @@ export const budgetsRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      const budgets = await ctx.prisma.budget.findMany({
+      const spendingBudgets = await ctx.prisma.budget.findMany({
         where: {
           userId: ctx.session.user.id,
+          isSavings: false,
         },
         include: {
           source_transactions: {
@@ -86,15 +88,75 @@ export const budgetsRouter = createTRPCRouter({
           },
         },
       });
-      const budgetsWithAmounts = sumBudgetTransactions(budgets);
-      const spent = sumTotalBudgetSpent(budgetsWithAmounts);
-      const goal = sumBudgetGoals(budgets);
+      const savingsBudgets = await ctx.prisma.budget.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          isSavings: true,
+        },
+        include: {
+          savingsFund: {
+            select: {
+              id: true,
+            },
+          },
+          source_transactions: {
+            where: {
+              date: {
+                gte: input.startOfMonth,
+                lte: input.endOfMonth,
+              },
+            },
+            select: {
+              amount: true,
+            },
+          },
+        },
+      });
+
+      const spendingWithAmounts = sumBudgetTransactions(spendingBudgets);
+      const savingsWithAmounts = sumBudgetTransactions(savingsBudgets);
+
+      savingsWithAmounts.map(async (budget) => {
+        const fundId: string = budget.savingsFundId ?? "";
+        if (formatToCurrency(budget.spent) === "$0.00") {
+          const today = new Date();
+          const data = {
+            name: `Monthly Savings: ${budget?.name ?? "Budget"}`,
+            note: "",
+            isTransfer: false,
+            transactionId: "savings",
+            amount: budget?.goal ?? 0,
+            date: today,
+            pending: false,
+            user: {
+              connect: { id: ctx.session.user.id },
+            },
+            fundSource: {
+              connect: { id: fundId },
+            },
+            budgetSource: {
+              connect: { id: budget?.id },
+            },
+            sourceType: "savings",
+          };
+          await ctx.prisma.transaction.create({ data });
+        }
+      });
+
+      const spent = sumTotalBudgetSpent([
+        ...spendingWithAmounts,
+        ...savingsWithAmounts,
+      ]);
+      const goal = sumBudgetGoals([...spendingBudgets, ...savingsBudgets]);
 
       return {
         goal: goal,
         spent: spent,
         leftover: Prisma.Decimal.sub(goal, spent),
-        budgets: budgetsWithAmounts,
+        budgets: {
+          spending: spendingWithAmounts,
+          savings: savingsWithAmounts,
+        },
       };
     }),
   getById: protectedProcedure
@@ -129,13 +191,25 @@ export const budgetsRouter = createTRPCRouter({
       return budget ? addAmountToBudgetWithTransactions(budget) : budget;
     }),
   create: protectedProcedure
-    .input(z.object({ name: z.string(), goal: z.number(), icon: z.string() }))
+    .input(
+      z.object({
+        name: z.string(),
+        goal: z.number(),
+        icon: z.string(),
+        isSavings: z.boolean(),
+        fundId: z.string().nullable(),
+      })
+    )
     .mutation(({ input, ctx }) => {
       return ctx.prisma.budget.create({
         data: {
           icon: input.icon,
           name: input.name,
           goal: input.goal,
+          isSavings: input.isSavings,
+          ...(input.fundId !== null
+            ? { savingsFund: { connect: { id: input.fundId } } }
+            : {}),
           user: {
             connect: { id: ctx.session.user.id },
           },
