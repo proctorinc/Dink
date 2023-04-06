@@ -20,6 +20,7 @@ model BankAccount {
   official_name            String?
   subtype                  String
   type                     String
+  statementDueDay          Int?
   user                     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                   String
   transactions             Transaction[]
@@ -33,10 +34,14 @@ model Budget {
   icon                String
   name                String
   userId              String
+  isSavings           Boolean       @default(false)
+  savingsFundId       String?
+  savingsFund         Fund?         @relation(fields: [savingsFundId], references: [id])
   user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   source_transactions Transaction[]
   
   @@index([userId])
+  @@index([savingsFundId])
 }
 
 model Fund {
@@ -46,6 +51,7 @@ model Fund {
   userId              String
   user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   source_transactions Transaction[]
+  savingsBudgets      Budget[]
   
   @@index([userId])
 }
@@ -149,6 +155,15 @@ model Session {
   @@index([userId])
 }
 
+model Settings {
+  id                      String @id @default(cuid())
+  creditPercentTarget     Int @default(10)
+  userId                  String @unique
+  user                    User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
 model User {
   id               String            @id @default(cuid())
   name             String?
@@ -156,6 +171,7 @@ model User {
   email            String?           @unique
   emailVerified    DateTime?
   image            String?
+  settings         Settings?
   accounts         Account[]
   sessions         Session[]
   bankAccessTokens BankAccessToken[]
