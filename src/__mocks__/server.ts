@@ -1,7 +1,6 @@
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import superjson from "superjson";
-import queryString from "query-string";
 
 export const SERVER_URL = `http://localhost:${
   process.env.PORT ?? 3000
@@ -14,9 +13,6 @@ const jsonSucessResponse = (data: unknown) => ({
 
 const handlers = [
   rest.get(`${SERVER_URL}/example.hello`, (req, res, ctx) => {
-    const operations = Object.values(req.params);
-    const { input } = queryString.parse(req.url.search);
-
     return res(
       ctx.status(200),
       ctx.json([jsonSucessResponse({ greeting: `Goodbye from TRPC` })])
