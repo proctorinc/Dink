@@ -24,7 +24,7 @@ export const IconButton: FC<IconButtonProps> = ({
   } else if (size === "xs") {
     buttonSize = "w-4";
   }
-  let iconSize: SizeProp = "xl";
+  let iconSize: SizeProp = "lg";
   if (size === "sm") {
     iconSize = "sm";
   } else if (size === "xs") {
