@@ -17,11 +17,11 @@ import Button, { ButtonBar } from "~/components/ui/Button";
 import { useState } from "react";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
 import AuthPage from "~/components/routes/AuthPage";
+import EditableTitle from "~/components/ui/EditableTitle";
 
 const BudgetPage = () => {
   const router = useRouter();
   const { budgetId } = router.query;
-  const ctx = api.useContext();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { convertToIcon } = useIcons();
   const { month, year, startOfMonth, endOfMonth } = useMonthContext();
@@ -37,9 +37,8 @@ const BudgetPage = () => {
       enabled: !!budgetId,
     }
   );
-  const deleteBudget = api.budgets.delete.useMutation({
-    onSuccess: () => void ctx.invalidate(),
-  });
+  const deleteBudget = api.budgets.delete.useMutation();
+  const updateBudgetName = api.budgets.update.useMutation();
   const icon = convertToIcon(budgetData.data?.icon) ?? faMoneyBill1;
   const chartData = [
     { name: "Spent", amount: budgetData.data?.spent },
@@ -49,6 +48,10 @@ const BudgetPage = () => {
   const handleDeleteBudget = () => {
     deleteBudget.mutate({ budgetId: budgetData?.data?.id ?? "" });
     void router.push("/budget");
+  };
+
+  const handleNameUpdate = (name: string) => {
+    updateBudgetName.mutate({ budgetId: budgetData.data?.id ?? "", name });
   };
 
   if (budgetData.isLoading) {
@@ -63,7 +66,12 @@ const BudgetPage = () => {
     <AuthPage>
       <Header
         back
-        title={budgetData?.data?.name}
+        title={
+          <EditableTitle
+            value={budgetData?.data?.name}
+            onUpdate={handleNameUpdate}
+          />
+        }
         subtitle={`${month} ${year}`}
         icon={icon}
       />
