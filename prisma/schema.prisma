@@ -35,11 +35,12 @@ model Budget {
   name                String
   userId              String
   isSavings           Boolean       @default(false)
-  savingsFundId       String?
+  savingsFundId       String?       @unique
   savingsFund         Fund?         @relation(fields: [savingsFundId], references: [id])
   user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   source_transactions Transaction[]
   
+  @@unique([name, userId])
   @@index([userId])
   @@index([savingsFundId])
 }
@@ -53,6 +54,7 @@ model Fund {
   source_transactions Transaction[]
   savingsBudgets      Budget[]
   
+  @@unique([name, userId])
   @@index([userId])
 }
 
