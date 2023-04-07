@@ -5,7 +5,6 @@ import {
   faRedo,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Prisma } from "@prisma/client";
 import { useMonthContext } from "~/hooks/useMonthContext";
 import { ButtonBar } from "~/components/ui/Button";
 import Button from "~/components/ui/Button/Button";
@@ -14,7 +13,7 @@ import MonthYearSelector from "~/components/ui/MonthSelector";
 import Spinner from "~/components/ui/Spinner";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
-import Budget from "~/features/budgets";
+import Budget, { SavingsBudget, IncomeBudget } from "~/features/budgets";
 import { useRouter } from "next/router";
 import { PieChart } from "~/components/ui/Charts";
 import AuthPage from "~/components/routes/AuthPage";
@@ -33,24 +32,6 @@ export default function Budgets() {
     startOfMonth,
     endOfMonth,
   });
-
-  const income = api.transactions.getIncomeByMonth.useQuery({
-    startOfMonth,
-    endOfMonth,
-  });
-
-  const incomeBudget = {
-    spent: income.data ?? new Prisma.Decimal(0),
-    leftover: new Prisma.Decimal(0),
-    id: "income",
-    goal: new Prisma.Decimal(0),
-    icon: "",
-    name: "Income",
-    userId: "",
-    isSavings: false,
-    savingsFundId: null,
-    savingsFund: null,
-  };
 
   const chartData = [
     { name: "Spent", amount: budgetData.data?.spent },
@@ -105,7 +86,7 @@ export default function Budgets() {
       {budgetData.isLoading && <Spinner />}
       {budgetData.isSuccess && (
         <>
-          <Budget data={incomeBudget} />
+          <IncomeBudget />
           <h3 className="w-full text-left font-bold text-primary-light">
             Spending
           </h3>
@@ -115,9 +96,11 @@ export default function Budgets() {
           <h3 className="w-full text-left font-bold text-primary-light">
             Savings
           </h3>
-          {budgetData.data?.budgets.savings.map((budget) => (
-            <Budget key={budget.id} data={budget} />
-          ))}
+          <div className="flex w-full flex-col gap-3">
+            {budgetData.data?.budgets.savings.map((budget) => (
+              <SavingsBudget key={budget.id} data={budget} />
+            ))}
+          </div>
         </>
       )}
     </AuthPage>
