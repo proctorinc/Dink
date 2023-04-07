@@ -35,7 +35,7 @@ const UserPage = () => {
 
   return (
     <AuthPage>
-      <Header title="Profile" subtitle={""} />
+      <Header title="Profile" />
       <div className="flex items-center gap-2">
         <Image
           className="w-30 rounded-full ring ring-primary-med"
