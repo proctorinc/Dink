@@ -20,7 +20,7 @@ export const LineChart: FC<LineChartProps> = ({ data }) => (
       },
     ]}
     fill={[{ match: "*", id: "gradient" }]}
-    margin={{ top: 15, right: 15, bottom: 15, left: 15 }}
+    margin={{ top: 25 }}
     xScale={{ type: "point" }}
     yScale={{
       type: "linear",
