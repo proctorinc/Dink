@@ -156,4 +156,17 @@ export const fundsRouter = createTRPCRouter({
         },
       });
     }),
+  update: protectedProcedure
+    .input(z.object({ fundId: z.string(), name: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      return ctx.prisma.fund.updateMany({
+        where: {
+          id: input.fundId,
+          userId: ctx.session.user.id,
+        },
+        data: {
+          name: input.name,
+        },
+      });
+    }),
 });
