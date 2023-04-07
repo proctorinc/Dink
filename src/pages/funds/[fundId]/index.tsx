@@ -16,17 +16,16 @@ import Button, { ButtonBar } from "~/components/ui/Button";
 import { useState } from "react";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
 import AuthPage from "~/components/routes/AuthPage";
+import EditableTitle from "~/components/ui/EditableTitle";
 
 const FundPage = () => {
   const router = useRouter();
-  const ctx = api.useContext();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { convertToIcon } = useIcons();
   const { fundId } = router.query;
   const strFundId = typeof fundId === "string" ? fundId : null;
-  const deleteFund = api.funds.delete.useMutation({
-    onSuccess: () => void ctx.invalidate(),
-  });
+  const deleteFund = api.funds.delete.useMutation();
+  const updateFundName = api.funds.update.useMutation();
   const fundData = api.funds.getById.useQuery(
     {
       fundId: strFundId ?? "",
@@ -42,6 +41,10 @@ const FundPage = () => {
     void router.push("/funds");
   };
 
+  const handleNameUpdate = (name: string) => {
+    updateFundName.mutate({ fundId: fund?.id ?? "", name });
+  };
+
   if (fundData.isLoading) {
     return <Spinner />;
   }
@@ -54,7 +57,7 @@ const FundPage = () => {
     <AuthPage>
       <Header
         back
-        title={fund?.name}
+        title={<EditableTitle value={fund?.name} onUpdate={handleNameUpdate} />}
         icon={convertToIcon(fund?.icon) ?? faMoneyBill1}
         subtitle={`Total: ${formatToCurrency(fundData?.data?.amount)}`}
       />
