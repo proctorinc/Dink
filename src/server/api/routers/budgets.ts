@@ -1,7 +1,6 @@
 import { Prisma, type Transaction, type Budget } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { formatToCurrency } from "~/utils";
 
 type TransactionAmount = {
   amount: Prisma.Decimal;
@@ -116,9 +115,12 @@ export const budgetsRouter = createTRPCRouter({
       const spendingWithAmounts = sumBudgetTransactions(spendingBudgets);
       const savingsWithAmounts = sumBudgetTransactions(savingsBudgets);
 
-      savingsWithAmounts.map(async (budget) => {
+      savingsBudgets.map(async (budget) => {
         const fundId: string = budget.savingsFundId ?? "";
-        if (formatToCurrency(budget.spent) === "$0.00") {
+        if (
+          budget.source_transactions &&
+          budget.source_transactions.length === 0
+        ) {
           const today = new Date();
           const data = {
             name: `Monthly Savings: ${budget?.name ?? "Budget"}`,
