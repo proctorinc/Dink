@@ -122,26 +122,41 @@ export const budgetsRouter = createTRPCRouter({
           budget.source_transactions.length === 0
         ) {
           const today = new Date();
-          const data = {
-            name: `Monthly Savings: ${budget?.name ?? "Budget"}`,
-            note: "",
-            isTransfer: false,
-            transactionId: "savings",
-            amount: budget?.goal ?? 0,
-            date: today,
-            pending: false,
-            user: {
-              connect: { id: ctx.session.user.id },
+          await ctx.prisma.transaction.upsert({
+            where: {
+              id: `${fundId}-${
+                budget.id
+              }-${today.getMonth()}-${today.getFullYear()}`,
             },
-            fundSource: {
-              connect: { id: fundId },
+            update: {},
+            create: {
+              id: `${fundId}-${
+                budget.id
+              }-${today.getMonth()}-${today.getFullYear()}`,
+              name: "Monthly Savings",
+              note: "",
+              isTransfer: false,
+              isSavings: true,
+              transactionId: "savings",
+              amount: budget?.goal ?? 0,
+              date: today,
+              pending: false,
+              user: {
+                connect: { id: ctx.session.user.id },
+              },
+              fundSource: {
+                connect: { id: fundId },
+              },
+              budgetSource: {
+                connect: { id: budget?.id },
+              },
+              sourceType: "savings",
             },
-            budgetSource: {
-              connect: { id: budget?.id },
+            select: {
+              fundSource: true,
+              budgetSource: true,
             },
-            sourceType: "savings",
-          };
-          await ctx.prisma.transaction.create({ data });
+          });
         }
       });
 
@@ -192,14 +207,12 @@ export const budgetsRouter = createTRPCRouter({
 
       return budget ? addAmountToBudgetWithTransactions(budget) : budget;
     }),
-  create: protectedProcedure
+  createSpending: protectedProcedure
     .input(
       z.object({
         name: z.string(),
         goal: z.number(),
         icon: z.string(),
-        isSavings: z.boolean(),
-        fundId: z.string().nullable(),
       })
     )
     .mutation(({ input, ctx }) => {
@@ -208,15 +221,42 @@ export const budgetsRouter = createTRPCRouter({
           icon: input.icon,
           name: input.name,
           goal: input.goal,
-          isSavings: input.isSavings,
-          ...(input.fundId !== null
-            ? { savingsFund: { connect: { id: input.fundId } } }
-            : {}),
+          isSavings: false,
           user: {
             connect: { id: ctx.session.user.id },
           },
         },
       });
+    }),
+  createSavings: protectedProcedure
+    .input(
+      z.object({
+        goal: z.number(),
+        fundId: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const fund = await ctx.prisma.fund.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          id: input.fundId,
+        },
+      });
+
+      if (!!fund) {
+        return ctx.prisma.budget.create({
+          data: {
+            icon: fund?.icon ?? "",
+            name: fund?.name,
+            goal: input.goal,
+            isSavings: true,
+            savingsFund: { connect: { id: input.fundId } },
+            user: {
+              connect: { id: ctx.session.user.id },
+            },
+          },
+        });
+      }
     }),
   delete: protectedProcedure
     .input(z.object({ budgetId: z.string() }))
@@ -235,6 +275,19 @@ export const budgetsRouter = createTRPCRouter({
         where: {
           id: input.budgetId,
           userId: ctx.session.user.id,
+        },
+      });
+    }),
+  update: protectedProcedure
+    .input(z.object({ budgetId: z.string(), name: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      return ctx.prisma.budget.updateMany({
+        where: {
+          id: input.budgetId,
+          userId: ctx.session.user.id,
+        },
+        data: {
+          name: input.name,
         },
       });
     }),
