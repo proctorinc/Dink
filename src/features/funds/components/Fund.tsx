@@ -27,8 +27,10 @@ const Fund: FC<FundProps> = ({ data: fund, onClick }) => {
     <Card onClick={onClick ?? navigateToFund}>
       <Card.Header size="xl">
         <Card.Group horizontal size="xl">
-          <IconButton icon={icon} size="sm" style="secondary" />
-          <h3 className="text-lg font-bold">{formatToTitleCase(fund?.name)}</h3>
+          <IconButton icon={icon} style="secondary" />
+          <h3 className="overflow-hidden text-ellipsis text-lg font-bold">
+            {formatToTitleCase(fund?.name)}
+          </h3>
         </Card.Group>
         <span className="h-fit text-lg font-bold text-primary-light group-hover:text-primary-med">
           {formatToCurrency(fund?.amount)}
