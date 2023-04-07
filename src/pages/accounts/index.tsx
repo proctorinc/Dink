@@ -37,7 +37,7 @@ export default function BankAccounts() {
     {
       id: "Line",
       data: [
-        { x: 1, y: 1 },
+        { x: 1, y: 4 },
         { x: 2, y: 5 },
         { x: 3, y: 3 },
         { x: 4, y: 5 },
@@ -52,7 +52,7 @@ export default function BankAccounts() {
         title="Accounts"
         subtitle={`Net worth: ${formatToCurrency(accountData.data?.total)}`}
       />
-      <div className="h-40 w-full">
+      <div className="h-48 w-full">
         <LineChart data={data} />
       </div>
       <ButtonBar>
