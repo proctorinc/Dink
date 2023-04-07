@@ -12,6 +12,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ButtonBar, IconButton } from "~/components/ui/Button";
 import Button from "~/components/ui/Button/Button";
 import Card from "~/components/ui/Card";
+import { LineChart } from "~/components/ui/Charts";
+import { type Serie } from "@nivo/line";
 
 export default function BankAccounts() {
   const router = useRouter();
@@ -30,16 +32,28 @@ export default function BankAccounts() {
     createDemoAccount.mutate();
   };
 
+  const data: Serie[] = [
+    {
+      id: "Line",
+      data: [
+        { x: 1, y: 1 },
+        { x: 2, y: 5 },
+        { x: 3, y: 3 },
+        { x: 4, y: 5 },
+        { x: 5, y: 2 },
+      ],
+    },
+  ];
+
   return (
     <>
       <Header
         title="Accounts"
         subtitle={`Net worth: ${formatToCurrency(accountData.data?.total)}`}
       />
-
-      {/* Chart block component */}
-      <div className="h-52 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div>
-
+      <div className="h-40 w-full">
+        <LineChart data={data} />
+      </div>
       <ButtonBar>
         <Button
           icon={faPlus}
@@ -48,7 +62,6 @@ export default function BankAccounts() {
           onClick={handleCreateAccount}
         />
       </ButtonBar>
-
       {accountCategories.map((category) => (
         <Card key={category}>
           <Card.Header size="xl" onClick={() => handleOpen(category)}>
