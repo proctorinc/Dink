@@ -27,6 +27,7 @@ const TransactionsPage = () => {
   const [includeSavings, setIncludeSavings] = useState(false);
   const [includeCategorized, setIncludeCategorized] = useState(true);
   const [includeUncategorized, setIncludeUncategorized] = useState(true);
+  const [includeIncome, setIncludeIncome] = useState(true);
 
   const transactionData = api.transactions.search.useQuery({
     filterMonthly,
@@ -35,11 +36,35 @@ const TransactionsPage = () => {
     includeSavings,
     includeCategorized,
     includeUncategorized,
+    includeIncome,
   });
+
+  const allIncluded =
+    includeCategorized &&
+    includeSavings &&
+    includeUncategorized &&
+    includeIncome;
+
+  const handleToggleAll = () => {
+    if (allIncluded) {
+      setIncludeCategorized(false);
+      setIncludeSavings(false);
+      setIncludeUncategorized(false);
+      setIncludeIncome(false);
+    } else {
+      setIncludeCategorized(true);
+      setIncludeSavings(true);
+      setIncludeUncategorized(true);
+      setIncludeIncome(true);
+    }
+  };
 
   return (
     <AuthPage>
-      <Header title="Transactions" subtitle={`${month} ${year}`} />
+      <Header
+        title="Transactions"
+        subtitle={filterMonthly ? `${month} ${year}` : "All"}
+      />
       <ButtonBar>
         <Button
           icon={faMagnifyingGlass}
@@ -60,6 +85,25 @@ const TransactionsPage = () => {
           }}
         />
       </ButtonBar>
+      {searchEnabled && (
+        <Card size="sm">
+          <Card.Body>
+            <Card.Group horizontal>
+              <span className="text-2xl font-bold text-primary-light">
+                <IconButton icon={faMagnifyingGlass} size="xs" />
+              </span>
+              <input
+                id="name-input"
+                autoFocus
+                placeholder="Enter name..."
+                className="text-md flex-grow bg-primary-med font-bold text-primary-light placeholder-primary-light"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </Card.Group>
+          </Card.Body>
+        </Card>
+      )}
       {filtersOpen && (
         <Card>
           <Card.Body>
@@ -82,35 +126,13 @@ const TransactionsPage = () => {
                 />
               </Card.Group>
               <span className="text-md font-bold">Include Types</span>
-              <Card.Group horizontal>
+              <Card.Group horizontal className="flex-wrap">
                 <Button
                   title="All"
                   size="sm"
-                  icon={
-                    includeCategorized && includeSavings && includeUncategorized
-                      ? faSquareCheck
-                      : faSquare
-                  }
-                  style={
-                    includeCategorized && includeSavings && includeUncategorized
-                      ? "secondary"
-                      : "primary"
-                  }
-                  onClick={() => {
-                    if (
-                      includeCategorized &&
-                      includeSavings &&
-                      includeUncategorized
-                    ) {
-                      setIncludeCategorized(false);
-                      setIncludeSavings(false);
-                      setIncludeUncategorized(false);
-                    } else {
-                      setIncludeCategorized(true);
-                      setIncludeSavings(true);
-                      setIncludeUncategorized(true);
-                    }
-                  }}
+                  icon={allIncluded ? faSquareCheck : faSquare}
+                  style={allIncluded ? "secondary" : "primary"}
+                  onClick={handleToggleAll}
                 />
                 <Button
                   title="Categorized"
@@ -133,26 +155,14 @@ const TransactionsPage = () => {
                   style={includeSavings ? "secondary" : "primary"}
                   onClick={() => setIncludeSavings((prev) => !prev)}
                 />
+                <Button
+                  title="Income"
+                  size="sm"
+                  icon={includeIncome ? faSquareCheck : faSquare}
+                  style={includeIncome ? "secondary" : "primary"}
+                  onClick={() => setIncludeIncome((prev) => !prev)}
+                />
               </Card.Group>
-            </Card.Group>
-          </Card.Body>
-        </Card>
-      )}
-      {searchEnabled && (
-        <Card size="sm">
-          <Card.Body>
-            <Card.Group horizontal>
-              <span className="text-2xl font-bold text-primary-light">
-                <IconButton icon={faMagnifyingGlass} size="xs" />
-              </span>
-              <input
-                id="name-input"
-                autoFocus
-                placeholder="Enter name..."
-                className="text-md flex-grow bg-primary-med font-bold text-primary-light placeholder-primary-light"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
             </Card.Group>
           </Card.Body>
         </Card>
@@ -164,10 +174,7 @@ const TransactionsPage = () => {
           <Card>
             <Card.Header size="xl">
               <Card.Group>
-                <span>None</span>
-                <span className="text-xs text-primary-light">
-                  Try using different filters
-                </span>
+                <span>No Transactions</span>
               </Card.Group>
             </Card.Header>
           </Card>
