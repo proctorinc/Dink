@@ -14,6 +14,7 @@ import Button from "~/components/ui/Button/Button";
 import Card from "~/components/ui/Card";
 import { LineChart } from "~/components/ui/Charts";
 import { type Serie } from "@nivo/line";
+import AuthPage from "~/components/routes/AuthPage";
 
 export default function BankAccounts() {
   const router = useRouter();
@@ -46,7 +47,7 @@ export default function BankAccounts() {
   ];
 
   return (
-    <>
+    <AuthPage>
       <Header
         title="Accounts"
         subtitle={`Net worth: ${formatToCurrency(accountData.data?.total)}`}
@@ -108,6 +109,6 @@ export default function BankAccounts() {
           </Card.Collapse>
         </Card>
       ))}
-    </>
+    </AuthPage>
   );
 }

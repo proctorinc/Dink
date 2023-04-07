@@ -8,6 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import AuthPage from "~/components/routes/AuthPage";
 import Button, { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import Header from "~/components/ui/Header";
@@ -46,7 +47,7 @@ export default function CreateBudgetPage() {
   };
 
   return (
-    <>
+    <AuthPage>
       <Header back title={`Create Budget`} />
       <Card>
         <Card.Body horizontal>
@@ -137,6 +138,6 @@ export default function CreateBudgetPage() {
           onClick={handleConfirm}
         />
       </div>
-    </>
+    </AuthPage>
   );
 }

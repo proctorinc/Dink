@@ -9,6 +9,7 @@ import { api } from "~/utils/api";
 import Button, { ButtonBar } from "~/components/ui/Button";
 import { useState } from "react";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
+import AuthPage from "~/components/routes/AuthPage";
 
 const AccountPage = () => {
   const router = useRouter();
@@ -37,7 +38,7 @@ const AccountPage = () => {
   }
 
   return (
-    <>
+    <AuthPage>
       <Header
         back
         title={accountData?.data?.name}
@@ -94,7 +95,7 @@ const AccountPage = () => {
             <Transaction key={transaction.id} data={transaction} />
           ))}
       </div>
-    </>
+    </AuthPage>
   );
 };
 

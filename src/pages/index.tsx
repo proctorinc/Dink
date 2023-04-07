@@ -15,7 +15,6 @@ export default function Home() {
         title={`Hi, ${sessionData?.user?.nickname ?? ""}`}
         subtitle={formatToMonthYear(new Date())}
       />
-      {/* <div className="h-64 w-full rounded-xl bg-gradient-to-t from-secondary-dark to-secondary-med"></div> */}
       <TransactionsSummary />
       <BudgetSummary />
       <FundsSummary />

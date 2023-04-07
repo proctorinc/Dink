@@ -9,10 +9,10 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import AuthPage from "~/components/routes/AuthPage";
 import Button, { ButtonBar, IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import Header from "~/components/ui/Header";
-import Spinner from "~/components/ui/Spinner";
 import { api } from "~/utils/api";
 
 const UserPage = () => {
@@ -33,12 +33,8 @@ const UserPage = () => {
     }
   };
 
-  if (!sessionData?.user) {
-    return <Spinner />;
-  }
-
   return (
-    <>
+    <AuthPage>
       <Header title="Profile" subtitle={""} />
       <div className="flex items-center gap-2">
         <Image
@@ -52,7 +48,7 @@ const UserPage = () => {
           <div className="flex items-center gap-2">
             {!editing && (
               <h2 className="text-3xl font-bold text-white">
-                {sessionData.user.nickname ?? "Add Nickname"}
+                {sessionData?.user.nickname ?? "Add Nickname"}
               </h2>
             )}
             {editing && (
@@ -111,7 +107,7 @@ const UserPage = () => {
         <Button title="Log Out" onClick={() => void signOut()} />
         <Button title="Delete Account" />
       </ButtonBar>
-    </>
+    </AuthPage>
   );
 };
 

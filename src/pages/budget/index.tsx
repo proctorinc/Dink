@@ -17,6 +17,7 @@ import { api } from "~/utils/api";
 import Budget from "~/features/budgets";
 import { useRouter } from "next/router";
 import { PieChart } from "~/components/ui/Charts";
+import AuthPage from "~/components/routes/AuthPage";
 
 export default function Budgets() {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function Budgets() {
   ];
 
   return (
-    <>
+    <AuthPage>
       <Header title={`Budget`} subtitle={`${month} ${year}`} />
       <div className="flex w-full items-center justify-center">
         <div className="p-2">
@@ -119,6 +120,6 @@ export default function Budgets() {
           ))}
         </>
       )}
-    </>
+    </AuthPage>
   );
 }

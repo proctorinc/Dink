@@ -1,6 +1,7 @@
 import { faCoins, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Prisma } from "@prisma/client";
 import { useRouter } from "next/router";
+import AuthPage from "~/components/routes/AuthPage";
 import { ButtonBar } from "~/components/ui/Button";
 import Button from "~/components/ui/Button/Button";
 import { PieChart } from "~/components/ui/Charts";
@@ -30,7 +31,7 @@ export default function Funds() {
   ];
 
   return (
-    <>
+    <AuthPage>
       <Header
         title="Funds"
         subtitle={`Total: ${formatToCurrency(fundsData?.data?.total)}`}
@@ -73,6 +74,6 @@ export default function Funds() {
           onClick={() => void router.push(`/funds/${fund.id}`)}
         />
       ))}
-    </>
+    </AuthPage>
   );
 }

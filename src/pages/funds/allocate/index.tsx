@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type Fund as FundType, type Prisma } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import AuthPage from "~/components/routes/AuthPage";
 import Button, { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import Header from "~/components/ui/Header";
@@ -36,7 +37,7 @@ export default function AllocateFundsPage() {
   };
 
   return (
-    <>
+    <AuthPage>
       <Header
         back
         title={`Allocate Funds`}
@@ -114,6 +115,6 @@ export default function AllocateFundsPage() {
         style="secondary"
         onClick={allocateFunds}
       />
-    </>
+    </AuthPage>
   );
 }

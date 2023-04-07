@@ -16,6 +16,7 @@ import useIcons from "~/hooks/useIcons";
 import Button, { ButtonBar } from "~/components/ui/Button";
 import { useState } from "react";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
+import AuthPage from "~/components/routes/AuthPage";
 
 const BudgetPage = () => {
   const router = useRouter();
@@ -59,7 +60,7 @@ const BudgetPage = () => {
   }
 
   return (
-    <>
+    <AuthPage>
       <Header
         back
         title={budgetData?.data?.name}
@@ -105,7 +106,7 @@ const BudgetPage = () => {
             <NoSourceTransaction key={transaction.id} data={transaction} />
           ))}
       </div>
-    </>
+    </AuthPage>
   );
 };
 

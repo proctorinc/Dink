@@ -15,6 +15,7 @@ import Spinner from "~/components/ui/Spinner";
 import { api } from "~/utils/api";
 import Card from "~/components/ui/Card";
 import { useState } from "react";
+import AuthPage from "~/components/routes/AuthPage";
 
 const TransactionsPage = () => {
   const router = useRouter();
@@ -37,7 +38,7 @@ const TransactionsPage = () => {
   });
 
   return (
-    <>
+    <AuthPage>
       <Header title="Transactions" subtitle={`${month} ${year}`} />
       <ButtonBar>
         <Button
@@ -177,7 +178,7 @@ const TransactionsPage = () => {
             <Transaction key={transaction.id} data={transaction} />
           ))}
       </div>
-    </>
+    </AuthPage>
   );
 };
 
