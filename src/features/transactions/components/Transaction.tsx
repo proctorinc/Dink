@@ -2,7 +2,7 @@ import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { type Budget, type Fund, Transaction } from "@prisma/client";
 import { useRouter } from "next/router";
 import { type FC } from "react";
-import { formatToCurrency } from "~/utils";
+import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 
@@ -38,9 +38,10 @@ const Transaction: FC<TransactionProps> = ({ data: transaction }) => {
             </span>
             <span className="text-sm text-primary-light group-hover:text-primary-med">
               {transaction.sourceType
-                ? transaction.sourceType
+                ? formatToTitleCase(transaction.sourceType)
                 : "Uncategorized"}
-              {transaction.sourceType === "fund" &&
+              {(transaction.sourceType === "fund" ||
+                transaction.sourceType === "savings") &&
                 ` / ${transaction.fundSource?.name ?? ""}`}
               {transaction.sourceType === "budget" &&
                 ` / ${transaction.budgetSource?.name ?? ""}`}
@@ -52,10 +53,15 @@ const Transaction: FC<TransactionProps> = ({ data: transaction }) => {
             {formatToCurrency(transaction.amount)}
           </span>
           <span className="text-sm text-primary-light group-hover:text-primary-med">
-            {transaction.date.toLocaleString("en-us", {
-              month: "short",
-              day: "numeric",
-            })}
+            {transaction?.isSavings &&
+              transaction?.date.toLocaleString("en-us", {
+                month: "long",
+              })}
+            {!transaction.isSavings &&
+              transaction.date.toLocaleString("en-us", {
+                month: "short",
+                day: "numeric",
+              })}
           </span>
         </Card.Group>
       </Card.Body>

@@ -30,11 +30,16 @@ export const NoSourceTransaction: FC<NoSourceTransactionProps> = ({
         <div className="flex flex-col">
           <span className="text-lg font-bold">{transaction?.name}</span>
           <span className="text-sm text-primary-light group-hover:text-primary-med">
-            {transaction?.date.toLocaleString("en-us", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
+            {transaction?.isSavings &&
+              transaction?.date.toLocaleString("en-us", {
+                month: "long",
+                year: "numeric",
+              })}
+            {!transaction?.isSavings &&
+              transaction?.date.toLocaleString("en-us", {
+                month: "short",
+                day: "numeric",
+              })}
           </span>
         </div>
         <div className="flex flex-col justify-center text-right">
