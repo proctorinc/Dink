@@ -32,8 +32,14 @@ export default function Budgets() {
     startOfMonth,
     endOfMonth,
   });
-  const income = {
-    spent: new Prisma.Decimal(0),
+
+  const income = api.transactions.getIncomeByMonth.useQuery({
+    startOfMonth,
+    endOfMonth,
+  });
+
+  const incomeBudget = {
+    spent: income.data ?? new Prisma.Decimal(0),
     leftover: new Prisma.Decimal(0),
     id: "income",
     goal: new Prisma.Decimal(0),
@@ -98,10 +104,10 @@ export default function Budgets() {
       {budgetData.isLoading && <Spinner />}
       {budgetData.isSuccess && (
         <>
+          <Budget data={incomeBudget} />
           <h3 className="w-full text-left font-bold text-primary-light">
             Spending
           </h3>
-          <Budget data={income} />
           {budgetData.data?.budgets.spending.map((budget) => (
             <Budget key={budget.id} data={budget} />
           ))}

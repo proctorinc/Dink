@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -98,35 +99,83 @@ export const transactionsRouter = createTRPCRouter({
       },
     });
   }),
-  categorizeTransaction: protectedProcedure
+  getIncomeByMonth: protectedProcedure
+    .input(
+      z.object({
+        startOfMonth: z.date(),
+        endOfMonth: z.date(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const income = await ctx.prisma.transaction.groupBy({
+        by: ["sourceType"],
+        where: {
+          userId: ctx.session.user.id,
+          sourceType: "income",
+          date: {
+            gte: input.startOfMonth,
+            lte: input.endOfMonth,
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      });
+
+      return income[0]?._sum.amount ?? new Prisma.Decimal(0);
+    }),
+  categorizeAsFund: protectedProcedure
     .input(
       z.object({
         id: z.string().nullable(),
-        type: z.string().nullable(),
         sourceId: z.string(),
       })
     )
     .mutation(({ input, ctx }) => {
-      if (input.type === "fund") {
-        return ctx.prisma.transaction.updateMany({
-          where: {
-            userId: ctx.session.user.id,
-            id: input.id ?? "",
-          },
-          data: {
-            sourceType: input.type,
-            fundSourceId: input.sourceId,
-          },
-        });
-      }
       return ctx.prisma.transaction.updateMany({
         where: {
           userId: ctx.session.user.id,
           id: input.id ?? "",
         },
         data: {
-          sourceType: input.type,
+          sourceType: "fund",
+          fundSourceId: input.sourceId,
+        },
+      });
+    }),
+  categorizeAsBudget: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().nullable(),
+        sourceId: z.string(),
+      })
+    )
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.transaction.updateMany({
+        where: {
+          userId: ctx.session.user.id,
+          id: input.id ?? "",
+        },
+        data: {
+          sourceType: "budget",
           budgetSourceId: input.sourceId,
+        },
+      });
+    }),
+  categorizeAsIncome: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().nullable(),
+      })
+    )
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.transaction.updateMany({
+        where: {
+          userId: ctx.session.user.id,
+          id: input.id ?? "",
+        },
+        data: {
+          sourceType: "income",
         },
       });
     }),
