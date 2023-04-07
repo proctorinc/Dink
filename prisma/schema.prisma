@@ -47,7 +47,7 @@ model Budget {
 model Fund {
   id                  String        @id @default(cuid())
   icon                String?
-  name                String        @unique
+  name                String
   userId              String
   user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   source_transactions Transaction[]
