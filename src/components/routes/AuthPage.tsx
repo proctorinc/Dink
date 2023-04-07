@@ -1,5 +1,3 @@
-"use client";
-
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type FC, type ReactNode } from "react";
@@ -11,14 +9,14 @@ type AuthPageProps = {
 
 const AuthPage: FC<AuthPageProps> = ({ children }) => {
   const router = useRouter();
-  const { data: sessionData } = useSession();
+  const { status } = useSession();
 
-  if (typeof window !== "undefined" && !sessionData) {
-    void router.push("/login");
+  if (status === "authenticated") {
+    return <>{children}</>;
   }
 
-  if (sessionData) {
-    return <>{children}</>;
+  if (typeof window !== "undefined" && status === "unauthenticated") {
+    void router.push("/login");
   }
 
   return <Spinner />;
