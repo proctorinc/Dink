@@ -12,6 +12,7 @@ export const transactionsRouter = createTRPCRouter({
         includeSavings: z.boolean(),
         includeCategorized: z.boolean(),
         includeUncategorized: z.boolean(),
+        includeIncome: z.boolean(),
       })
     )
     .query(async ({ input, ctx }) => {
@@ -37,6 +38,9 @@ export const transactionsRouter = createTRPCRouter({
             },
             {
               ...(input.includeCategorized ? { sourceType: "budget" } : {}),
+            },
+            {
+              ...(input.includeIncome ? { sourceType: "income" } : {}),
             },
           ],
         },
@@ -182,7 +186,6 @@ export const transactionsRouter = createTRPCRouter({
   sumAllTransactionsMonthly: protectedProcedure.query(async ({ ctx }) => {
     const data = await ctx.prisma
       .$queryRaw`SELECT * FROM dink.Transaction, DATE_FORMAT(date, '%m-%Y') AS date_created WHERE userId = ${ctx.session.user.id} GROUP BY MONTH(date_created), YEAR(date_created);`;
-    console.log(data);
     return data;
   }),
   createFundAllocation: protectedProcedure
