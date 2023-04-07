@@ -25,28 +25,8 @@ const Budget: FC<BudgetProps> = ({ data: budget, onClick }) => {
     void router.push(`/budget/${budget?.id ?? ""}`);
   };
 
-  if (budget.goal === budget.leftover) {
-    return (
-      <Card onClick={onClick ?? navigateToBudget}>
-        <Card.Body horizontal>
-          <Card.Group size="sm">
-            <Card.Group horizontal>
-              <IconButton icon={icon} size="sm" style="secondary" />
-              <h3 className="text-lg font-bold">
-                {formatToTitleCase(budget.name)}
-              </h3>
-            </Card.Group>
-          </Card.Group>
-          <span className="font-bold text-primary-light">
-            {formatToCurrency(budget.goal)}
-          </span>
-        </Card.Body>
-      </Card>
-    );
-  }
-
   return (
-    <Card key={budget.id} size="sm" onClick={onClick ?? navigateToBudget}>
+    <Card size="sm" onClick={onClick ?? navigateToBudget}>
       <Card.Header>
         <Card.Group horizontal>
           <IconButton icon={icon} size="sm" style="secondary" />
