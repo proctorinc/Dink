@@ -1,11 +1,13 @@
 import {
   faCheck,
+  faCoins,
   faDollarSign,
   faPencil,
-  faSquare,
-  faSquareCheck,
+  faPiggyBank,
+  faRedo,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { type Prisma, type Fund as FundType } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import AuthPage from "~/components/routes/AuthPage";
@@ -23,24 +25,35 @@ export default function CreateBudgetPage() {
 
   const [name, setName] = useState("");
   const [goal, setGoal] = useState(0);
-  const [isSavings, setIsSavings] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState(icons[0]?.name ?? "");
-  const [fundId, setFundId] = useState<string | null>(null);
+  const [fund, setFund] = useState<
+    (FundType & { amount: Prisma.Decimal }) | null
+  >(null);
+  const [isSavings, setIsSavings] = useState<boolean | null>(null);
 
-  const createBudget = api.budgets.create.useMutation({
+  const createSpending = api.budgets.createSpending.useMutation({
+    onSuccess: () => void ctx.invalidate(),
+  });
+  const createSavings = api.budgets.createSavings.useMutation({
     onSuccess: () => void ctx.invalidate(),
   });
   const fundsData = api.funds.getAllData.useQuery();
-  const isValidData = !!name && !!selectedIcon && goal != 0;
+  const isValidData =
+    (!isSavings && !!name && !!selectedIcon && goal != 0) ||
+    (!!isSavings && !!fund && goal != 0 && goal != 0);
 
   const handleConfirm = () => {
-    if (isValidData) {
-      createBudget.mutate({
+    if (isValidData && !isSavings) {
+      createSpending.mutate({
         name,
         goal,
-        isSavings,
         icon: selectedIcon,
-        fundId,
+      });
+      void router.push("/budget");
+    } else if (isValidData && !!fund && !!isSavings) {
+      createSavings.mutate({
+        goal,
+        fundId: fund.id,
       });
       void router.push("/budget");
     }
@@ -50,84 +63,119 @@ export default function CreateBudgetPage() {
     <AuthPage>
       <Header back title={`Create Budget`} />
       <Card>
-        <Card.Body horizontal>
-          <Card.Group>
-            <label htmlFor="amount-input" className="font-bold">
-              Name:
-            </label>
-            <Card.Group horizontal>
-              <span className="text-2xl font-bold text-primary-light">
-                <FontAwesomeIcon icon={faPencil} />
-              </span>
-              <input
-                id="name-input"
-                placeholder="Enter name..."
-                className="bg-primary-med text-xl font-bold text-primary-light placeholder-primary-light"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-              />
-            </Card.Group>
-            <label htmlFor="amount-input" className="font-bold">
-              Goal:
-            </label>
-            <Card.Group horizontal>
-              <span className="text-2xl font-bold text-primary-light">
-                <FontAwesomeIcon icon={faDollarSign} />
-              </span>
-              <input
-                id="amount-input"
-                type="number"
-                className="bg-primary-med text-xl font-bold text-primary-light"
-                value={goal}
-                onChange={(event) => setGoal(Number(event.target.value))}
-              />
-            </Card.Group>
-            <label htmlFor="amount-input" className="font-bold">
-              Savings Transfer:
-            </label>
-            <Card.Group horizontal>
-              <Button
-                title="No"
-                icon={isSavings ? faSquare : faSquareCheck}
-                style={isSavings ? "primary" : "secondary"}
-                onClick={() => setIsSavings(false)}
-              />
-              <Button
-                title="Yes"
-                icon={isSavings ? faSquareCheck : faSquare}
-                style={isSavings ? "secondary" : "primary"}
-                onClick={() => setIsSavings(true)}
-              />
-            </Card.Group>
-            <Card.Collapse
-              open={isSavings}
-              className="max-h-64 overflow-y-scroll rounded-xl"
-            >
-              <Card.Group size="sm">
-                {fundsData?.data?.funds.map((fund) => (
-                  <Fund
-                    key={fund.id}
-                    data={fund}
-                    onClick={() => setFundId(fund.id)}
-                  />
-                ))}
+        <Card.Collapse open={isSavings === null}>
+          <Card onClick={() => setIsSavings(false)}>
+            <Card.Header size="xl">
+              <Card.Group horizontal>
+                <IconButton icon={faCoins} style="secondary" />
+                <h3>Spending</h3>
               </Card.Group>
-            </Card.Collapse>
-            <label htmlFor="amount-input" className="font-bold">
-              Icon:
-            </label>
-            <Card.Group horizontal className="h-40 flex-wrap overflow-y-scroll">
-              {icons.map((icon) => (
-                <IconButton
-                  key={icon.name}
-                  icon={icon.icon}
-                  style={selectedIcon === icon.name ? "secondary" : "primary"}
-                  onClick={() => setSelectedIcon(icon.name)}
-                />
-              ))}
-            </Card.Group>
-          </Card.Group>
-        </Card.Body>
+            </Card.Header>
+          </Card>
+          <Card onClick={() => setIsSavings(true)}>
+            <Card.Header size="xl">
+              <Card.Group horizontal>
+                <IconButton icon={faPiggyBank} style="secondary" />
+                <h3>Savings</h3>
+              </Card.Group>
+            </Card.Header>
+          </Card>
+        </Card.Collapse>
+        <Card.Collapse open={!!isSavings}>
+          <Card>
+            <Card.Body horizontal>
+              <Card.Group>
+                <label htmlFor="amount-input" className="font-bold">
+                  Monthly Amount:
+                </label>
+                <Card.Group horizontal>
+                  <span className="text-2xl font-bold text-primary-light">
+                    <FontAwesomeIcon icon={faDollarSign} />
+                  </span>
+                  <input
+                    id="amount-input"
+                    type="number"
+                    className="bg-primary-med text-xl font-bold text-primary-light"
+                    value={goal}
+                    onChange={(event) => setGoal(Number(event.target.value))}
+                  />
+                </Card.Group>
+                <label className="font-bold">Choose Fund:</label>
+                <Card.Collapse open={!!fund}>
+                  {fund && <Fund data={fund} />}
+                </Card.Collapse>
+                <Card.Collapse
+                  open={fund === null}
+                  className="max-h-64 overflow-y-scroll rounded-xl"
+                >
+                  <Card.Group size="sm">
+                    {fundsData?.data?.funds.map((fund) => (
+                      <Fund
+                        key={fund.id}
+                        data={fund}
+                        onClick={() => setFund(fund)}
+                      />
+                    ))}
+                  </Card.Group>
+                </Card.Collapse>
+              </Card.Group>
+            </Card.Body>
+          </Card>
+        </Card.Collapse>
+        <Card.Collapse open={isSavings === false}>
+          <Card>
+            <Card.Body horizontal>
+              <Card.Group>
+                <label htmlFor="name-input" className="font-bold">
+                  Name:
+                </label>
+                <Card.Group horizontal>
+                  <span className="text-2xl font-bold text-primary-light">
+                    <FontAwesomeIcon icon={faPencil} />
+                  </span>
+                  <input
+                    id="name-input"
+                    placeholder="Enter name..."
+                    className="bg-primary-med text-xl font-bold text-primary-light placeholder-primary-light"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                  />
+                </Card.Group>
+                <label htmlFor="amount-input" className="font-bold">
+                  Goal:
+                </label>
+                <Card.Group horizontal>
+                  <span className="text-2xl font-bold text-primary-light">
+                    <FontAwesomeIcon icon={faDollarSign} />
+                  </span>
+                  <input
+                    id="amount-input"
+                    type="number"
+                    className="bg-primary-med text-xl font-bold text-primary-light"
+                    value={goal}
+                    onChange={(event) => setGoal(Number(event.target.value))}
+                  />
+                </Card.Group>
+                <label className="font-bold">Icon:</label>
+                <Card.Group
+                  horizontal
+                  className="h-40 flex-wrap overflow-y-scroll"
+                >
+                  {icons.map((icon) => (
+                    <IconButton
+                      key={icon.name}
+                      icon={icon.icon}
+                      style={
+                        selectedIcon === icon.name ? "secondary" : "primary"
+                      }
+                      onClick={() => setSelectedIcon(icon.name)}
+                    />
+                  ))}
+                </Card.Group>
+              </Card.Group>
+            </Card.Body>
+          </Card>
+        </Card.Collapse>
       </Card>
       <div className="flex w-full justify-center gap-2">
         <Button
@@ -136,6 +184,13 @@ export default function CreateBudgetPage() {
           disabled={!isValidData}
           style="secondary"
           onClick={handleConfirm}
+        />
+        <Button
+          title="Reselect"
+          icon={faRedo}
+          disabled={isSavings === null}
+          style={isValidData ? "primary" : "secondary"}
+          onClick={() => setIsSavings(null)}
         />
       </div>
     </AuthPage>
