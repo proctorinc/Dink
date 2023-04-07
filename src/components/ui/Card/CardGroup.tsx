@@ -17,7 +17,7 @@ const CardGroup: FC<CardGroupProps> = ({
   const orientation = horizontal ? "items-center" : "flex-col";
 
   return (
-    <div className={`${orientation} ${gap} flex flex-wrap ${className ?? ""}`}>
+    <div className={`${orientation} ${gap} flex ${className ?? ""}`}>
       {children}
     </div>
   );
