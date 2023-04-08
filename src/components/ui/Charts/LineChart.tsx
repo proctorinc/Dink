@@ -24,7 +24,6 @@ export const LineChart: FC<LineChartProps> = ({ data }) => (
     xScale={{ type: "point" }}
     yScale={{
       type: "linear",
-      min: "auto",
       max: "auto",
       stacked: true,
       reverse: false,
