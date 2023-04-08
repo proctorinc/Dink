@@ -14,7 +14,7 @@ import Button from "~/components/ui/Button/Button";
 import Card from "~/components/ui/Card";
 import { LineChart } from "~/components/ui/Charts";
 import { type Serie } from "@nivo/line";
-import AuthPage from "~/components/routes/AuthPage";
+import Page from "~/components/ui/Page";
 
 export default function BankAccounts() {
   const router = useRouter();
@@ -37,78 +37,100 @@ export default function BankAccounts() {
     {
       id: "Line",
       data: [
-        { x: 1, y: 4 },
-        { x: 2, y: 5 },
+        { x: 1, y: 2 },
+        { x: 2, y: 3 },
         { x: 3, y: 3 },
-        { x: 4, y: 5 },
-        { x: 5, y: 2 },
+        { x: 4, y: 2 },
+        { x: 5, y: 5 },
+        { x: 6, y: 6 },
+        { x: 7, y: 8 },
+        { x: 8, y: 5 },
+        { x: 9, y: 9 },
+        { x: 10, y: 9 },
       ],
     },
   ];
 
   return (
-    <AuthPage>
-      <Header
-        title="Accounts"
-        subtitle={`Net worth: ${formatToCurrency(accountData.data?.total)}`}
-      />
-      <div className="h-48 w-full">
+    <Page auth title="Accounts" style="basic">
+      <div className="w-full px-4">
+        <Header
+          title="Accounts"
+          subtitle={`Net worth: ${formatToCurrency(accountData.data?.total)}`}
+        />
+      </div>
+      <div className="flex h-40 w-full flex-col">
         <LineChart data={data} />
       </div>
-      <ButtonBar>
-        <Button
-          icon={faPlus}
-          title="Account"
-          style="secondary"
-          onClick={handleCreateAccount}
-        />
-      </ButtonBar>
-      {accountCategories.map((category) => (
-        <Card key={category}>
-          <Card.Header size="xl" onClick={() => handleOpen(category)}>
-            <Card.Group size="xl" horizontal>
-              <IconButton
-                icon={AccountCategoryIcons[category]}
-                size="sm"
-                style="secondary"
-              />
-              <h3 className="text-lg font-bold">
-                {category === AccountCategory.Cash
-                  ? "Cash"
-                  : formatToTitleCase(category)}
-              </h3>
-            </Card.Group>
-            <span className="text-lg font-bold text-primary-light group-hover:text-primary-med">
-              {formatToCurrency(accountData.data?.categories[category].total)}
-            </span>
-          </Card.Header>
-          <Card.Collapse open={open === category}>
-            {accountData.data?.categories[category].accounts.map((account) => (
-              <Card
-                key={account.id}
-                onClick={() => void router.push(`/accounts/${account.id}`)}
-              >
-                <Card.Body horizontal>
-                  <Card.Group horizontal>
-                    <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-secondary-dark">
-                      <div className="h-8 w-8 rounded-full bg-secondary-med" />
-                    </div>
-                    <Card.Group size="sm">
-                      <h3 className="text-md">{account.name}</h3>
-                      <span className="text-sm text-primary-light group-hover:text-primary-med">
-                        {account.official_name} - {account.mask}
+      <div className="flex w-full flex-col gap-4 px-4">
+        <ButtonBar>
+          <Button
+            icon={faPlus}
+            title="Account"
+            style="secondary"
+            onClick={handleCreateAccount}
+          />
+        </ButtonBar>
+        {accountCategories.map((category) => (
+          <Card key={category}>
+            <Card.Header size="xl" onClick={() => handleOpen(category)}>
+              <Card.Group size="xl" horizontal>
+                <IconButton
+                  icon={AccountCategoryIcons[category]}
+                  size="sm"
+                  style="secondary"
+                />
+                <h3 className="text-lg font-bold">
+                  {category === AccountCategory.Cash
+                    ? "Cash"
+                    : formatToTitleCase(category)}
+                </h3>
+              </Card.Group>
+              <span className="text-lg font-bold text-primary-light group-hover:text-primary-med">
+                {formatToCurrency(accountData.data?.categories[category].total)}
+              </span>
+            </Card.Header>
+            <Card.Collapse open={open === category}>
+              {accountData.data?.categories[category].accounts.map(
+                (account) => (
+                  <Card
+                    key={account.id}
+                    onClick={() => void router.push(`/accounts/${account.id}`)}
+                  >
+                    <Card.Body horizontal>
+                      <Card.Group horizontal>
+                        <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-secondary-dark">
+                          <div className="h-8 w-8 rounded-full bg-secondary-med" />
+                        </div>
+                        <Card.Group size="sm">
+                          <h3 className="text-md">{account.name}</h3>
+                          <span className="text-sm text-primary-light group-hover:text-primary-med">
+                            {account.official_name} - {account.mask}
+                          </span>
+                        </Card.Group>
+                      </Card.Group>
+                      <span className="text-lg text-primary-light group-hover:text-primary-med">
+                        {formatToCurrency(account.current)}
                       </span>
-                    </Card.Group>
-                  </Card.Group>
-                  <span className="text-lg text-primary-light group-hover:text-primary-med">
-                    {formatToCurrency(account.current)}
-                  </span>
+                    </Card.Body>
+                  </Card>
+                )
+              )}
+            </Card.Collapse>
+            <Card.Collapse
+              open={
+                accountData.data?.categories[category].accounts.length === 0
+              }
+            >
+              <Card size="sm">
+                <Card.Body>
+                  <Button title="Account" icon={faPlus} className="w-fit" />
                 </Card.Body>
               </Card>
-            ))}
-          </Card.Collapse>
-        </Card>
-      ))}
-    </AuthPage>
+            </Card.Collapse>
+          </Card>
+        ))}
+      </div>
+    </Page>
   );
 }
