@@ -1,4 +1,9 @@
-import { Prisma, type Transaction, type Budget } from "@prisma/client";
+import {
+  Prisma,
+  type Transaction,
+  type Budget,
+  type Fund,
+} from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -19,6 +24,7 @@ function sumTransactions(transactions: TransactionAmount[]) {
 function sumBudgetTransactions(
   budgets: (Budget & {
     source_transactions: TransactionAmount[];
+    savingsFund: Fund | null;
   })[]
 ) {
   return budgets.map((budget) => {
@@ -74,6 +80,7 @@ export const budgetsRouter = createTRPCRouter({
           isSavings: false,
         },
         include: {
+          savingsFund: true,
           source_transactions: {
             where: {
               date: {
