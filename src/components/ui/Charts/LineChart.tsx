@@ -14,8 +14,8 @@ export const LineChart: FC<LineChartProps> = ({ data }) => (
         id: "gradient",
         type: "linearGradient",
         colors: [
-          { offset: 0, color: "#00C6C5" },
-          { offset: 100, color: "#126473" },
+          { offset: 90, color: "#167B8D" },
+          // { offset: 100, color: "#292B4C00" },
         ],
       },
     ]}
@@ -28,7 +28,8 @@ export const LineChart: FC<LineChartProps> = ({ data }) => (
       stacked: true,
       reverse: false,
     }}
-    curve="catmullRom"
+    areaOpacity={1}
+    curve="cardinal"
     axisTop={null}
     axisRight={null}
     enableGridX={false}
