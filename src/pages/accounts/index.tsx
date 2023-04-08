@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   accountCategories,
   AccountCategory,
@@ -93,40 +93,41 @@ export default function BankAccounts() {
             <Card.Collapse open={open === category}>
               {accountData.data?.categories[category].accounts.map(
                 (account) => (
-                  <Card
-                    key={account.id}
-                    onClick={() => void router.push(`/accounts/${account.id}`)}
-                  >
-                    <Card.Body horizontal>
-                      <Card.Group horizontal>
-                        <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-secondary-dark">
-                          <div className="h-8 w-8 rounded-full bg-secondary-med" />
-                        </div>
-                        <Card.Group size="sm">
-                          <h3 className="text-md">{account.name}</h3>
-                          <span className="text-sm text-primary-light group-hover:text-primary-med">
-                            {account.official_name} - {account.mask}
-                          </span>
+                  <Fragment key={account.id}>
+                    <Card
+                      // key={account.id}
+                      onClick={() =>
+                        void router.push(`/accounts/${account.id}`)
+                      }
+                    >
+                      <Card.Body horizontal>
+                        <Card.Group horizontal>
+                          <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-secondary-dark">
+                            <div className="h-8 w-8 rounded-full bg-secondary-med" />
+                          </div>
+                          <Card.Group size="sm">
+                            <h3 className="text-md">{account.name}</h3>
+                            <span className="text-sm text-primary-light group-hover:text-primary-med">
+                              {account.official_name} - {account.mask}
+                            </span>
+                          </Card.Group>
                         </Card.Group>
-                      </Card.Group>
-                      <span className="text-lg text-primary-light group-hover:text-primary-med">
-                        {formatToCurrency(account.current)}
-                      </span>
-                    </Card.Body>
-                  </Card>
+                        <span className="text-lg text-primary-light group-hover:text-primary-med">
+                          {formatToCurrency(account.current)}
+                        </span>
+                      </Card.Body>
+                    </Card>
+                    {accountData.data?.categories[category].accounts.length ===
+                      0 && (
+                      <Card size="sm">
+                        <Card.Body>
+                          <Button title="Account" icon={faPlus} />
+                        </Card.Body>
+                      </Card>
+                    )}
+                  </Fragment>
                 )
               )}
-            </Card.Collapse>
-            <Card.Collapse
-              open={
-                accountData.data?.categories[category].accounts.length === 0
-              }
-            >
-              <Card size="sm">
-                <Card.Body>
-                  <Button title="Account" icon={faPlus} className="w-fit" />
-                </Card.Body>
-              </Card>
             </Card.Collapse>
           </Card>
         ))}
