@@ -11,7 +11,7 @@ type SavingsBudget = {
   data: Budget & {
     spent: Prisma.Decimal;
     leftover: Prisma.Decimal;
-    savingsFund: Fund;
+    savingsFund: Fund | null;
   };
   onClick?: MouseEventHandler<HTMLDivElement>;
 };
@@ -34,7 +34,7 @@ export const SavingsBudget: FC<SavingsBudget> = ({ data: budget, onClick }) => {
               size="sm"
               style="secondary"
             />
-            <h3 className="text-lg font-bold">{budget.savingsFund.name}</h3>
+            <h3 className="text-lg font-bold">{budget?.savingsFund?.name}</h3>
           </Card.Group>
         </Card.Group>
         <Card.Group horizontal size="sm">
