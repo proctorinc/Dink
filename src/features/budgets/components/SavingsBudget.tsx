@@ -1,4 +1,4 @@
-import { type Budget, type Prisma } from "@prisma/client";
+import { type Fund, type Budget, type Prisma } from "@prisma/client";
 import { type MouseEventHandler, type FC } from "react";
 import { formatToCurrency } from "~/utils";
 import Card from "~/components/ui/Card";
@@ -11,6 +11,7 @@ type SavingsBudget = {
   data: Budget & {
     spent: Prisma.Decimal;
     leftover: Prisma.Decimal;
+    savingsFund: Fund;
   };
   onClick?: MouseEventHandler<HTMLDivElement>;
 };
@@ -33,12 +34,12 @@ export const SavingsBudget: FC<SavingsBudget> = ({ data: budget, onClick }) => {
               size="sm"
               style="secondary"
             />
-            <h3 className="text-lg font-bold">{budget.name}</h3>
+            <h3 className="text-lg font-bold">{budget.savingsFund.name}</h3>
           </Card.Group>
         </Card.Group>
         <Card.Group horizontal size="sm">
           <span className="font-bold text-primary-light">
-            {formatToCurrency(budget.spent)}
+            {formatToCurrency(budget.goal)}
           </span>
           {Number(budget.spent) > 0 && (
             <IconButton size="sm" icon={faCheckCircle} />
