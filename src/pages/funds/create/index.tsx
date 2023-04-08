@@ -2,10 +2,10 @@ import { faCheck, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import AuthPage from "~/components/routes/AuthPage";
 import Button, { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import Header from "~/components/ui/Header";
+import Page from "~/components/ui/Page";
 import useIcons from "~/hooks/useIcons";
 import { api } from "~/utils/api";
 
@@ -30,7 +30,7 @@ export default function CreateFundPage() {
   };
 
   return (
-    <AuthPage>
+    <Page auth title="Create Fund">
       <Header back title={`Create Fund`} />
       <Card>
         <Card.Body>
@@ -75,6 +75,6 @@ export default function CreateFundPage() {
           onClick={allocateFunds}
         />
       </div>
-    </AuthPage>
+    </Page>
   );
 }

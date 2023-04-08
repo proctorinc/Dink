@@ -14,7 +14,7 @@ import Budget from "~/features/budgets";
 import Fund from "~/features/funds";
 import Button, { IconButton } from "~/components/ui/Button";
 import Spinner from "~/components/ui/Spinner";
-import AuthPage from "~/components/routes/AuthPage";
+import Page from "~/components/ui/Page";
 
 const CategorizePage = () => {
   const [type, setType] = useState<string | null>(null);
@@ -65,7 +65,7 @@ const CategorizePage = () => {
   }
 
   return (
-    <AuthPage>
+    <Page auth title="Categorize">
       <Header back title="Categorize" />
       <div className="flex w-full flex-col gap-2">
         <h2 className="text-left text-xl text-primary-light">Transaction:</h2>
@@ -138,7 +138,7 @@ const CategorizePage = () => {
           />
         </>
       )}
-    </AuthPage>
+    </Page>
   );
 };
 

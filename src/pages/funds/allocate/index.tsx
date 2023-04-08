@@ -8,10 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type Fund as FundType, type Prisma } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import AuthPage from "~/components/routes/AuthPage";
 import Button, { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import Header from "~/components/ui/Header";
+import Page from "~/components/ui/Page";
 import Fund from "~/features/funds";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
@@ -27,7 +27,6 @@ export default function AllocateFundsPage() {
   const [name, setName] = useState("");
 
   const isValidData = fundsData.data && !!fund && !!name && amount > 0;
-  // new Prisma.Decimal(amount) <= fundsData.data.unallocatedTotal;
 
   const allocateFunds = () => {
     if (isValidData) {
@@ -37,7 +36,7 @@ export default function AllocateFundsPage() {
   };
 
   return (
-    <AuthPage>
+    <Page auth title="Allocate">
       <Header
         back
         title={`Allocate Funds`}
@@ -115,6 +114,6 @@ export default function AllocateFundsPage() {
         style="secondary"
         onClick={allocateFunds}
       />
-    </AuthPage>
+    </Page>
   );
 }

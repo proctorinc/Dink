@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Button from "~/components/ui/Button";
+import Page from "~/components/ui/Page";
 import Spinner from "~/components/ui/Spinner";
 
 const Login = () => {
@@ -18,11 +19,8 @@ const Login = () => {
 
   if (!sessionData) {
     return (
-      <div className="flex flex-col items-center gap-5 pt-52">
-        <div
-          className="flex items-center gap-3 rounded-xl pb-10 text-7xl font-bold text-primary-light"
-          onClick={() => void router.push("/")}
-        >
+      <Page title="Login" style="centered">
+        <div className="flex items-center gap-3 rounded-xl pb-40 text-7xl font-bold text-primary-light">
           <FontAwesomeIcon
             className="h-[52px] w-[52px]"
             icon={faCircleHalfStroke}
@@ -37,7 +35,7 @@ const Login = () => {
           onClick={() => void signIn()}
           iconRight
         />
-      </div>
+      </Page>
     );
   }
   return <Spinner />;

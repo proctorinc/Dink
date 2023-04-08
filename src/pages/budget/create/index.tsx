@@ -10,10 +10,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type Prisma, type Fund as FundType } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import AuthPage from "~/components/routes/AuthPage";
 import Button, { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import Header from "~/components/ui/Header";
+import Page from "~/components/ui/Page";
 import Fund from "~/features/funds";
 import useIcons from "~/hooks/useIcons";
 import { api } from "~/utils/api";
@@ -60,7 +60,7 @@ export default function CreateBudgetPage() {
   };
 
   return (
-    <AuthPage>
+    <Page auth title="Create Budget">
       <Header back title={`Create Budget`} />
       <Card>
         <Card.Collapse open={isSavings === null}>
@@ -193,6 +193,6 @@ export default function CreateBudgetPage() {
           onClick={() => setIsSavings(null)}
         />
       </div>
-    </AuthPage>
+    </Page>
   );
 }

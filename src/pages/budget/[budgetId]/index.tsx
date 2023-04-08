@@ -16,8 +16,8 @@ import useIcons from "~/hooks/useIcons";
 import Button, { ButtonBar } from "~/components/ui/Button";
 import { useState } from "react";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
-import AuthPage from "~/components/routes/AuthPage";
 import EditableTitle from "~/components/ui/EditableTitle";
+import Page from "~/components/ui/Page";
 
 const BudgetPage = () => {
   const router = useRouter();
@@ -63,7 +63,7 @@ const BudgetPage = () => {
   }
 
   return (
-    <AuthPage>
+    <Page auth title="Budget">
       <Header
         back
         title={
@@ -114,7 +114,7 @@ const BudgetPage = () => {
             <NoSourceTransaction key={transaction.id} data={transaction} />
           ))}
       </div>
-    </AuthPage>
+    </Page>
   );
 };
 

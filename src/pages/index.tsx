@@ -5,13 +5,13 @@ import { BudgetSummary } from "~/features/budgets";
 import { TransactionsSummary } from "~/features/transactions";
 import { FundsSummary } from "~/features/funds";
 import { AccountSummary, CreditCardSummary } from "~/features/accounts";
-import AuthPage from "~/components/routes/AuthPage";
+import Page from "~/components/ui/Page";
 
 export default function Home() {
   const { data: sessionData } = useSession();
 
   return (
-    <AuthPage>
+    <Page auth title="Home">
       <Header
         title={`Hi, ${sessionData?.user?.nickname ?? ""}`}
         subtitle={formatToMonthYear(new Date())}
@@ -21,6 +21,6 @@ export default function Home() {
       <FundsSummary />
       <AccountSummary />
       <CreditCardSummary />
-    </AuthPage>
+    </Page>
   );
 }

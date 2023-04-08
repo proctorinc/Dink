@@ -1,11 +1,11 @@
 import { faCoins, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Prisma } from "@prisma/client";
 import { useRouter } from "next/router";
-import AuthPage from "~/components/routes/AuthPage";
 import { ButtonBar } from "~/components/ui/Button";
 import Button from "~/components/ui/Button/Button";
 import { PieChart } from "~/components/ui/Charts";
 import Header from "~/components/ui/Header";
+import Page from "~/components/ui/Page";
 import Spinner from "~/components/ui/Spinner";
 import Fund from "~/features/funds";
 import { formatToCurrency, formatToPercentage } from "~/utils";
@@ -31,14 +31,14 @@ export default function Funds() {
   ];
 
   return (
-    <AuthPage>
+    <Page auth title="Funds">
       <Header
         title="Funds"
         subtitle={`Total: ${formatToCurrency(fundsData?.data?.total)}`}
       />
       <div className="flex w-full items-end overflow-x-clip">
         <div className="max-h-1/4 h-64 w-2/3">
-          <PieChart data={fundsData.data?.funds ?? []} />
+          <PieChart data={fundsData.data?.funds ?? []} floatRight />
         </div>
         <div className="flex w-1/3 items-end">
           <div className="relative flex h-40 w-full flex-col items-center justify-center">
@@ -67,13 +67,15 @@ export default function Funds() {
         />
       </ButtonBar>
       {fundsData.isLoading && <Spinner />}
-      {fundsData?.data?.funds.map((fund) => (
-        <Fund
-          key={fund.id}
-          data={fund}
-          onClick={() => void router.push(`/funds/${fund.id}`)}
-        />
-      ))}
-    </AuthPage>
+      <div className="flex w-full flex-col gap-3">
+        {fundsData?.data?.funds.map((fund) => (
+          <Fund
+            key={fund.id}
+            data={fund}
+            onClick={() => void router.push(`/funds/${fund.id}`)}
+          />
+        ))}
+      </div>
+    </Page>
   );
 }

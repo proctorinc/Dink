@@ -15,8 +15,8 @@ import Card from "~/components/ui/Card";
 import Button, { ButtonBar } from "~/components/ui/Button";
 import { useState } from "react";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
-import AuthPage from "~/components/routes/AuthPage";
 import EditableTitle from "~/components/ui/EditableTitle";
+import Page from "~/components/ui/Page";
 
 const FundPage = () => {
   const router = useRouter();
@@ -54,7 +54,7 @@ const FundPage = () => {
   }
 
   return (
-    <AuthPage>
+    <Page auth title="Fund">
       <Header
         back
         title={<EditableTitle value={fund?.name} onUpdate={handleNameUpdate} />}
@@ -109,7 +109,7 @@ const FundPage = () => {
             <NoSourceTransaction key={transaction.id} data={transaction} />
           ))}
       </div>
-    </AuthPage>
+    </Page>
   );
 };
 
