@@ -8,11 +8,13 @@ import Button from "./Button";
 import Card from "./Card";
 
 type ConfirmDeleteProps = {
+  buttonText?: string;
   confirmationText: string;
   onDelete: () => void;
 };
 
 const ConfirmDelete: FC<ConfirmDeleteProps> = ({
+  buttonText,
   confirmationText,
   onDelete,
 }) => {
@@ -31,7 +33,7 @@ const ConfirmDelete: FC<ConfirmDeleteProps> = ({
     <>
       {!clickedDelete && (
         <Button
-          title="Delete"
+          title={buttonText ?? "Delete"}
           icon={faTrash}
           style="danger"
           onClick={() => setClickedDelete(true)}
