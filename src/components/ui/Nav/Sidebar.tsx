@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 
 const Sidebar = () => {
   const router = useRouter();
-  const { data: sessionData } = useSession();
+  const { status } = useSession();
 
   const routes = [
     { path: "/accounts", name: "Accounts", icon: faBuildingColumns },
@@ -21,33 +21,32 @@ const Sidebar = () => {
     { path: "/transactions", name: "Transactions", icon: faReceipt },
   ];
 
-  if (!sessionData) {
-    return <></>;
-  }
-
-  return (
-    <aside className="fixed left-[10%] top-1/2 hidden -translate-y-1/2 text-white sm:flex">
-      <div className="flex flex-col gap-3">
-        {routes.map((route) => (
-          <div
-            key={route.path}
-            className="group flex items-center gap-3"
-            onClick={() => void router.push(route.path)}
-          >
-            <IconButton
+  if (status === "authenticated") {
+    return (
+      <aside className="fixed left-[10%] top-1/2 hidden -translate-y-1/2 text-white sm:flex">
+        <div className="flex flex-col gap-3">
+          {routes.map((route) => (
+            <div
               key={route.path}
-              icon={route.icon}
-              active={router.pathname === route.path}
+              className="group flex items-center gap-3"
               onClick={() => void router.push(route.path)}
-            />
-            <span className="invisible select-none font-bold text-primary-light group-hover:visible">
-              {route.name}
-            </span>
-          </div>
-        ))}
-      </div>
-    </aside>
-  );
+            >
+              <IconButton
+                key={route.path}
+                icon={route.icon}
+                active={router.pathname === route.path}
+                onClick={() => void router.push(route.path)}
+              />
+              <span className="invisible select-none font-bold text-primary-light group-hover:visible">
+                {route.name}
+              </span>
+            </div>
+          ))}
+        </div>
+      </aside>
+    );
+  }
+  return <></>;
 };
 
 export default Sidebar;
