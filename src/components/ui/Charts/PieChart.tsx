@@ -6,9 +6,10 @@ import { faHouse } from "@fortawesome/free-solid-svg-icons";
 type PieChartProps = {
   data: unknown[];
   progress?: boolean;
+  floatRight?: boolean;
 };
 
-export const PieChart: FC<PieChartProps> = ({ data, progress }) => {
+export const PieChart: FC<PieChartProps> = ({ data, progress, floatRight }) => {
   const theme = {
     fontSize: 15,
   };
@@ -33,25 +34,12 @@ export const PieChart: FC<PieChartProps> = ({ data, progress }) => {
       spacing: 10,
     },
     {
-      id: "basic",
-      type: "linearGradient",
-      colors: [
-        { offset: 0, color: "#51538a" },
-        { offset: 100, color: "#3D3F71" },
-      ],
-    },
-    {
       id: "gradient",
       type: "linearGradient",
       colors: [
         { offset: 0, color: "#00C6C5" },
-        { offset: 100, color: "#126473" },
+        // { offset: 100, color: "#126473" },
       ],
-    },
-    {
-      id: "gradientPrimary",
-      type: "linearGradient",
-      colors: [{ offset: 0, color: "#3D3F71" }],
     },
   ];
 
@@ -96,7 +84,11 @@ export const PieChart: FC<PieChartProps> = ({ data, progress }) => {
         </div>
       )}
       tooltip={({ datum: data }) => (
-        <div className="flex w-fit items-center gap-2 rounded-xl bg-primary-med px-3 py-1 font-bold shadow-2xl">
+        <div
+          className={`${
+            floatRight ? "translate-x-16" : "-translate-x-12"
+          } flex w-fit -translate-y-2 items-center gap-2 rounded-xl bg-primary-med px-3 py-1 font-bold shadow-2xl`}
+        >
           <div className="flex flex-col">
             <span>{data.id}</span>
             <span className="text-primary-light">{data.formattedValue}</span>
