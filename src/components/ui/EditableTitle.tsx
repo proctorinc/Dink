@@ -11,11 +11,13 @@ import Spinner from "./Spinner";
 type EditableTitleProps = {
   value?: string;
   onUpdate: (updatedValue: string) => void;
+  className?: string;
 };
 
 const EditableTitle: FC<EditableTitleProps> = ({
   value: initialValue,
   onUpdate,
+  className,
 }) => {
   const [value, setValue] = useState(initialValue);
   const [editing, setEditing] = useState(false);
@@ -62,7 +64,7 @@ const EditableTitle: FC<EditableTitleProps> = ({
   }
   return (
     <div className="flex gap-2">
-      <h3>{value}</h3>
+      <h3 className={className}>{value}</h3>
       <IconButton icon={faPencil} size="xs" onClick={() => setEditing(true)} />
     </div>
   );
