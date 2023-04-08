@@ -41,9 +41,7 @@ const Header: FC<HeaderProps> = ({ title, subtitle, icon, back }) => {
             <h1 className="text-4xl font-bold">{title}</h1>
           </div>
           {subtitle && (
-            <h2 className="text-2xl font-light text-primary-light">
-              {subtitle}
-            </h2>
+            <h2 className="text-2xl text-primary-light">{subtitle}</h2>
           )}
         </div>
       </div>
