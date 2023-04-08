@@ -95,7 +95,6 @@ export default function BankAccounts() {
                 (account) => (
                   <Fragment key={account.id}>
                     <Card
-                      // key={account.id}
                       onClick={() =>
                         void router.push(`/accounts/${account.id}`)
                       }
@@ -117,16 +116,15 @@ export default function BankAccounts() {
                         </span>
                       </Card.Body>
                     </Card>
-                    {accountData.data?.categories[category].accounts.length ===
-                      0 && (
-                      <Card size="sm">
-                        <Card.Body>
-                          <Button title="Account" icon={faPlus} />
-                        </Card.Body>
-                      </Card>
-                    )}
                   </Fragment>
                 )
+              )}
+              {accountData.data?.categories[category].accounts.length === 0 && (
+                <Card size="sm">
+                  <Card.Body>
+                    <Button title="Account" icon={faPlus} />
+                  </Card.Body>
+                </Card>
               )}
             </Card.Collapse>
           </Card>
