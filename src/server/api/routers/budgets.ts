@@ -93,11 +93,7 @@ export const budgetsRouter = createTRPCRouter({
           isSavings: true,
         },
         include: {
-          savingsFund: {
-            select: {
-              id: true,
-            },
-          },
+          savingsFund: true,
           source_transactions: {
             where: {
               date: {
