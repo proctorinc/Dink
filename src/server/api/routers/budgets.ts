@@ -6,6 +6,11 @@ import {
 } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  getFirstDayOfMonth,
+  getLastDayOfLastMonth,
+  getLastDayOfMonth,
+} from "~/utils";
 
 type TransactionAmount = {
   amount: Prisma.Decimal;
@@ -78,6 +83,17 @@ export const budgetsRouter = createTRPCRouter({
         where: {
           userId: ctx.session.user.id,
           isSavings: false,
+          start_date: {
+            lte: input.startOfMonth,
+          },
+          OR: [
+            { end_date: { equals: null } },
+            {
+              end_date: {
+                gte: input.endOfMonth,
+              },
+            },
+          ],
         },
         include: {
           savingsFund: true,
@@ -98,6 +114,17 @@ export const budgetsRouter = createTRPCRouter({
         where: {
           userId: ctx.session.user.id,
           isSavings: true,
+          start_date: {
+            lte: input.startOfMonth,
+          },
+          OR: [
+            { end_date: { equals: null } },
+            {
+              end_date: {
+                gte: input.endOfMonth,
+              },
+            },
+          ],
         },
         include: {
           savingsFund: true,
@@ -243,6 +270,7 @@ export const budgetsRouter = createTRPCRouter({
           name: input.name,
           goal: input.goal,
           isSavings: false,
+          start_date: getFirstDayOfMonth(new Date()),
           user: {
             connect: { id: ctx.session.user.id },
           },
@@ -271,6 +299,7 @@ export const budgetsRouter = createTRPCRouter({
             name: fund?.name,
             goal: input.goal,
             isSavings: true,
+            start_date: getFirstDayOfMonth(new Date()),
             savingsFund: { connect: { id: input.fundId } },
             user: {
               connect: { id: ctx.session.user.id },
@@ -282,20 +311,45 @@ export const budgetsRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ budgetId: z.string() }))
     .mutation(async ({ input, ctx }) => {
+      const today = new Date();
+      const endOfLastMonth = getLastDayOfLastMonth();
+      const budget = await ctx.prisma.budget.findFirst({
+        where: {
+          id: input.budgetId,
+          userId: ctx.session.user.id,
+        },
+      });
+
       await ctx.prisma.transaction.updateMany({
         where: {
           budgetSourceId: input.budgetId,
           userId: ctx.session.user.id,
+          date: {
+            lte: getLastDayOfMonth(today),
+            gte: getFirstDayOfMonth(today),
+          },
         },
         data: {
           sourceType: null,
           fundSourceId: null,
         },
       });
-      return ctx.prisma.budget.deleteMany({
+
+      if (budget?.start_date && budget?.start_date > endOfLastMonth) {
+        return ctx.prisma.budget.deleteMany({
+          where: {
+            id: input.budgetId,
+            userId: ctx.session.user.id,
+          },
+        });
+      }
+      return ctx.prisma.budget.updateMany({
         where: {
           id: input.budgetId,
           userId: ctx.session.user.id,
+        },
+        data: {
+          end_date: endOfLastMonth,
         },
       });
     }),
