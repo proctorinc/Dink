@@ -163,19 +163,37 @@ export const budgetsRouter = createTRPCRouter({
         }
       });
 
-      const spent = sumTotalBudgetSpent([
+      const overallSpending = sumTotalBudgetSpent([
         ...spendingWithAmounts,
         ...savingsWithAmounts,
       ]);
-      const goal = sumBudgetGoals([...spendingBudgets, ...savingsBudgets]);
+      const overallGoal = sumBudgetGoals([
+        ...spendingBudgets,
+        ...savingsBudgets,
+      ]);
+
+      const spendingTotal = sumTotalBudgetSpent(spendingWithAmounts);
+      const spendingGoal = sumBudgetGoals(spendingWithAmounts);
+      const savingsTotal = sumTotalBudgetSpent(savingsWithAmounts);
+      const savingsGoal = sumBudgetGoals(savingsWithAmounts);
 
       return {
-        goal: goal,
-        spent: spent,
-        leftover: Prisma.Decimal.sub(goal, spent),
-        budgets: {
-          spending: spendingWithAmounts,
-          savings: savingsWithAmounts,
+        overall: {
+          goal: overallGoal,
+          spent: overallSpending,
+          leftover: Prisma.Decimal.sub(overallGoal, overallSpending),
+        },
+        spending: {
+          budgets: spendingWithAmounts,
+          total: spendingTotal,
+          goal: spendingGoal,
+          leftover: Prisma.Decimal.sub(spendingGoal, spendingTotal),
+        },
+        savings: {
+          budgets: savingsWithAmounts,
+          total: savingsTotal,
+          goal: savingsGoal,
+          leftover: Prisma.Decimal.sub(savingsGoal, savingsTotal),
         },
       };
     }),

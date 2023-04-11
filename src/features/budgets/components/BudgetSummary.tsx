@@ -22,8 +22,8 @@ export const BudgetSummary = () => {
   });
 
   if (
-    budgetData.data?.budgets.spending.length === 0 ||
-    budgetData.data?.budgets.savings.length
+    budgetData.data?.spending.budgets.length === 0 &&
+    budgetData.data?.savings.budgets.length
   ) {
     return (
       <Card onClick={() => void router.push("/budget")}>
@@ -49,17 +49,20 @@ export const BudgetSummary = () => {
         >
           <h3>Budget</h3>
           <h3 className="text-lg text-primary-light group-hover:text-primary-med">
-            {formatToPercentage(budgetData.data?.spent, budgetData.data?.goal)}{" "}
+            {formatToPercentage(
+              budgetData.data?.overall.spent,
+              budgetData.data?.overall.goal
+            )}{" "}
             Spent
           </h3>
         </Card.Group>
         <span className="text-sm text-primary-light group-hover:text-primary-med">
-          {formatToCurrency(budgetData.data?.spent)} /{" "}
-          {formatToCurrency(budgetData.data?.goal)}
+          {formatToCurrency(budgetData.data?.overall.spent)} /{" "}
+          {formatToCurrency(budgetData.data?.overall.goal)}
         </span>
         <ProgressBar
-          value={budgetData.data?.spent}
-          goal={budgetData.data?.goal}
+          value={budgetData.data?.overall.spent}
+          goal={budgetData.data?.overall.goal}
         />
       </Card.Body>
     </Card>

@@ -6,7 +6,6 @@ import {
   faPlus,
   faRedo,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMonthContext } from "~/hooks/useMonthContext";
 import { ButtonBar, IconButton } from "~/components/ui/Button";
 import Button from "~/components/ui/Button/Button";
@@ -37,40 +36,73 @@ export default function Budgets() {
   });
   const [showSavings, setShowSavings] = useState(true);
   const [showSpending, setShowSpending] = useState(true);
-  const percentSpent = formatToPercentage(
-    budgetData?.data?.spent,
-    budgetData?.data?.goal
+  const [chartNum, setChartNum] = useState(0);
+  const percentOverall = formatToPercentage(
+    budgetData?.data?.overall.spent,
+    budgetData?.data?.overall.goal
   );
 
-  const chartData = [
-    { name: "Spent", amount: budgetData.data?.spent },
-    { name: "Left", amount: budgetData.data?.leftover },
+  const overallData = [
+    { name: "Spent", amount: budgetData.data?.overall.spent },
+    { name: "Left", amount: budgetData.data?.overall.leftover },
+  ];
+  const spendingData = [
+    { name: "Spent", amount: budgetData.data?.spending.total },
+    { name: "Budget", amount: budgetData.data?.spending.leftover },
+  ];
+  const savingsData = [
+    { name: "Saved", amount: budgetData.data?.savings.total },
+    { name: "Goal", amount: budgetData.data?.savings.leftover },
   ];
 
   return (
     <Page auth title="Budget">
       <Header title={`Budget`} subtitle={`${month} ${year}`} />
       <div className="flex w-full items-center justify-center">
-        <div className="p-2">
-          <button className="h-8 w-8 rounded-full text-primary-light hover:bg-primary-light hover:text-primary-med">
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </button>
-        </div>
-        <div className="relative flex h-52 w-full flex-col items-center justify-center pb-5">
-          <div className="absolute flex flex-col items-center justify-center text-xl font-bold">
-            <h2 className="text-3xl font-bold">{percentSpent}</h2>
+        <IconButton
+          className={chartNum !== 1 ? "invisible" : ""}
+          icon={faChevronLeft}
+          onClick={() => setChartNum(0)}
+        />
+        {chartNum === 0 && (
+          <div className="relative flex h-52 w-full flex-col items-center justify-center pb-5">
+            <div className="absolute flex flex-col items-center justify-center text-xl font-bold">
+              <h2 className="text-3xl font-bold">{percentOverall}</h2>
+            </div>
+            <PieChart data={overallData} progress />
+            <span className="absolute bottom-0 font-bold text-primary-light">
+              {formatToCurrency(budgetData.data?.overall.spent)} /{" "}
+              {formatToCurrency(budgetData.data?.overall.goal)}
+            </span>
           </div>
-          <PieChart data={chartData} progress />
-          <span className="absolute bottom-0 font-bold text-primary-light">
-            {formatToCurrency(budgetData.data?.spent)} /{" "}
-            {formatToCurrency(budgetData.data?.goal)}
-          </span>
-        </div>
-        <div className="p-2">
-          <button className="h-8 w-8 rounded-full text-primary-light hover:bg-primary-light hover:text-primary-med">
-            <FontAwesomeIcon icon={faChevronRight} />
-          </button>
-        </div>
+        )}
+        {chartNum === 1 && (
+          <div className="flex h-52 w-full items-center">
+            <div className="relative flex h-40 w-full flex-col items-center justify-center pb-5">
+              <div className="absolute flex flex-col items-center justify-center text-xl font-bold">
+                <h2 className="text-sm font-bold">Spending</h2>
+              </div>
+              <PieChart data={spendingData} progress floatRight />
+              <span className="absolute bottom-0 font-bold text-primary-light">
+                {formatToCurrency(budgetData.data?.spending.total)}
+              </span>
+            </div>
+            <div className="relative flex h-40 w-full flex-col items-center justify-center pb-5">
+              <div className="absolute flex flex-col items-center justify-center text-xl font-bold">
+                <h2 className="text-sm font-bold">Savings</h2>
+              </div>
+              <PieChart data={savingsData} progress />
+              <span className="absolute bottom-0 font-bold text-primary-light">
+                {formatToCurrency(budgetData.data?.savings.total)}
+              </span>
+            </div>
+          </div>
+        )}
+        <IconButton
+          className={chartNum !== 0 ? "invisible" : ""}
+          icon={faChevronRight}
+          onClick={() => setChartNum(1)}
+        />
       </div>
       <ButtonBar>
         {isCurrentMonth && (
@@ -100,27 +132,39 @@ export default function Budgets() {
             className="flex w-full items-center justify-between"
             onClick={() => setShowSpending((prev) => !prev)}
           >
-            <h3 className="w-full text-left text-xl font-bold text-primary-light">
-              Spending
-            </h3>
-            <IconButton icon={showSpending ? faAngleDown : faAngleUp} />
+            <div className="flex gap-1">
+              <IconButton icon={showSpending ? faAngleUp : faAngleDown} />
+              <h3 className="w-full text-left text-xl font-bold text-primary-light">
+                Spending
+              </h3>
+            </div>
+            <span className="font-bold text-primary-light">
+              {formatToCurrency(budgetData.data?.spending.total)}
+            </span>
           </div>
-          {showSpending &&
-            budgetData.data?.budgets.spending.map((budget) => (
-              <Budget key={budget.id} data={budget} />
-            ))}
+          <div className="flex w-full flex-col gap-3">
+            {showSpending &&
+              budgetData.data?.spending.budgets.map((budget) => (
+                <Budget key={budget.id} data={budget} />
+              ))}
+          </div>
           <div
             className="flex w-full items-center justify-between"
             onClick={() => setShowSavings((prev) => !prev)}
           >
-            <h3 className="w-full text-left text-xl font-bold text-primary-light">
-              Savings
-            </h3>
-            <IconButton icon={showSavings ? faAngleDown : faAngleUp} />
+            <div className="flex gap-1">
+              <IconButton icon={showSavings ? faAngleUp : faAngleDown} />
+              <h3 className="w-full text-left text-xl font-bold text-primary-light">
+                Savings
+              </h3>
+            </div>
+            <span className="font-bold text-primary-light">
+              {formatToCurrency(budgetData.data?.savings.total)}
+            </span>
           </div>
           <div className="flex w-full flex-col gap-3">
             {showSavings &&
-              budgetData.data?.budgets.savings.map((budget) => (
+              budgetData.data?.savings.budgets.map((budget) => (
                 <SavingsBudget key={budget.id} data={budget} />
               ))}
           </div>
