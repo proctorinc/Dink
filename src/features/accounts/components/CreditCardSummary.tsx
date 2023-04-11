@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { formatToCurrency, formatToPercentage } from "~/utils";
 import { api } from "~/utils/api";
 import Card from "~/components/ui/Card";
-import { Tag } from "~/components/ui/Tag";
 
 export const CreditCardSummary = () => {
   const router = useRouter();
@@ -34,7 +33,7 @@ export const CreditCardSummary = () => {
       {creditAccounts.data?.map((account) => {
         const utilizationPercent = formatToPercentage(
           account.current,
-          new Prisma.Decimal(account.limit ?? 0)
+          new Prisma.Decimal(account.limit ?? 1)
         );
         return (
           <Card
@@ -44,7 +43,6 @@ export const CreditCardSummary = () => {
           >
             <Card.Header>
               <h3 className="text-lg">{account.name}</h3>
-              <Tag text="Due ???d" color="warning" />
             </Card.Header>
             <Card.Body>
               <div className="relative h-6 w-full rounded-md bg-primary-dark group-hover:bg-primary-med">
