@@ -111,7 +111,7 @@ const CategorizePage = () => {
               </Card>
             </Card.Collapse>
             <Card.Collapse open={type === "budget"} className="rounded-xl">
-              {budgetData?.data?.budgets.spending.map((budget) => (
+              {budgetData?.data?.spending.budgets.map((budget) => (
                 <Budget
                   key={budget.id}
                   data={budget}
