@@ -25,6 +25,12 @@ export const formatToPercentage = (
   divisor: Prisma.Decimal | undefined | null
 ) => {
   if (numerator && divisor) {
+    if (Number(divisor) === 0) {
+      const result = Prisma.Decimal.div(numerator, new Prisma.Decimal(1))
+        .mul(100)
+        .toFixed(0);
+      return `${result}%`;
+    }
     const result = Prisma.Decimal.div(numerator, divisor).mul(100).toFixed(0);
     return `${result}%`;
   }
