@@ -24,12 +24,47 @@ export const userRouter = createTRPCRouter({
     .input(z.object({ name: z.string() }))
     .mutation(({ input, ctx }) => {
       return ctx.prisma.user.update({
-        data: {
-          nickname: input.name,
-        },
         where: {
           id: ctx.session.user.id,
         },
+        data: {
+          nickname: input.name,
+        },
       });
     }),
+  updateTargetIncome: protectedProcedure
+    .input(z.object({ income: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      return ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          targetIncome: input.income,
+        },
+      });
+    }),
+  updateCreditUtilization: protectedProcedure
+    .input(z.object({ utilization: z.number() }))
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          creditPercentTarget: input.utilization,
+        },
+      });
+    }),
+  getUserSettings: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.user.findFirst({
+      where: {
+        id: ctx.session.user.id,
+      },
+      select: {
+        creditPercentTarget: true,
+        targetIncome: true,
+      },
+    });
+  }),
 });
