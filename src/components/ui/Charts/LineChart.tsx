@@ -44,7 +44,6 @@ export const LineChart: FC<LineChartProps> = ({ data }) => (
     }}
     enablePoints={false}
     enableArea={true}
-    animate={true}
     lineWidth={5}
   />
 );
