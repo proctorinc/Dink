@@ -9,6 +9,7 @@ type IconButtonProps = {
   style?: "secondary" | "primary";
   size?: "sm" | "xs";
   onClick?: MouseEventHandler<HTMLButtonElement>;
+  className?: string;
 };
 
 export const IconButton: FC<IconButtonProps> = ({
@@ -17,6 +18,7 @@ export const IconButton: FC<IconButtonProps> = ({
   style,
   size,
   onClick,
+  className,
 }) => {
   let buttonSize = "w-10";
   if (size === "sm") {
@@ -26,7 +28,7 @@ export const IconButton: FC<IconButtonProps> = ({
   }
   let iconSize: SizeProp = "lg";
   if (size === "sm") {
-    iconSize = "sm";
+    iconSize = "lg";
   } else if (size === "xs") {
     iconSize = "xs";
   }
@@ -45,7 +47,9 @@ export const IconButton: FC<IconButtonProps> = ({
 
   return (
     <button
-      className={`${iconStyle} ${buttonSize} aspect-square rounded-full`}
+      className={`${iconStyle} ${buttonSize} aspect-square rounded-lg ${
+        className ?? ""
+      }`}
       onClick={onClick}
     >
       <FontAwesomeIcon size={iconSize} icon={icon} />
