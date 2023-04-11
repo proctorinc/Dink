@@ -1,9 +1,9 @@
 import { faAngleUp, faGear } from "@fortawesome/free-solid-svg-icons";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import Button, { ButtonBar } from "~/components/ui/Button";
+import Card from "~/components/ui/Card";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
 import EditableTitle from "~/components/ui/EditableTitle";
 import Header from "~/components/ui/Header";
@@ -11,16 +11,25 @@ import Page from "~/components/ui/Page";
 import { api } from "~/utils/api";
 
 const UserPage = () => {
-  const router = useRouter();
   const { data: sessionData } = useSession();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const updateNickname = api.users.updateNickname.useMutation({
-    onSuccess: () => router.reload(),
-  });
+  const settingsData = api.users.getUserSettings.useQuery();
+  const updateNickname = api.users.updateNickname.useMutation();
+  const updateIncome = api.users.updateTargetIncome.useMutation();
+  const updateCreditUtilization =
+    api.users.updateCreditUtilization.useMutation();
 
   const handleProfileUpdate = (name: string) => {
     updateNickname.mutate({ name });
+  };
+
+  const handleIncomeUpdate = (value: string) => {
+    updateIncome.mutate({ income: Number(value) });
+  };
+
+  const handleCreditUtilizationUpdate = (value: string) => {
+    updateCreditUtilization.mutate({ utilization: Number(value) });
   };
 
   return (
@@ -62,6 +71,41 @@ const UserPage = () => {
           />
         </ButtonBar>
       )}
+      <Card>
+        <Card.Header>
+          <h3>Preferences</h3>
+        </Card.Header>
+        <Card>
+          <Card.Body>
+            <Card.Group>
+              {settingsData.data && (
+                <Card.Group horizontal>
+                  <span className="font-bold text-primary-light">
+                    Monthly Income:
+                  </span>
+                  <EditableTitle
+                    value={String(settingsData.data?.targetIncome ?? "0")}
+                    onUpdate={handleIncomeUpdate}
+                  />
+                </Card.Group>
+              )}
+              {settingsData.data && (
+                <Card.Group horizontal>
+                  <span className="font-bold text-primary-light">
+                    Credit Utilization Target:
+                  </span>
+                  <EditableTitle
+                    value={String(
+                      settingsData.data?.creditPercentTarget ?? "0"
+                    )}
+                    onUpdate={handleCreditUtilizationUpdate}
+                  />
+                </Card.Group>
+              )}
+            </Card.Group>
+          </Card.Body>
+        </Card>
+      </Card>
     </Page>
   );
 };
