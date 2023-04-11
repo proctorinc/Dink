@@ -3,26 +3,44 @@ import { type FC } from "react";
 import { formatToCurrency } from "~/utils";
 import Card from "~/components/ui/Card";
 import { ProgressBar } from "~/components/ui/Charts";
-import { IconButton } from "~/components/ui/Button";
-import { faSackDollar } from "@fortawesome/free-solid-svg-icons";
 import { api } from "~/utils/api";
 import { useMonthContext } from "~/hooks/useMonthContext";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import Button from "~/components/ui/Button";
 
 export const IncomeBudget: FC = () => {
-  const { month, startOfMonth, endOfMonth } = useMonthContext();
+  const { startOfMonth, endOfMonth } = useMonthContext();
 
   const income = api.transactions.getIncomeByMonth.useQuery({
     startOfMonth,
     endOfMonth,
   });
 
+  const incomeGoal = new Prisma.Decimal(0);
+
+  if (Number(incomeGoal) === 0) {
+    return (
+      <Card size="sm">
+        <Card.Body horizontal>
+          <div className="flex flex-col">
+            <h3 className="text-xl font-bold">Income</h3>
+            <span className="text-sm text-primary-light group-hover:text-primary-med">
+              No projected income
+            </span>
+          </div>
+          <Button title="Fix" icon={faArrowRight} style="secondary" iconRight />
+        </Card.Body>
+      </Card>
+    );
+  }
+
   return (
-    <Card size="sm">
-      <Card.Header>
-        <Card.Group horizontal>
-          <IconButton icon={faSackDollar} size="sm" style="secondary" />
-          <h3 className="text-lg">{month} Income</h3>
-        </Card.Group>
+    <Card>
+      <Card.Header size="sm">
+        <h3 className="text-xl">Income</h3>
+        <span className="text-sm text-primary-light">
+          {formatToCurrency(income?.data)} / {formatToCurrency(incomeGoal)}
+        </span>
       </Card.Header>
       <Card.Body>
         <ProgressBar
@@ -30,10 +48,6 @@ export const IncomeBudget: FC = () => {
           value={income.data}
           goal={new Prisma.Decimal(0)}
         />
-        <span className="text-sm text-primary-light">
-          {formatToCurrency(income?.data)} /{" "}
-          {formatToCurrency(new Prisma.Decimal(0))}
-        </span>
       </Card.Body>
     </Card>
   );
