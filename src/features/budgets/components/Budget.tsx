@@ -27,25 +27,25 @@ const Budget: FC<BudgetProps> = ({ data: budget, onClick }) => {
 
   return (
     <Card size="sm" onClick={onClick ?? navigateToBudget}>
-      <Card.Header>
-        <Card.Group horizontal>
-          <IconButton icon={icon} size="sm" style="secondary" />
-          <h3 className="text-lg">{formatToTitleCase(budget.name)}</h3>
+      <Card.Body horizontal>
+        <IconButton icon={icon} style="secondary" />
+        <Card.Group size="sm" className="w-full gap-1 pl-2">
+          <h3 className="text-lg font-bold">
+            {formatToTitleCase(budget.name)}
+          </h3>
+          <ProgressBar size="sm" value={budget.spent} goal={budget.goal} />
+          <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
+            <span>
+              {formatToCurrency(budget.spent)} / {formatToCurrency(budget.goal)}
+            </span>
+            {Number(budget.leftover) >= 0 && (
+              <span>{formatToCurrency(budget.leftover)} left</span>
+            )}
+            {Number(budget.leftover) < 0 && (
+              <span>{formatToCurrency(budget.leftover)} over</span>
+            )}
+          </div>
         </Card.Group>
-      </Card.Header>
-      <Card.Body>
-        <ProgressBar size="sm" value={budget.spent} goal={budget.goal} />
-        <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
-          <span>
-            {formatToCurrency(budget.spent)} / {formatToCurrency(budget.goal)}
-          </span>
-          {Number(budget.leftover) >= 0 && (
-            <span>{formatToCurrency(budget.leftover)} left</span>
-          )}
-          {Number(budget.leftover) < 0 && (
-            <span>{formatToCurrency(budget.leftover)} over</span>
-          )}
-        </div>
       </Card.Body>
     </Card>
   );
