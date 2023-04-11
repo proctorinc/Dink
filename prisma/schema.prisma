@@ -39,6 +39,8 @@ model Budget {
   savingsFund         Fund?         @relation(fields: [savingsFundId], references: [id])
   user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   source_transactions Transaction[]
+  start_date          DateTime
+  end_date            DateTime?
   
   @@unique([name, userId])
   @@index([userId])
