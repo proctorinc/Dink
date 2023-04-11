@@ -35,7 +35,7 @@ export default function CreateFundPage() {
       <Card>
         <Card.Body>
           <Card.Group>
-            <label htmlFor="amount-input" className="font-bold">
+            <label htmlFor="name-input" className="font-bold">
               Name:
             </label>
             <Card.Group horizontal>
@@ -50,9 +50,7 @@ export default function CreateFundPage() {
                 onChange={(event) => setName(event.target.value)}
               />
             </Card.Group>
-            <label htmlFor="amount-input" className="font-bold">
-              Icon:
-            </label>
+            <label className="font-bold">Icon:</label>
             <Card.Group horizontal className="h-40 flex-wrap overflow-y-scroll">
               {icons.map((icon) => (
                 <IconButton
