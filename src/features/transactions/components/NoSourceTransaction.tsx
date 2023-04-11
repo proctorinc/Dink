@@ -28,7 +28,7 @@ export const NoSourceTransaction: FC<NoSourceTransactionProps> = ({
     >
       <div className="flex w-full justify-between">
         <div className="flex flex-col">
-          <span className="text-lg font-bold">{transaction?.name}</span>
+          <span className="text-md font-bold">{transaction?.name}</span>
           <span className="text-sm text-primary-light group-hover:text-primary-med">
             {transaction?.isSavings &&
               transaction?.date.toLocaleString("en-us", {
@@ -43,7 +43,7 @@ export const NoSourceTransaction: FC<NoSourceTransactionProps> = ({
           </span>
         </div>
         <div className="flex flex-col justify-center text-right">
-          <span className="text-xl font-bold text-primary-light group-hover:text-primary-med">
+          <span className="font-bold text-primary-light group-hover:text-primary-med">
             {formatToCurrency(transaction?.amount)}
           </span>
         </div>
