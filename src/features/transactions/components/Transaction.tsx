@@ -1,10 +1,14 @@
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleRight,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import { type Budget, type Fund, Transaction } from "@prisma/client";
 import { useRouter } from "next/router";
 import { type FC } from "react";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type TransactionProps = {
   data: Transaction & {
@@ -36,16 +40,25 @@ const Transaction: FC<TransactionProps> = ({ data: transaction }) => {
             <span className="overflow-x-hidden text-ellipsis text-lg font-bold">
               {transaction.name}
             </span>
-            <span className="text-sm text-primary-light group-hover:text-primary-med">
-              {transaction.sourceType
-                ? formatToTitleCase(transaction.sourceType)
-                : "Uncategorized"}
-              {(transaction.sourceType === "fund" ||
-                transaction.sourceType === "savings") &&
-                ` / ${transaction.fundSource?.name ?? ""}`}
-              {transaction.sourceType === "budget" &&
-                ` / ${transaction.budgetSource?.name ?? ""}`}
-            </span>
+            <div className="flex items-center gap-1 text-sm text-primary-light group-hover:text-primary-med">
+              <span className="">
+                {transaction.sourceType
+                  ? formatToTitleCase(transaction.sourceType)
+                  : "Uncategorized"}
+              </span>
+              {(transaction.sourceType === "budget" ||
+                transaction.sourceType === "fund" ||
+                transaction.sourceType === "savings") && (
+                <>
+                  <FontAwesomeIcon icon={faAngleRight} size="xs" />
+                  <span>
+                    {transaction.sourceType === "budget"
+                      ? transaction.budgetSource?.name
+                      : transaction.fundSource?.name}
+                  </span>
+                </>
+              )}
+            </div>
           </Card.Group>
         </Card.Group>
         <Card.Group size="sm" className="text-right">
