@@ -1,5 +1,4 @@
-import { faAngleUp, faGear, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useSession } from "next-auth/react";
+import { faAngleUp, faGear } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import Transaction from "~/features/transactions";
 import Header from "~/components/ui/Header";
@@ -15,7 +14,6 @@ const AccountPage = () => {
   const router = useRouter();
   const ctx = api.useContext();
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const { data: sessionData } = useSession();
   const { accountId } = router.query;
   const strAccountId = typeof accountId === "string" ? accountId : null;
   const accountData = api.bankAccounts.getById.useQuery({
@@ -23,9 +21,6 @@ const AccountPage = () => {
   });
   const deleteAccount = api.bankAccounts.delete.useMutation({
     onSuccess: () => void ctx.invalidate(),
-  });
-  const addMockTransaction = api.mockData.addMockTransaction.useMutation({
-    onSuccess: () => ctx.invalidate(),
   });
 
   const handleDeleteAccount = () => {
@@ -58,19 +53,6 @@ const AccountPage = () => {
         <Button
           icon={settingsOpen ? faAngleUp : faGear}
           onClick={() => setSettingsOpen((prev) => !prev)}
-        />
-        <Button
-          title="Transaction"
-          icon={faPlus}
-          style="secondary"
-          onClick={() => {
-            if (sessionData?.user && typeof accountId === "string") {
-              void addMockTransaction.mutate({
-                accountId,
-                userId: sessionData?.user.id,
-              });
-            }
-          }}
         />
       </ButtonBar>
       {settingsOpen && (

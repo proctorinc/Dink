@@ -18,19 +18,15 @@ import Page from "~/components/ui/Page";
 
 export default function BankAccounts() {
   const router = useRouter();
-  const ctx = api.useContext();
   const [open, setOpen] = useState("");
   const accountData = api.bankAccounts.getAllData.useQuery();
-  const createDemoAccount = api.mockData.addMockBankAccount.useMutation({
-    onSuccess: () => void ctx.invalidate(),
-  });
 
   const handleOpen = (type: AccountCategory) => {
     setOpen((prev) => (prev === type ? "" : type));
   };
 
   const handleCreateAccount = () => {
-    createDemoAccount.mutate();
+    console.log("Create account");
   };
 
   const data: Serie[] = [
