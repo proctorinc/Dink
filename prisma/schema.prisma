@@ -159,15 +159,6 @@ model Session {
   @@index([userId])
 }
 
-model Settings {
-  id                      String @id @default(cuid())
-  creditPercentTarget     Int @default(10)
-  userId                  String @unique
-  user                    User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-}
-
 model User {
   id               String            @id @default(cuid())
   name             String?
@@ -175,7 +166,8 @@ model User {
   email            String?           @unique
   emailVerified    DateTime?
   image            String?
-  settings         Settings?
+  creditPercentTarget     Int @default(10)
+  targetIncome            Decimal @default(0)
   accounts         Account[]
   sessions         Session[]
   bankAccessTokens BankAccessToken[]
