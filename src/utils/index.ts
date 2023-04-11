@@ -71,3 +71,9 @@ export const getLastDayOfMonth = (date: Date) => {
 export const getFirstDayOfMonth = (date: Date) => {
   return new Date(date.getFullYear(), date.getMonth(), 1);
 };
+
+export const getLastDayOfLastMonth = () => {
+  const today = new Date();
+  const oneMonthAgo = new Date(today.setMonth(today.getMonth() - 1));
+  return getLastDayOfMonth(oneMonthAgo);
+};
