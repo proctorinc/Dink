@@ -61,7 +61,7 @@ export default function CreateBudgetPage() {
 
   return (
     <Page auth title="Create Budget">
-      <Header back title={`Create Budget`} />
+      <Header back title="Create Budget" />
       <Card>
         <Card.Collapse open={isSavings === null}>
           <Card onClick={() => setIsSavings(false)}>
