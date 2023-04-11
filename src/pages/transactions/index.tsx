@@ -174,7 +174,7 @@ const TransactionsPage = () => {
           <Card>
             <Card.Header size="xl">
               <Card.Group>
-                <span>No Transactions</span>
+                <span className="text-lg">No Transactions</span>
               </Card.Group>
             </Card.Header>
           </Card>
