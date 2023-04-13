@@ -8,42 +8,7 @@ type BarChartProps = {
   floatRight?: boolean;
 };
 
-export const BarChart: FC<BarChartProps> = ({
-  data,
-  keys,
-  progress,
-  floatRight,
-}) => {
-  const theme = {
-    fontSize: 15,
-  };
-
-  const patterns = [
-    {
-      id: "dots",
-      type: "patternDots",
-      background: "#00C6C5",
-      color: "rgb(22, 123, 141, 0.1)",
-      size: 6,
-      padding: 4,
-      stagger: true,
-    },
-    {
-      id: "lines",
-      type: "patternLines",
-      background: "#3D3F71",
-      color: "rgba(255, 255, 255, 0.05)",
-      rotation: -45,
-      lineWidth: 6,
-      spacing: 10,
-    },
-    {
-      id: "gradient",
-      type: "linearGradient",
-      colors: [{ offset: 0, color: "#00C6C5" }],
-    },
-  ];
-
+export const BarChart: FC<BarChartProps> = ({ data, keys, floatRight }) => {
   return (
     <ResponsiveBar
       data={data}
@@ -86,35 +51,6 @@ export const BarChart: FC<BarChartProps> = ({
         from: "color",
         modifiers: [["darker", 1.6]],
       }}
-      // legends={[
-      //   {
-      //     dataFrom: "keys",
-      //     anchor: "bottom-right",
-      //     direction: "column",
-      //     justify: false,
-      //     translateX: 120,
-      //     translateY: 0,
-      //     itemsSpacing: 2,
-      //     itemWidth: 100,
-      //     itemHeight: 20,
-      //     itemDirection: "left-to-right",
-      //     itemOpacity: 0.85,
-      //     symbolSize: 20,
-      //     effects: [
-      //       {
-      //         on: "hover",
-      //         style: {
-      //           itemOpacity: 1,
-      //         },
-      //       },
-      //     ],
-      //   },
-      // ]}
-      // role="application"
-      // ariaLabel="Nivo bar chart demo"
-      // barAriaLabel={function (e) {
-      //   return e.id + ": " + e.formattedValue + " in country: " + e.indexValue;
-      // }}
       valueFormat=" >-$,.2f"
       tooltip={(data) => (
         <div
