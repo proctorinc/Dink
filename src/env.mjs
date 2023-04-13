@@ -18,9 +18,12 @@ const server = z.object({
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
     process.env.VERCEL ? z.string().min(1) : z.string().url()
   ),
-  // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  PLAID_ENV: z.string(),
+  PLAID_CLIENT_ID: z.string(),
+  PLAID_DEV_SECRET: z.string(),
+  PLAID_SANDBOX_SECRET: z.string(),
 });
 
 /**
@@ -44,7 +47,10 @@ const processEnv = {
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+  PLAID_ENV: process.env.PLAID_ENV,
+  PLAID_CLIENT_ID: process.env.PLAID_CLIENT_ID,
+  PLAID_DEV_SECRET: process.env.PLAID_DEV_SECRET,
+  PLAID_SANDBOX_SECRET: process.env.PLAID_SANDBOX_SECRET,
 };
 
 // Don't touch the part below
