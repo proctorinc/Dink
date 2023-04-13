@@ -22,12 +22,18 @@ export const bankAccountRouter = createTRPCRouter({
         userId: ctx.session.user.id,
         type: AccountCategory.Cash,
       },
+      include: {
+        item: true,
+      },
     });
 
     const creditAccounts = await ctx.prisma.bankAccount.findMany({
       where: {
         userId: ctx.session.user.id,
         type: AccountCategory.Credit,
+      },
+      include: {
+        item: true,
       },
     });
 
@@ -36,12 +42,18 @@ export const bankAccountRouter = createTRPCRouter({
         userId: ctx.session.user.id,
         type: AccountCategory.Investment,
       },
+      include: {
+        item: true,
+      },
     });
 
     const loanAccounts = await ctx.prisma.bankAccount.findMany({
       where: {
         userId: ctx.session.user.id,
         type: AccountCategory.Loan,
+      },
+      include: {
+        item: true,
       },
     });
 
@@ -101,6 +113,7 @@ export const bankAccountRouter = createTRPCRouter({
           id: input.accountId,
         },
         include: {
+          item: true,
           transactions: {
             include: {
               fundSource: true,
@@ -112,6 +125,80 @@ export const bankAccountRouter = createTRPCRouter({
           },
         },
       });
+    }),
+  create: protectedProcedure
+    .input(
+      z.object({
+        plaidItemId: z.string(),
+        accounts: z
+          .object({
+            id: z.string(),
+            plaidId: z.string(),
+            available: z.number().nullable().optional(),
+            current: z.number().optional(),
+            iso_currency_code: z.string().optional(),
+            limit: z.number().optional(),
+            unofficial_currency_code: z.string().optional(),
+            mask: z.string(),
+            name: z.string(),
+            official_name: z.string().optional(),
+            subtype: z.string(),
+            type: z.string(),
+          })
+          .array()
+          .min(1),
+      })
+    )
+    .mutation(({ input, ctx }) => {
+      // const data = input.accounts.map((account) => {
+      //   return {};
+      // });
+      // return ctx.prisma.bankAccount.createMany({
+      //   data: {
+      //     plaidAccountId: account.plaidId,
+      //     available: account.available,
+      //     current: account.current,
+      //     iso_currency_code: account?.iso_currency_code ?? null,
+      //     limit: account.limit,
+      //     unofficial_currency_code: account.unofficial_currency_code,
+      //     mask: account.mask,
+      //     name: account.name,
+      //     official_name: account.official_name,
+      //     subtype: account.subtype,
+      //     type: account.type === "other" ? "cash" : account.type,
+      //     user: {
+      //       connect: { id: ctx.session.user.id },
+      //     },
+      //     item: {
+      //       connect: { id: input.plaidItemId },
+      //     },
+      //   },
+      // });
+
+      input.accounts.map(async (account) => {
+        await ctx.prisma.bankAccount.create({
+          data: {
+            plaidAccountId: account.plaidId,
+            available: account.available,
+            current: account.current,
+            iso_currency_code: account?.iso_currency_code ?? null,
+            limit: account.limit,
+            unofficial_currency_code: account.unofficial_currency_code,
+            mask: account.mask,
+            name: account.name,
+            official_name: account.official_name,
+            subtype: account.subtype,
+            type: account.type === "other" ? "cash" : account.type,
+            user: {
+              connect: { id: ctx.session.user.id },
+            },
+            item: {
+              connect: { id: input.plaidItemId },
+            },
+          },
+        });
+      });
+      return;
     }),
   delete: protectedProcedure
     .input(z.object({ accountId: z.string() }))
