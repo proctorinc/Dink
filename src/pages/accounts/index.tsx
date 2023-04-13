@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import {
   accountCategories,
   AccountCategory,
@@ -7,7 +7,6 @@ import {
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { api } from "~/utils/api";
 import Header from "~/components/ui/Header";
-import { useRouter } from "next/router";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ButtonBar, IconButton } from "~/components/ui/Button";
 import Button from "~/components/ui/Button/Button";
@@ -15,18 +14,15 @@ import Card from "~/components/ui/Card";
 import { LineChart } from "~/components/ui/Charts";
 import { type Serie } from "@nivo/line";
 import Page from "~/components/ui/Page";
+import { PlaidLink } from "~/features/plaid";
+import Account from "~/features/accounts";
 
 export default function BankAccounts() {
-  const router = useRouter();
   const [open, setOpen] = useState("");
   const accountData = api.bankAccounts.getAllData.useQuery();
 
   const handleOpen = (type: AccountCategory) => {
     setOpen((prev) => (prev === type ? "" : type));
-  };
-
-  const handleCreateAccount = () => {
-    console.log("Create account");
   };
 
   const data: Serie[] = [
@@ -60,12 +56,7 @@ export default function BankAccounts() {
       </div>
       <div className="flex w-full flex-col gap-4 px-4">
         <ButtonBar>
-          <Button
-            icon={faPlus}
-            title="Account"
-            style="secondary"
-            onClick={handleCreateAccount}
-          />
+          <PlaidLink />
         </ButtonBar>
         {accountCategories.map((category) => (
           <Card key={category}>
@@ -74,6 +65,7 @@ export default function BankAccounts() {
                 <IconButton
                   icon={AccountCategoryIcons[category]}
                   size="sm"
+                  iconSize="sm"
                   style="secondary"
                 />
                 <h3 className="text-lg font-bold">
@@ -89,30 +81,7 @@ export default function BankAccounts() {
             <Card.Collapse open={open === category}>
               {accountData.data?.categories[category].accounts.map(
                 (account) => (
-                  <Fragment key={account.id}>
-                    <Card
-                      onClick={() =>
-                        void router.push(`/accounts/${account.id}`)
-                      }
-                    >
-                      <Card.Body horizontal>
-                        <Card.Group horizontal>
-                          <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-secondary-dark">
-                            <div className="h-8 w-8 rounded-full bg-secondary-med" />
-                          </div>
-                          <Card.Group size="sm">
-                            <h3 className="text-md">{account.name}</h3>
-                            <span className="text-sm text-primary-light group-hover:text-primary-med">
-                              {account.official_name} - {account.mask}
-                            </span>
-                          </Card.Group>
-                        </Card.Group>
-                        <span className="text-lg text-primary-light group-hover:text-primary-med">
-                          {formatToCurrency(account.current)}
-                        </span>
-                      </Card.Body>
-                    </Card>
-                  </Fragment>
+                  <Account key={account.id} data={account} />
                 )
               )}
               {accountData.data?.categories[category].accounts.length === 0 && (
