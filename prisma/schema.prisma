@@ -10,15 +10,18 @@ datasource db {
 
 model BankAccount {
   id                       String        @id @default(cuid())
+  plaidAccountId           String        @unique
+  itemId                   String
+  item                     PlaidItem     @relation(fields: [itemId], references: [id], onDelete: Cascade)
   available                Decimal?      @db.Decimal(10, 2)
   current                  Decimal?      @db.Decimal(10, 2)
-  iso_currency_code        String
+  iso_currency_code        String?
   limit                    Int?
   unofficial_currency_code String?
-  mask                     String
+  mask                     String?
   name                     String
   official_name            String?
-  subtype                  String
+  subtype                  String?
   type                     String
   statementDueDay          Int?
   user                     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -26,6 +29,7 @@ model BankAccount {
   transactions             Transaction[]
 
   @@index([userId])
+  @@index([itemId])
 }
 
 model Budget {
@@ -159,6 +163,18 @@ model Session {
   @@index([userId])
 }
 
+model PlaidItem {
+  id            String   @id @default(cuid())
+  plaidId       String   @unique
+  institutionId String
+  accessToken   String   @unique
+  status        String
+  userId        String
+  accounts      BankAccount[]
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
 model User {
   id               String            @id @default(cuid())
   name             String?
@@ -175,6 +191,7 @@ model User {
   transactions     Transaction[]
   funds            Fund[]
   budgets          Budget[]
+  plaid_access_tokens PlaidItem[]
 }
 
 model VerificationToken {
