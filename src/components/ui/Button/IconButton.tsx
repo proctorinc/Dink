@@ -8,6 +8,7 @@ type IconButtonProps = {
   active?: boolean;
   style?: "secondary" | "primary";
   size?: "sm" | "xs";
+  iconSize?: "xl" | "lg" | "sm" | "xs";
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
 };
@@ -17,6 +18,7 @@ export const IconButton: FC<IconButtonProps> = ({
   active,
   style,
   size,
+  iconSize,
   onClick,
   className,
 }) => {
@@ -26,11 +28,11 @@ export const IconButton: FC<IconButtonProps> = ({
   } else if (size === "xs") {
     buttonSize = "w-4";
   }
-  let iconSize: SizeProp = "lg";
+  let innerIconSize: SizeProp = "lg";
   if (size === "sm") {
-    iconSize = "lg";
+    innerIconSize = "lg";
   } else if (size === "xs") {
-    iconSize = "xs";
+    innerIconSize = "xs";
   }
 
   let iconStyle =
@@ -52,7 +54,7 @@ export const IconButton: FC<IconButtonProps> = ({
       }`}
       onClick={onClick}
     >
-      <FontAwesomeIcon size={iconSize} icon={icon} />
+      <FontAwesomeIcon size={iconSize ?? innerIconSize} icon={icon} />
     </button>
   );
 };
