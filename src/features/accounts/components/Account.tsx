@@ -1,5 +1,66 @@
-const Account = () => {
-  return <div>Account</div>;
+import { faBuildingColumns } from "@fortawesome/free-solid-svg-icons";
+import { type PlaidItem, type BankAccount } from "@prisma/client";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { type FC } from "react";
+import { IconButton } from "~/components/ui/Button";
+import Card from "~/components/ui/Card";
+import { formatToCurrency, formatToTitleCase } from "~/utils";
+import { api } from "~/utils/api";
+
+type AccountProps = {
+  data: BankAccount & {
+    item: PlaidItem;
+  };
+};
+
+const Account: FC<AccountProps> = ({ data: account }) => {
+  const router = useRouter();
+
+  const institutionQuery = api.plaid.getInstitution.useQuery({
+    institutionId: account.item.institutionId,
+  });
+
+  return (
+    <Card onClick={() => void router.push(`/accounts/${account.id}`)}>
+      <Card.Body horizontal>
+        <Card.Group horizontal>
+          {!institutionQuery.data && (
+            <div className="flex aspect-square h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-primary-light bg-primary-dark">
+              <IconButton icon={faBuildingColumns} />
+            </div>
+          )}
+          {!!institutionQuery.data?.logo && (
+            <Image
+              className="w-10 rounded-full border border-primary-light"
+              width={100}
+              height={100}
+              src={`data:image/jpeg;base64,${institutionQuery.data.logo}`}
+              alt="user-image"
+            />
+          )}
+          {!institutionQuery.data?.logo && !!institutionQuery.data?.url && (
+            <Image
+              className="w-10 rounded-full border border-primary-light"
+              width={100}
+              height={100}
+              src={`https://s2.googleusercontent.com/s2/favicons?domain=${institutionQuery.data.url}&sz=256`}
+              alt="user-image"
+            />
+          )}
+          <Card.Group size="sm" className="grow">
+            <h3 className="text-md">{account.name}</h3>
+            <span className="text-sm text-primary-light group-hover:text-primary-med">
+              {formatToTitleCase(account.subtype, true)} - {account.mask}
+            </span>
+          </Card.Group>
+        </Card.Group>
+        <span className="text-lg text-primary-light group-hover:text-primary-med">
+          {formatToCurrency(account.current)}
+        </span>
+      </Card.Body>
+    </Card>
+  );
 };
 
 export default Account;
