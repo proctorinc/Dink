@@ -1,14 +1,19 @@
-import { faAngleUp, faGear } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleUp,
+  faBuildingColumns,
+  faGear,
+} from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import Transaction from "~/features/transactions";
 import Header from "~/components/ui/Header";
 import Spinner from "~/components/ui/Spinner";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { api } from "~/utils/api";
-import Button, { ButtonBar } from "~/components/ui/Button";
+import Button, { ButtonBar, IconButton } from "~/components/ui/Button";
 import { useState } from "react";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
 import Page from "~/components/ui/Page";
+import Image from "next/image";
 
 const AccountPage = () => {
   const router = useRouter();
@@ -19,6 +24,14 @@ const AccountPage = () => {
   const accountData = api.bankAccounts.getById.useQuery({
     accountId: strAccountId ?? "",
   });
+  const institutionQuery = api.plaid.getInstitution.useQuery(
+    {
+      institutionId: accountData.data?.item.institutionId ?? "",
+    },
+    {
+      enabled: !!accountData.data?.item.institutionId,
+    }
+  );
   const deleteAccount = api.bankAccounts.delete.useMutation({
     onSuccess: () => void ctx.invalidate(),
   });
@@ -32,17 +45,54 @@ const AccountPage = () => {
     return <Spinner />;
   }
 
+  const Icon = () => {
+    return (
+      <>
+        {!institutionQuery.data && (
+          <div className="flex aspect-square h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-primary-light bg-primary-dark">
+            <IconButton size="xs" icon={faBuildingColumns} />
+          </div>
+        )}
+        {!!institutionQuery.data?.logo && (
+          <Image
+            className="h-10 w-10 rounded-full border border-primary-light"
+            width={100}
+            height={100}
+            src={`data:image/jpeg;base64,${institutionQuery.data.logo}`}
+            alt="user-image"
+          />
+        )}
+        {!institutionQuery.data?.logo && !!institutionQuery.data?.url && (
+          <Image
+            className="h-10 w-10 rounded-full border border-primary-light"
+            width={100}
+            height={100}
+            src={`https://s2.googleusercontent.com/s2/favicons?domain=${institutionQuery.data.url}&sz=256`}
+            alt="user-image"
+          />
+        )}
+      </>
+    );
+  };
+
   return (
     <Page auth title="Account">
       <Header
         back
-        title={accountData?.data?.name}
+        title={
+          <div className="flex gap-2">
+            <Icon />
+            <h3>{accountData?.data?.name}</h3>
+          </div>
+        }
         subtitle={`Total: ${formatToCurrency(accountData?.data?.current)}`}
       />
       <div className="flex w-full flex-col gap-2">
-        <span className="flex h-fit w-fit items-center rounded-lg bg-primary-med px-2 py-1 text-xs font-bold text-primary-light">
-          {accountData?.data?.official_name}
-        </span>
+        {accountData?.data?.official_name && (
+          <span className="flex h-fit w-fit items-center rounded-lg bg-primary-med px-2 py-1 text-xs font-bold text-primary-light">
+            {accountData?.data?.official_name}
+          </span>
+        )}
         <span className="text-md text-primary-light">
           {formatToTitleCase(accountData?.data?.type)} /{" "}
           {formatToTitleCase(accountData?.data?.subtype)} /{" "}
