@@ -2,10 +2,9 @@ import {
   faArrowLeft,
   type IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import React, { type FC, type ReactNode } from "react";
-import { IconButton } from "./Button";
+import Button, { IconButton } from "./Button";
 
 type HeaderProps = {
   title: ReactNode;
@@ -20,18 +19,12 @@ const Header: FC<HeaderProps> = ({ title, subtitle, icon, back }) => {
   return (
     <div className="flex w-full flex-col">
       {back && (
-        <div className="flex w-full">
-          <div
-            className="flex items-center gap-2 py-2 text-xs font-bold text-primary-light"
+        <div className="w-full pb-8">
+          <Button
+            title="Back"
+            icon={faArrowLeft}
             onClick={() => void router.back()}
-          >
-            <FontAwesomeIcon
-              className="float-left pt-2"
-              icon={faArrowLeft}
-              size="xl"
-            />
-            <span className="pt-2 text-xl">back</span>
-          </div>
+          />
         </div>
       )}
       <div className="flex gap-4">
