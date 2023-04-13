@@ -8,9 +8,16 @@ export const formatToCurrency = (amount: Prisma.Decimal | undefined | null) => {
   return amount ? USD.format(Number(amount)) : "$0.00";
 };
 
-export const formatToTitleCase = (str: string | undefined | null) => {
+export const formatToTitleCase = (
+  str: string | undefined | null,
+  capitalize_all_short = false
+) => {
   if (!str) {
     return "";
+  }
+
+  if (capitalize_all_short && str.length <= 3) {
+    return str.toUpperCase();
   }
 
   return str
