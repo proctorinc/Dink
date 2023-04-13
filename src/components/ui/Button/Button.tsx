@@ -45,7 +45,7 @@ const Button: FC<ButtonProps> = ({
       "bg-danger-med text-danger-dark hover:bg-danger-light hover:text-danger-med hover:ring hover:ring-danger-med group-hover:text-danger-light";
   }
 
-  const buttonSize = size === "sm" ? "px-2 text-xs py-1" : "h-10 py-2 px-5";
+  const buttonSize = size === "sm" ? "px-2 text-xs py-1" : "h-10 py-6 px-5";
 
   return (
     <button
