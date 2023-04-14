@@ -7,9 +7,7 @@ import {
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { api } from "~/utils/api";
 import Header from "~/components/ui/Header";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ButtonBar, IconButton } from "~/components/ui/Button";
-import Button from "~/components/ui/Button/Button";
 import Card from "~/components/ui/Card";
 import { LineChart } from "~/components/ui/Charts";
 import { type Serie } from "@nivo/line";
@@ -87,7 +85,7 @@ export default function BankAccounts() {
               {accountData.data?.categories[category].accounts.length === 0 && (
                 <Card size="sm">
                   <Card.Body>
-                    <Button title="Account" icon={faPlus} />
+                    <PlaidLink />
                   </Card.Body>
                 </Card>
               )}
