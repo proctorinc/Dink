@@ -167,7 +167,6 @@ export const budgetsRouter = createTRPCRouter({
               note: "",
               isTransfer: false,
               isSavings: true,
-              transactionId: "savings",
               amount: budget?.goal ?? 0,
               date: today,
               pending: false,
