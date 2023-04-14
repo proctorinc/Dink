@@ -1,4 +1,12 @@
-import { type BankAccount, Prisma } from "@prisma/client";
+import {
+  type BankAccount,
+  Prisma,
+  type PlaidItem,
+  type Institution,
+  type Transaction,
+  type Fund,
+  type Budget,
+} from "@prisma/client";
 import { z } from "zod";
 import { AccountCategory } from "~/config";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
@@ -7,6 +15,78 @@ function sumAccountsBalance(accounts: BankAccount[]) {
   return accounts.reduce((acc, account) => {
     return Prisma.Decimal.add(acc, account.current ?? new Prisma.Decimal(0));
   }, new Prisma.Decimal(0));
+}
+
+function convertAccountLogosToString(
+  accounts: (BankAccount & {
+    item: PlaidItem & {
+      institution: Institution | null;
+    };
+  })[]
+) {
+  return accounts.map((account) => {
+    return convertLogoBufferToString(account);
+  });
+}
+
+function convertLogoBufferToString(
+  account: BankAccount & {
+    item: PlaidItem & {
+      institution: Institution | null;
+    };
+  }
+) {
+  const { item, ...accountValues } = account;
+  if (item.institution && item.institution.logo) {
+    const { institution, ...itemValues } = item;
+    const { logo: blob, ...institutionValues } = institution;
+
+    const logo = blob?.toString("utf-8");
+
+    return {
+      ...accountValues,
+      item: {
+        ...itemValues,
+        institution: {
+          ...institutionValues,
+          logo: logo ?? null,
+        },
+      },
+    };
+  }
+  return account;
+}
+
+function convertLogoBufferToStringWithTransactions(
+  account: BankAccount & {
+    transactions: (Transaction & {
+      fundSource: Fund | null;
+      budgetSource: Budget | null;
+    })[];
+    item: PlaidItem & {
+      institution: Institution | null;
+    };
+  }
+) {
+  const { item, ...accountValues } = account;
+  if (item.institution && item.institution.logo) {
+    const { institution, ...itemValues } = item;
+    const { logo: blob, ...institutionValues } = institution;
+
+    const logo = blob?.toString("utf-8");
+
+    return {
+      ...accountValues,
+      item: {
+        ...itemValues,
+        institution: {
+          ...institutionValues,
+          logo: logo ?? null,
+        },
+      },
+    };
+  }
+  return account;
 }
 
 export const bankAccountRouter = createTRPCRouter({
@@ -23,7 +103,11 @@ export const bankAccountRouter = createTRPCRouter({
         type: AccountCategory.Cash,
       },
       include: {
-        item: true,
+        item: {
+          include: {
+            institution: true,
+          },
+        },
       },
     });
 
@@ -33,7 +117,11 @@ export const bankAccountRouter = createTRPCRouter({
         type: AccountCategory.Credit,
       },
       include: {
-        item: true,
+        item: {
+          include: {
+            institution: true,
+          },
+        },
       },
     });
 
@@ -43,7 +131,11 @@ export const bankAccountRouter = createTRPCRouter({
         type: AccountCategory.Investment,
       },
       include: {
-        item: true,
+        item: {
+          include: {
+            institution: true,
+          },
+        },
       },
     });
 
@@ -53,7 +145,11 @@ export const bankAccountRouter = createTRPCRouter({
         type: AccountCategory.Loan,
       },
       include: {
-        item: true,
+        item: {
+          include: {
+            institution: true,
+          },
+        },
       },
     });
 
@@ -75,19 +171,19 @@ export const bankAccountRouter = createTRPCRouter({
       categories: {
         [AccountCategory.Cash]: {
           total: cashBalance,
-          accounts: cashAccounts,
+          accounts: convertAccountLogosToString(cashAccounts),
         },
         [AccountCategory.Credit]: {
           total: creditBalance,
-          accounts: creditAccounts,
+          accounts: convertAccountLogosToString(creditAccounts),
         },
         [AccountCategory.Investment]: {
           total: investmentBalance,
-          accounts: investmentAccounts,
+          accounts: convertAccountLogosToString(investmentAccounts),
         },
         [AccountCategory.Loan]: {
           total: loanBalance,
-          accounts: loanAccounts,
+          accounts: convertAccountLogosToString(loanAccounts),
         },
       },
     };
@@ -106,14 +202,18 @@ export const bankAccountRouter = createTRPCRouter({
         accountId: z.string(),
       })
     )
-    .query(({ input, ctx }) => {
-      return ctx.prisma.bankAccount.findFirst({
+    .query(async ({ input, ctx }) => {
+      const account = await ctx.prisma.bankAccount.findFirst({
         where: {
           userId: ctx.session.user.id,
           id: input.accountId,
         },
         include: {
-          item: true,
+          item: {
+            include: {
+              institution: true,
+            },
+          },
           transactions: {
             include: {
               fundSource: true,
@@ -125,6 +225,9 @@ export const bankAccountRouter = createTRPCRouter({
           },
         },
       });
+      return account
+        ? convertLogoBufferToStringWithTransactions(account)
+        : null;
     }),
   create: protectedProcedure
     .input(
