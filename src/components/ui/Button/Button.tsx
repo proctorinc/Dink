@@ -33,7 +33,7 @@ const Button: FC<ButtonProps> = ({
   } else if (disabled && style === "danger") {
     buttonColors = "text-danger-med ring ring-danger-med";
   } else if (disabled) {
-    buttonColors = "text-primary-med ring ring-primary-med";
+    buttonColors = "text-primary-med bg-primary-med/25 ring ring-primary-med";
   } else if (style === "secondary") {
     buttonColors =
       "bg-secondary-med text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light";
@@ -45,7 +45,7 @@ const Button: FC<ButtonProps> = ({
       "bg-danger-med text-danger-dark hover:bg-danger-light hover:text-danger-med hover:ring hover:ring-danger-med group-hover:text-danger-light";
   }
 
-  const buttonSize = size === "sm" ? "px-2 text-xs py-1" : "h-10 py-6 px-5";
+  const buttonSize = size === "sm" ? "px-2 text-xs py-1" : "h-10 py-3 px-5";
 
   return (
     <button
