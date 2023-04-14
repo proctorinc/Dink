@@ -84,12 +84,12 @@ model Transaction {
   datetime                String?
   isSavings               Boolean?
   isTransfer              Boolean
-  isoCurrencyCode         String                @default("USD")
+  isoCurrencyCode         String?               @default("USD")
   address                 String?
   city                    String?
   country                 String?
-  lat                     String?
-  lon                     String?
+  lat                     Int?
+  lon                     Int?
   postal_code             String?
   region                  String?
   store_number            String?
@@ -108,14 +108,13 @@ model Transaction {
   pending                 Boolean
   pendingTransactionId    String?
   personalFinanceCategory String?
+  personalFinanceCategoryIcon String?
   sourceType              String?
   fundSource              Fund?                 @relation(fields: [fundSourceId], references: [id])
   fundSourceId            String?
   budgetSource            Budget?               @relation(fields: [budgetSourceId], references: [id])
   budgetSourceId          String?
   transactionCode         String?
-  transactionId           String
-  transactionType         String?
   unofficialCurrencyCode  String?
   userId                  String
   user                    User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -163,15 +162,26 @@ model Session {
   @@index([userId])
 }
 
+model Institution {
+  id            String      @id @default(cuid())
+  itemId        String      @unique
+  item          PlaidItem   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  name          String?
+  logo          Bytes?
+  url           String?
+  primary_color String?
+  @@index([itemId])
+}
+
 model PlaidItem {
-  id            String   @id @default(cuid())
-  plaidId       String   @unique
-  institutionId String
-  accessToken   String   @unique
+  id            String        @id @default(cuid())
+  institution   Institution?
+  accessToken   String        @unique
   status        String
-  userId        String
+  cursor        String?
   accounts      BankAccount[]
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@index([userId])
 }
 
