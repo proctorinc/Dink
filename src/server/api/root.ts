@@ -4,7 +4,7 @@ import { bankAccountRouter } from "./routers/bankAccounts";
 import { budgetsRouter } from "./routers/budgets";
 import { fundsRouter } from "./routers/funds";
 import { transactionsRouter } from "./routers/transactions";
-import { plaidRouter } from "./routers/plaid";
+import { plaidRouter } from "./routers/plaid/router";
 
 /**
  * This is the primary router for your server.
