@@ -10,10 +10,7 @@ export const TransactionsSummary = () => {
     api.transactions.getUncategorized.useQuery();
 
   return (
-    <Card
-      horizontal
-      onClick={() => void router.push("/transactions/categorize")}
-    >
+    <Card onClick={() => void router.push("/transactions/categorize")}>
       <Card.Body horizontal>
         <div className="flex flex-col">
           <h3 className="text-xl font-bold">Transactions</h3>
