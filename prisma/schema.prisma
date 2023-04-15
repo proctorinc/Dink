@@ -178,7 +178,7 @@ model PlaidItem {
   institution   Institution?
   accessToken   String        @unique
   status        String
-  cursor        String?
+  cursor        String        @default("")
   accounts      BankAccount[]
   userId        String
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
