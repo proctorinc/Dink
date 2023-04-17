@@ -3,65 +3,82 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model BankAccount {
-  id                       String        @id @default(cuid())
-  plaidAccountId           String        @unique
-  itemId                   String
-  item                     PlaidItem     @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  available                Decimal?      @db.Decimal(10, 2)
-  current                  Decimal?      @db.Decimal(10, 2)
-  iso_currency_code        String?
-  limit                    Int?
-  unofficial_currency_code String?
-  mask                     String?
-  name                     String
-  official_name            String?
-  subtype                  String?
-  type                     String
-  statementDueDay          Int?
-  user                     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                   String
-  transactions             Transaction[]
+  id                     String        @id @default(cuid())
+  plaidId                String        @unique
+  available              Decimal?      @db.Decimal(10, 2)
+  current                Decimal?      @db.Decimal(10, 2)
+  isoCurrencyCode        String?
+  unofficialCurrencyCode String?
+  creditLimit            Int?
+  mask                   String?
+  name                   String
+  officialName           String?
+  subtype                String?
+  type                   String
+  creditClosingDay       Int?
+  transactions           Transaction[]
+  institution            Institution   @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institutionId          String
+  user                   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                 String
 
   @@index([userId])
-  @@index([itemId])
+  @@index([institutionId])
 }
 
-model Budget {
-  id                  String        @id @default(cuid())
-  goal                Decimal      @db.Decimal(10, 2)
-  icon                String
-  name                String
-  userId              String
-  isSavings           Boolean       @default(false)
-  savingsFundId       String?       @unique
-  savingsFund         Fund?         @relation(fields: [savingsFundId], references: [id])
-  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  source_transactions Transaction[]
-  start_date          DateTime
-  end_date            DateTime?
-  
-  @@unique([name, userId])
+model Transaction {
+  id                          String                              @id @default(cuid())
+  plaidId                     String?
+  accountOwner                String?
+  amount                      Decimal                             @db.Decimal(10, 2)
+  authorizedDatetime          String?
+  checkNumber                 String?
+  date                        DateTime                            @db.Date
+  datetime                    DateTime?                           @db.Date
+  isTransfer                  Boolean
+  isoCurrencyCode             String?                             @default("USD")
+  merchantName                String?
+  name                        String
+  note                        String                              @default("")
+  paymentChannel              String?
+  isPending                   Boolean                             @default(false)
+  pendingTransactionId        String?
+  transactionCode             String?
+  unofficialCurrencyCode      String?
+  source                      TransactionSource?
+  personalFinanceCategoryIcon String?
+  personalFinanceCategory     TransactionPersonalFinanceCategory?
+  paymentMetadata             TransactionPaymentMetadata?
+  location                    TransactionLocation?
+  category                    TransactionCategory[]
+  account                     BankAccount?                        @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId                   String?
+  user                        User                                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                      String
+
   @@index([userId])
-  @@index([savingsFundId])
+  @@index([accountId])
 }
 
-model Fund {
-  id                  String        @id @default(cuid())
-  icon                String?
-  name                String
-  userId              String
-  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  source_transactions Transaction[]
-  savingsBudgets      Budget[]
-  
-  @@unique([name, userId])
-  @@index([userId])
+model TransactionSource {
+  id            String      @id @default(cuid())
+  type          String
+  fund          Fund?       @relation(fields: [fundId], references: [id])
+  fundId        String?
+  budget        Budget?     @relation(fields: [budgetId], references: [id])
+  budgetId      String?
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId String      @unique
+
+  @@index([transactionId])
+  @@index([fundId])
+  @@index([budgetId])
 }
 
 model TransactionCategory {
@@ -69,68 +86,142 @@ model TransactionCategory {
   name          String
   transaction   Transaction @relation(fields: [transactionId], references: [id])
   transactionId String      @unique
+
+  @@index([transactionId])
 }
 
-model Transaction {
-  id                      String                @id @default(cuid())
-  account                 BankAccount?          @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  accountId               String?
-  account_owner           String?
-  amount                  Decimal              @db.Decimal(10, 2)
-  authorized_datetime     String?
-  category                TransactionCategory[]
-  checkNumber             String?
-  date                    DateTime              @db.Date
-  datetime                String?
-  isSavings               Boolean?
-  isTransfer              Boolean
-  isoCurrencyCode         String?               @default("USD")
-  address                 String?
-  city                    String?
-  country                 String?
-  lat                     Int?
-  lon                     Int?
-  postal_code             String?
-  region                  String?
-  store_number            String?
-  merchantName            String?
-  name                    String
-  note                    String                @default("")
-  paymentChannel          String?
-  by_order_of             String?
-  payee                   String?
-  payer                   String?
-  payment_method          String?
-  payment_processor       String?
-  ppd_id                  String?
-  reason                  String?
-  reference_number        String?
-  pending                 Boolean
-  pendingTransactionId    String?
-  personalFinanceCategory String?
-  personalFinanceCategoryIcon String?
-  sourceType              String?
-  fundSource              Fund?                 @relation(fields: [fundSourceId], references: [id])
-  fundSourceId            String?
-  budgetSource            Budget?               @relation(fields: [budgetSourceId], references: [id])
-  budgetSourceId          String?
-  transactionCode         String?
-  unofficialCurrencyCode  String?
-  userId                  String
-  user                    User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  @@index([userId])
-  @@index([fundSourceId])
-  @@index([budgetSourceId])
-  @@index([accountId])
+model TransactionLocation {
+  id            String      @id @default(cuid())
+  address       String?
+  city          String?
+  country       String?
+  lat           Int?
+  lon           Int?
+  postalCode    String?
+  region        String?
+  storeNumber   String?
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId String      @unique
+
+  @@index([transactionId])
 }
 
-model BankAccessToken {
-  id     String @id @default(cuid())
-  value  String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
+model TransactionPaymentMetadata {
+  id               String      @id @default(cuid())
+  byOrderOf        String?
+  payee            String?
+  payer            String?
+  paymentMethod    String?
+  paymentProcessor String?
+  ppdId            String?
+  reason           String?
+  referenceNumber  String?
+  transaction      Transaction @relation(fields: [transactionId], references: [id])
+  transactionId    String      @unique
+
+  @@index([transactionId])
+}
+
+model TransactionPersonalFinanceCategory {
+  id            String      @id @default(cuid())
+  primary       String?
+  detailed      String?
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId String      @unique
+
+  @@index([transactionId])
+}
+
+model Institution {
+  id             String               @id @default(cuid())
+  name           String?
+  logo           Bytes?
+  url            String?
+  primaryColor   String?
+  linkedAccounts BankAccount[]
+  syncItem       InstitutionSyncItem?
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+
   @@index([userId])
+}
+
+model InstitutionSyncItem {
+  id            String      @id @default(cuid())
+  plaidId       String      @unique
+  accessToken   String      @unique
+  status        String
+  cursor        String      @default("")
+  institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institutionId String      @unique
+
+  @@index([institutionId])
+}
+
+model Budget {
+  id                 String              @id @default(cuid())
+  goal               Decimal             @db.Decimal(10, 2)
+  icon               String
+  name               String
+  startDate          DateTime
+  endDate            DateTime?
+  sourceTransactions TransactionSource[]
+  savingsFund        Fund?               @relation(fields: [savingsFundId], references: [id])
+  savingsFundId      String?             @unique
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+
+  @@unique([name, userId])
+  @@index([userId])
+  @@index([savingsFundId])
+}
+
+model Fund {
+  id                 String              @id @default(cuid())
+  icon               String?
+  name               String
+  sourceTransactions TransactionSource[]
+  savingsBudgets     Budget[]
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+
+  @@unique([name, userId])
+  @@index([userId])
+}
+
+model User {
+  id            String           @id @default(cuid())
+  name          String?
+  nickname      String?
+  email         String?          @unique
+  emailVerified DateTime?
+  image         String?
+  preferences   UserPreferences?
+  accounts      Account[]
+  sessions      Session[]
+  institutions  Institution[]
+  bankAccounts  BankAccount[]
+  transactions  Transaction[]
+  funds         Fund[]
+  budgets       Budget[]
+}
+
+model UserPreferences {
+  id                  String  @id @default(cuid())
+  creditPercentTarget Int     @default(10)
+  targetIncome        Decimal @default(0)
+  user                User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String  @unique
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 // Necessary for Next auth
@@ -149,8 +240,8 @@ model Account {
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -159,55 +250,6 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
-}
-
-model Institution {
-  id            String      @id @default(cuid())
-  itemId        String      @unique
-  item          PlaidItem   @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  name          String?
-  logo          Bytes?
-  url           String?
-  primary_color String?
-  @@index([itemId])
-}
-
-model PlaidItem {
-  id            String        @id @default(cuid())
-  institution   Institution?
-  accessToken   String        @unique
-  status        String
-  cursor        String        @default("")
-  accounts      BankAccount[]
-  userId        String
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  @@index([userId])
-}
-
-model User {
-  id               String            @id @default(cuid())
-  name             String?
-  nickname         String?
-  email            String?           @unique
-  emailVerified    DateTime?
-  image            String?
-  creditPercentTarget     Int @default(10)
-  targetIncome            Decimal @default(0)
-  accounts         Account[]
-  sessions         Session[]
-  bankAccessTokens BankAccessToken[]
-  bankAccounts     BankAccount[]
-  transactions     Transaction[]
-  funds            Fund[]
-  budgets          Budget[]
-  plaid_access_tokens PlaidItem[]
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
 }
