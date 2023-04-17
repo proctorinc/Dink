@@ -42,32 +42,30 @@ const AccountPage = () => {
   const Icon = () => {
     return (
       <>
-        {!account?.item.institution?.logo &&
-          !account?.item.institution?.url && (
-            <div className="flex aspect-square h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-primary-light bg-primary-dark">
-              <IconButton icon={faBuildingColumns} />
-            </div>
-          )}
-        {account?.item.institution?.logo &&
-          account?.item.institution?.logo !== "null" && (
+        {!account?.institution?.logo && !account?.institution?.url && (
+          <div className="flex aspect-square h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-primary-light bg-primary-dark">
+            <IconButton icon={faBuildingColumns} />
+          </div>
+        )}
+        {account?.institution?.logo &&
+          account?.institution?.logo !== "null" && (
             <Image
               className="h-12 w-12 rounded-full border border-primary-light"
               width={100}
               height={100}
-              src={`data:image/jpeg;base64,${account?.item.institution.logo.toString()}`}
+              src={`data:image/jpeg;base64,${account?.institution.logo}`}
               alt="logo"
             />
           )}
-        {account?.item.institution?.logo === "null" &&
-          account?.item.institution?.url && (
-            <Image
-              className="w-10 rounded-full border border-primary-light bg-white"
-              width={100}
-              height={100}
-              src={`https://s2.googleusercontent.com/s2/favicons?domain=${account.item.institution.url}&sz=256`}
-              alt="institution-image"
-            />
-          )}
+        {account?.institution?.logo === "null" && account?.institution?.url && (
+          <Image
+            className="w-10 rounded-full border border-primary-light bg-white"
+            width={100}
+            height={100}
+            src={`https://s2.googleusercontent.com/s2/favicons?domain=${account.institution.url}&sz=256`}
+            alt="institution-image"
+          />
+        )}
       </>
     );
   };
@@ -85,15 +83,14 @@ const AccountPage = () => {
         subtitle={`Total: ${formatToCurrency(accountData?.data?.current)}`}
       />
       <div className="flex w-full flex-col gap-2">
-        {accountData?.data?.official_name && (
+        {account?.officialName && (
           <span className="flex h-fit w-fit items-center rounded-lg bg-primary-med px-2 py-1 text-xs font-bold text-primary-light">
-            {accountData?.data?.official_name}
+            {account.officialName}
           </span>
         )}
         <span className="text-md text-primary-light">
           {formatToTitleCase(accountData?.data?.type)} /{" "}
-          {formatToTitleCase(accountData?.data?.subtype)} /{" "}
-          {accountData?.data?.mask}
+          {formatToTitleCase(accountData?.data?.subtype)} / {account?.mask}
         </span>
       </div>
       <ButtonBar>
@@ -113,14 +110,14 @@ const AccountPage = () => {
       <div className="w-full">
         <h2 className="text-left text-xl text-primary-light">Transactions</h2>
       </div>
-      {!accountData?.data?.transactions.length && (
+      {!account?.transactions.length && (
         <div className="group flex w-full items-center justify-between rounded-xl bg-primary-med px-4 py-2">
           None
         </div>
       )}
       <div className="flex w-full flex-col gap-3">
-        {accountData.data &&
-          accountData.data.transactions.map((transaction) => (
+        {account &&
+          account.transactions.map((transaction) => (
             <Transaction key={transaction.id} data={transaction} />
           ))}
       </div>

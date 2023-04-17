@@ -22,21 +22,21 @@ export async function createPlaidItem(data: CreateItemProps) {
     })
     .then((response) => response.data.institution);
 
-  return await prisma.plaidItem.create({
+  return await prisma.institution.create({
     data: {
-      id: itemId,
-      accessToken,
-      status: "good",
+      name: institution.name,
+      logo: Buffer.from(String(institution.logo), "utf-8"),
+      url: institution.url,
+      primaryColor: institution.primary_color,
+      syncItem: {
+        create: {
+          plaidId: itemId,
+          accessToken,
+          status: "good",
+        },
+      },
       user: {
         connect: { id: userId },
-      },
-      institution: {
-        create: {
-          name: institution.name,
-          logo: Buffer.from(String(institution.logo), "utf-8"),
-          url: institution.url,
-          primary_color: institution.primary_color,
-        },
       },
     },
   });
@@ -46,9 +46,9 @@ export async function updateItemTransactionsCursor(
   plaidItemId: string,
   cursor: string
 ) {
-  return await prisma.plaidItem.update({
+  return await prisma.institutionSyncItem.update({
     where: {
-      id: plaidItemId,
+      plaidId: plaidItemId,
     },
     data: {
       cursor: cursor,
@@ -56,20 +56,18 @@ export async function updateItemTransactionsCursor(
   });
 }
 
-export async function retrievePlaidItemById(id: string) {
-  return await prisma.plaidItem.findUniqueOrThrow({
+export async function retrievePlaidItemById(itemId: string) {
+  return await prisma.institutionSyncItem.findUniqueOrThrow({
     where: {
-      id: id,
+      plaidId: itemId,
     },
   });
 }
 
 export async function retrievePlaidItemByInstitutionId(institutionId: string) {
-  return await prisma.plaidItem.findFirst({
+  return await prisma.institutionSyncItem.findFirst({
     where: {
-      institution: {
-        id: institutionId,
-      },
+      plaidId: institutionId,
     },
   });
 }

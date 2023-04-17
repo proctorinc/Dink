@@ -10,7 +10,7 @@ export const PlaidLink = () => {
   const getLinkToken = api.plaid.getLinkToken.useMutation({
     onSuccess: (token) => setLinkToken(token),
   });
-  const createPlaidItem = api.plaid.createItem.useMutation({
+  const createPlaidItem = api.plaid.createInstitution.useMutation({
     onSuccess: () => void ctx.invalidate(),
   });
 

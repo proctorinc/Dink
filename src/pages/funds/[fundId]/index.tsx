@@ -113,7 +113,7 @@ const FundPage = () => {
         <div className="w-full">
           <h2 className="text-left text-xl text-primary-light">Transactions</h2>
         </div>
-        {fundData?.data?.source_transactions?.length === 0 && (
+        {fundData?.data?.sourceTransactions?.length === 0 && (
           <Card>
             <Card.Header>
               <h3>No Transactions</h3>
@@ -139,10 +139,12 @@ const FundPage = () => {
           </Card>
         )}
         <div className="flex w-full flex-col gap-3">
-          {fundData.data &&
-            fundData.data.source_transactions.map((transaction) => (
-              <NoSourceTransaction key={transaction.id} data={transaction} />
-            ))}
+          {fundData.data?.sourceTransactions.map((source) => (
+            <NoSourceTransaction
+              key={source.transaction.id}
+              data={source.transaction}
+            />
+          ))}
         </div>
       </div>
     </Page>

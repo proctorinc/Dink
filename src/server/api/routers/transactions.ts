@@ -17,39 +17,46 @@ export const transactionsRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const monthFilter = {
-        date: {
+        datetime: {
           gte: input.startOfMonth,
           lte: input.endOfMonth,
         },
       };
-      return ctx.prisma.transaction.findMany({
+      // TODO: create custom query
+      return await ctx.prisma.transaction.findMany({
         where: {
           userId: ctx.session.user.id,
           ...(input.filterMonthly ? monthFilter : {}),
-          OR: [
-            {
-              ...(input.includeSavings ? { sourceType: "savings" } : {}),
-            },
-            {
-              ...(input.includeUncategorized ? { sourceType: null } : {}),
-            },
-            {
-              ...(input.includeCategorized ? { sourceType: "fund" } : {}),
-            },
-            {
-              ...(input.includeCategorized ? { sourceType: "budget" } : {}),
-            },
-            {
-              ...(input.includeIncome ? { sourceType: "income" } : {}),
-            },
-          ],
+          // source: {
+          //   OR: [
+          //     {
+          //       ...(input.includeSavings ? { type: "savings" } : {}),
+          //     },
+          //     {
+          //       ...(input.includeUncategorized ? { type: null } : {}),
+          //     },
+          //     {
+          //       ...(input.includeCategorized ? { type: "fund" } : {}),
+          //     },
+          //     {
+          //       ...(input.includeCategorized ? { type: "budget" } : {}),
+          //     },
+          //     {
+          //       ...(input.includeIncome ? { type: "income" } : {}),
+          //     },
+          //   ],
+          // },
         },
         orderBy: {
-          date: "desc",
+          datetime: "desc",
         },
         include: {
-          budgetSource: true,
-          fundSource: true,
+          source: {
+            include: {
+              budget: true,
+              fund: true,
+            },
+          },
         },
       });
     }),
@@ -62,8 +69,7 @@ export const transactionsRouter = createTRPCRouter({
         date: "desc",
       },
       include: {
-        budgetSource: true,
-        fundSource: true,
+        source: true,
       },
     });
   }),
@@ -78,7 +84,7 @@ export const transactionsRouter = createTRPCRouter({
       return ctx.prisma.transaction.findMany({
         where: {
           userId: ctx.session.user.id,
-          date: {
+          datetime: {
             gte: input.startOfMonth,
             lte: input.endOfMonth,
           },
@@ -87,8 +93,12 @@ export const transactionsRouter = createTRPCRouter({
           date: "desc",
         },
         include: {
-          budgetSource: true,
-          fundSource: true,
+          source: {
+            include: {
+              budget: true,
+              fund: true,
+            },
+          },
         },
       });
     }),
@@ -96,10 +106,7 @@ export const transactionsRouter = createTRPCRouter({
     return ctx.prisma.transaction.findMany({
       where: {
         userId: ctx.session.user.id,
-        sourceType: null,
-      },
-      include: {
-        account: true,
+        source: null,
       },
     });
   }),
@@ -110,76 +117,85 @@ export const transactionsRouter = createTRPCRouter({
         endOfMonth: z.date(),
       })
     )
-    .query(async ({ input, ctx }) => {
-      const income = await ctx.prisma.transaction.groupBy({
-        by: ["sourceType"],
-        where: {
-          userId: ctx.session.user.id,
-          sourceType: "income",
-          date: {
-            gte: input.startOfMonth,
-            lte: input.endOfMonth,
-          },
-        },
-        _sum: {
-          amount: true,
-        },
-      });
+    .query(({ input, ctx }) => {
+      // TODO: create custom query
+      // const income = await ctx.prisma
+      //   .$queryRaw`SELECT * FROM Transaction as t JOIN TransactionSource ON t.sourceId = `;
 
-      return income[0]?._sum.amount ?? new Prisma.Decimal(0);
+      // return income[0]?._sum.amount ?? new Prisma.Decimal(0);
+      return new Prisma.Decimal(0);
     }),
   categorizeAsFund: protectedProcedure
     .input(
       z.object({
-        id: z.string().nullable(),
-        sourceId: z.string(),
+        transactionId: z.string(),
+        fundId: z.string(),
       })
     )
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.transaction.updateMany({
+      return ctx.prisma.transaction.update({
         where: {
-          userId: ctx.session.user.id,
-          id: input.id ?? "",
+          // userId: ctx.session.user.id,
+          id: input.transactionId,
         },
         data: {
-          sourceType: "fund",
-          fundSourceId: input.sourceId,
+          isTransfer: false,
+          source: {
+            create: {
+              type: "fund",
+              fund: {
+                connect: { id: input.fundId },
+              },
+            },
+          },
         },
       });
     }),
   categorizeAsBudget: protectedProcedure
     .input(
       z.object({
-        id: z.string().nullable(),
-        sourceId: z.string(),
+        transactionId: z.string(),
+        budgetId: z.string(),
       })
     )
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.transaction.updateMany({
+      return ctx.prisma.transaction.update({
         where: {
-          userId: ctx.session.user.id,
-          id: input.id ?? "",
+          // userId: ctx.session.user.id,
+          id: input.transactionId,
         },
         data: {
-          sourceType: "budget",
-          budgetSourceId: input.sourceId,
+          isTransfer: false,
+          source: {
+            create: {
+              type: "budget",
+              fund: {
+                connect: { id: input.budgetId },
+              },
+            },
+          },
         },
       });
     }),
   categorizeAsIncome: protectedProcedure
     .input(
       z.object({
-        id: z.string().nullable(),
+        id: z.string(),
       })
     )
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.transaction.updateMany({
+      return ctx.prisma.transaction.update({
         where: {
-          userId: ctx.session.user.id,
+          // userId: ctx.session.user.id,
           id: input.id ?? "",
         },
         data: {
-          sourceType: "income",
+          isTransfer: false,
+          source: {
+            create: {
+              type: "income",
+            },
+          },
         },
       });
     }),
@@ -198,24 +214,27 @@ export const transactionsRouter = createTRPCRouter({
     )
     .mutation(({ input, ctx }) => {
       const today = new Date();
-      const data = {
-        name: input.name,
-        note: "",
-        isTransfer: false,
-        transactionId: "savings",
-        amount: input.amount,
-        date: today,
-        pending: false,
-        user: {
-          connect: { id: ctx.session.user.id },
-        },
-        fundSource: {
-          connect: { id: input.fundId },
-        },
-        sourceType: "savings",
-      };
       return ctx.prisma.transaction.create({
-        data,
+        data: {
+          name: input.name,
+          note: "",
+          isTransfer: false,
+          amount: input.amount,
+          date: today.toDateString(),
+          datetime: today,
+          isPending: false,
+          user: {
+            connect: { id: ctx.session.user.id },
+          },
+          source: {
+            create: {
+              type: "savings",
+              fund: {
+                connect: { id: input.fundId },
+              },
+            },
+          },
+        },
       });
     }),
 });

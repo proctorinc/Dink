@@ -1,11 +1,12 @@
 import {
   type BankAccount,
   Prisma,
-  type PlaidItem,
+  type InstitutionSyncItem,
   type Institution,
   type Transaction,
-  type Fund,
+  type TransactionSource,
   type Budget,
+  type Fund,
 } from "@prisma/client";
 import { z } from "zod";
 import { AccountCategory } from "~/config";
@@ -19,8 +20,8 @@ function sumAccountsBalance(accounts: BankAccount[]) {
 
 function convertAccountLogosToString(
   accounts: (BankAccount & {
-    item: PlaidItem & {
-      institution: Institution | null;
+    institution: Institution & {
+      syncItem: InstitutionSyncItem | null;
     };
   })[]
 ) {
@@ -31,62 +32,48 @@ function convertAccountLogosToString(
 
 function convertLogoBufferToString(
   account: BankAccount & {
-    item: PlaidItem & {
-      institution: Institution | null;
+    institution: Institution & {
+      syncItem: InstitutionSyncItem | null;
     };
   }
 ) {
-  const { item, ...accountValues } = account;
-  if (item.institution && item.institution.logo) {
-    const { institution, ...itemValues } = item;
-    const { logo: blob, ...institutionValues } = institution;
+  const { institution, ...accountValues } = account;
+  const { logo: blob, ...institutionValues } = institution;
 
-    const logo = blob?.toString("utf-8");
-
-    return {
-      ...accountValues,
-      item: {
-        ...itemValues,
-        institution: {
-          ...institutionValues,
-          logo: logo ?? null,
-        },
-      },
-    };
-  }
-  return account;
+  return {
+    ...accountValues,
+    institution: {
+      ...institutionValues,
+      logo: blob ? blob?.toString("utf-8") : null,
+    },
+  };
 }
 
 function convertLogoBufferToStringWithTransactions(
   account: BankAccount & {
     transactions: (Transaction & {
-      fundSource: Fund | null;
-      budgetSource: Budget | null;
+      source:
+        | (TransactionSource & {
+            budget: Budget | null;
+            fund: Fund | null;
+          })
+        | null;
     })[];
-    item: PlaidItem & {
-      institution: Institution | null;
+    institution: Institution & {
+      syncItem: InstitutionSyncItem | null;
     };
   }
 ) {
-  const { item, ...accountValues } = account;
-  if (item.institution && item.institution.logo) {
-    const { institution, ...itemValues } = item;
-    const { logo: blob, ...institutionValues } = institution;
+  const { institution, ...accountValues } = account;
+  const { logo: blob, ...institutionValues } = institution;
 
-    const logo = blob?.toString("utf-8");
-
-    return {
-      ...accountValues,
-      item: {
-        ...itemValues,
-        institution: {
-          ...institutionValues,
-          logo: logo ?? null,
-        },
-      },
-    };
-  }
-  return account;
+  return {
+    ...accountValues,
+    institution: {
+      ...institutionValues,
+      logo: blob ? blob?.toString("utf-8") : null,
+    },
+  };
 }
 
 export const bankAccountRouter = createTRPCRouter({
@@ -103,9 +90,9 @@ export const bankAccountRouter = createTRPCRouter({
         type: AccountCategory.Cash,
       },
       include: {
-        item: {
+        institution: {
           include: {
-            institution: true,
+            syncItem: true,
           },
         },
       },
@@ -117,9 +104,9 @@ export const bankAccountRouter = createTRPCRouter({
         type: AccountCategory.Credit,
       },
       include: {
-        item: {
+        institution: {
           include: {
-            institution: true,
+            syncItem: true,
           },
         },
       },
@@ -131,9 +118,9 @@ export const bankAccountRouter = createTRPCRouter({
         type: AccountCategory.Investment,
       },
       include: {
-        item: {
+        institution: {
           include: {
-            institution: true,
+            syncItem: true,
           },
         },
       },
@@ -145,9 +132,9 @@ export const bankAccountRouter = createTRPCRouter({
         type: AccountCategory.Loan,
       },
       include: {
-        item: {
+        institution: {
           include: {
-            institution: true,
+            syncItem: true,
           },
         },
       },
@@ -209,15 +196,19 @@ export const bankAccountRouter = createTRPCRouter({
           id: input.accountId,
         },
         include: {
-          item: {
+          institution: {
             include: {
-              institution: true,
+              syncItem: true,
             },
           },
           transactions: {
             include: {
-              fundSource: true,
-              budgetSource: true,
+              source: {
+                include: {
+                  budget: true,
+                  fund: true,
+                },
+              },
             },
             orderBy: {
               date: "desc",
@@ -225,83 +216,11 @@ export const bankAccountRouter = createTRPCRouter({
           },
         },
       });
+      const test = account?.transactions;
+      console.log(test);
       return account
         ? convertLogoBufferToStringWithTransactions(account)
         : null;
-    }),
-  create: protectedProcedure
-    .input(
-      z.object({
-        plaidItemId: z.string(),
-        accounts: z
-          .object({
-            id: z.string(),
-            plaidId: z.string(),
-            available: z.number().nullable().optional(),
-            current: z.number().optional(),
-            iso_currency_code: z.string().optional(),
-            limit: z.number().optional(),
-            unofficial_currency_code: z.string().optional(),
-            mask: z.string(),
-            name: z.string(),
-            official_name: z.string().optional(),
-            subtype: z.string(),
-            type: z.string(),
-          })
-          .array()
-          .min(1),
-      })
-    )
-    .mutation(({ input, ctx }) => {
-      // const data = input.accounts.map((account) => {
-      //   return {};
-      // });
-      // return ctx.prisma.bankAccount.createMany({
-      //   data: {
-      //     plaidAccountId: account.plaidId,
-      //     available: account.available,
-      //     current: account.current,
-      //     iso_currency_code: account?.iso_currency_code ?? null,
-      //     limit: account.limit,
-      //     unofficial_currency_code: account.unofficial_currency_code,
-      //     mask: account.mask,
-      //     name: account.name,
-      //     official_name: account.official_name,
-      //     subtype: account.subtype,
-      //     type: account.type === "other" ? "cash" : account.type,
-      //     user: {
-      //       connect: { id: ctx.session.user.id },
-      //     },
-      //     item: {
-      //       connect: { id: input.plaidItemId },
-      //     },
-      //   },
-      // });
-
-      input.accounts.map(async (account) => {
-        await ctx.prisma.bankAccount.create({
-          data: {
-            plaidAccountId: account.plaidId,
-            available: account.available,
-            current: account.current,
-            iso_currency_code: account?.iso_currency_code ?? null,
-            limit: account.limit,
-            unofficial_currency_code: account.unofficial_currency_code,
-            mask: account.mask,
-            name: account.name,
-            official_name: account.official_name,
-            subtype: account.subtype,
-            type: account.type === "other" ? "cash" : account.type,
-            user: {
-              connect: { id: ctx.session.user.id },
-            },
-            item: {
-              connect: { id: input.plaidItemId },
-            },
-          },
-        });
-      });
-      return;
     }),
   delete: protectedProcedure
     .input(z.object({ accountId: z.string() }))

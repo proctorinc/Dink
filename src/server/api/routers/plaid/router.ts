@@ -24,7 +24,7 @@ export const plaidRouter = createTRPCRouter({
       })
       .then((response) => response.data.link_token);
   }),
-  createItem: protectedProcedure
+  createInstitution: protectedProcedure
     .input(
       z.object({
         publicToken: z.string(),
@@ -35,14 +35,14 @@ export const plaidRouter = createTRPCRouter({
       const { publicToken, institutionId } = input;
       const userId = ctx.session.user.id;
 
-      const existingItem = await retrievePlaidItemByInstitutionId(
+      const existingInstitution = await retrievePlaidItemByInstitutionId(
         institutionId
       );
 
-      if (existingItem) {
+      if (existingInstitution) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "You already have linked an item from this institution",
+          message: "You already have linked this institution",
         });
       }
 

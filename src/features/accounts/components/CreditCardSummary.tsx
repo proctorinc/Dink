@@ -33,7 +33,7 @@ export const CreditCardSummary = () => {
       {creditAccounts.data?.map((account) => {
         const utilizationPercent = formatToPercentage(
           account.current,
-          new Prisma.Decimal(account.limit ?? 1)
+          new Prisma.Decimal(account.creditLimit ?? 1)
         );
         return (
           <Card
@@ -54,7 +54,9 @@ export const CreditCardSummary = () => {
               <div className="flex justify-between py-1 text-sm text-primary-light group-hover:text-primary-med">
                 <span>
                   {formatToCurrency(account.current)} /{" "}
-                  {formatToCurrency(new Prisma.Decimal(account.limit ?? 0))}{" "}
+                  {formatToCurrency(
+                    new Prisma.Decimal(account.creditLimit ?? 0)
+                  )}{" "}
                   limit
                 </span>
                 <span>{utilizationPercent} utilization</span>

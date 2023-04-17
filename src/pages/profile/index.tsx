@@ -14,7 +14,7 @@ const UserPage = () => {
   const { data: sessionData } = useSession();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const settingsData = api.users.getUserSettings.useQuery();
+  const userPreferences = sessionData?.user.preferences;
   const updateNickname = api.users.updateNickname.useMutation();
   const updateIncome = api.users.updateTargetIncome.useMutation();
   const updateCreditUtilization =
@@ -78,26 +78,24 @@ const UserPage = () => {
         <Card>
           <Card.Body>
             <Card.Group>
-              {settingsData.data && (
+              {userPreferences && (
                 <Card.Group horizontal>
                   <span className="font-bold text-primary-light">
                     Monthly Income:
                   </span>
                   <EditableTitle
-                    value={String(settingsData.data?.targetIncome ?? "0")}
+                    value={String(userPreferences.targetIncome ?? "0")}
                     onUpdate={handleIncomeUpdate}
                   />
                 </Card.Group>
               )}
-              {settingsData.data && (
+              {userPreferences && (
                 <Card.Group horizontal>
                   <span className="font-bold text-primary-light">
                     Credit Utilization Target:
                   </span>
                   <EditableTitle
-                    value={String(
-                      settingsData.data?.creditPercentTarget ?? "0"
-                    )}
+                    value={String(userPreferences.creditPercentTarget ?? "0")}
                     onUpdate={handleCreditUtilizationUpdate}
                   />
                 </Card.Group>

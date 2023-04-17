@@ -7,20 +7,21 @@ import { useMonthContext } from "~/hooks/useMonthContext";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import Button from "~/components/ui/Button";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 export const IncomeBudget: FC = () => {
   const router = useRouter();
   const { startOfMonth, endOfMonth } = useMonthContext();
+  const { data: sessionData } = useSession();
 
   const income = api.transactions.getIncomeByMonth.useQuery({
     startOfMonth,
     endOfMonth,
   });
 
-  const settingsData = api.users.getUserSettings.useQuery();
-  const expectedIncome = settingsData.data?.targetIncome;
+  const targetIncome = sessionData?.user.preferences?.targetIncome;
 
-  if (Number(expectedIncome) === 0) {
+  if (Number(targetIncome) === 0) {
     return (
       <Card size="sm" onClick={() => void router.push("/profile")}>
         <Card.Body horizontal>
@@ -41,11 +42,11 @@ export const IncomeBudget: FC = () => {
       <Card.Header size="sm">
         <h3 className="text-xl">Income</h3>
         <span className="text-sm text-primary-light">
-          {formatToCurrency(income?.data)} / {formatToCurrency(expectedIncome)}
+          {formatToCurrency(income?.data)} / {formatToCurrency(targetIncome)}
         </span>
       </Card.Header>
       <Card.Body>
-        <ProgressBar size="sm" value={income.data} goal={expectedIncome} />
+        <ProgressBar size="sm" value={income.data} goal={targetIncome} />
       </Card.Body>
     </Card>
   );

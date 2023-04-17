@@ -1,5 +1,10 @@
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import { type Budget, type Fund, Transaction } from "@prisma/client";
+import {
+  type Budget,
+  type Fund,
+  Transaction,
+  type TransactionSource,
+} from "@prisma/client";
 import { useRouter } from "next/router";
 import { type FC } from "react";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
@@ -8,15 +13,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type TransactionProps = {
   data: Transaction & {
-    fundSource: Fund | null;
-    budgetSource: Budget | null;
+    source:
+      | (TransactionSource & {
+          budget?: Budget | null;
+          fund?: Fund | null;
+        })
+      | null;
   };
 };
 
 const Transaction: FC<TransactionProps> = ({ data: transaction }) => {
   const router = useRouter();
   const handleOnClick = () => {
-    if (!transaction.sourceType) {
+    if (!transaction?.source?.type) {
       void router.push("/transactions/categorize");
     }
   };
@@ -28,19 +37,19 @@ const Transaction: FC<TransactionProps> = ({ data: transaction }) => {
           <span className="font-bold">{transaction.name}</span>
           <div className="flex items-center gap-1 text-sm text-primary-light group-hover:text-primary-med">
             <span className="">
-              {transaction.sourceType
-                ? formatToTitleCase(transaction.sourceType)
+              {transaction?.source?.type
+                ? formatToTitleCase(transaction.source.type)
                 : "Uncategorized"}
             </span>
-            {(transaction.sourceType === "budget" ||
-              transaction.sourceType === "fund" ||
-              transaction.sourceType === "savings") && (
+            {(transaction?.source?.type === "budget" ||
+              transaction?.source?.type === "fund" ||
+              transaction?.source?.type === "savings") && (
               <>
                 <FontAwesomeIcon icon={faAngleRight} size="xs" />
                 <span>
-                  {transaction.sourceType === "budget"
-                    ? transaction.budgetSource?.name
-                    : transaction.fundSource?.name}
+                  {transaction?.source.type === "budget"
+                    ? transaction?.source?.budget?.name
+                    : transaction?.source?.fund?.name}
                 </span>
               </>
             )}
@@ -51,15 +60,10 @@ const Transaction: FC<TransactionProps> = ({ data: transaction }) => {
             {formatToCurrency(transaction.amount)}
           </span>
           <span className="text-sm text-primary-light group-hover:text-primary-med">
-            {transaction?.isSavings &&
-              transaction?.date.toLocaleString("en-us", {
-                month: "long",
-              })}
-            {!transaction.isSavings &&
-              transaction.date.toLocaleString("en-us", {
-                month: "short",
-                day: "numeric",
-              })}
+            {transaction.date.toLocaleString("en-us", {
+              month: "short",
+              day: "numeric",
+            })}
           </span>
         </Card.Group>
       </Card.Body>

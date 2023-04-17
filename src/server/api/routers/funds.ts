@@ -1,19 +1,25 @@
-import { type Fund, Prisma, type Transaction } from "@prisma/client";
+import {
+  type Fund,
+  Prisma,
+  type TransactionSource,
+  type Transaction,
+} from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { AccountCategory } from "~/config";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-
-type TransactionAmount = {
-  amount: Prisma.Decimal;
-};
 
 type FundAmount = {
   amount: Prisma.Decimal;
 };
 
-function sumTransactions(transactions: TransactionAmount[]) {
-  return transactions.reduce((acc, transaction) => {
-    return Prisma.Decimal.add(acc, transaction.amount);
+function sumTransactions(
+  sources: (TransactionSource & {
+    transaction: Transaction;
+  })[]
+) {
+  return sources.reduce((acc, source) => {
+    return Prisma.Decimal.add(acc, source.transaction.amount);
   }, new Prisma.Decimal(0));
 }
 
@@ -25,7 +31,9 @@ function sumTotalFundAmount(funds: (Fund & FundAmount)[]) {
 
 function sumFundTransactions(
   funds: (Fund & {
-    source_transactions: TransactionAmount[];
+    sourceTransactions: (TransactionSource & {
+      transaction: Transaction;
+    })[];
   })[]
 ) {
   return funds.map((fund) => addAmountToFund(fund));
@@ -33,28 +41,31 @@ function sumFundTransactions(
 
 function addAmountToFund(
   fund: Fund & {
-    source_transactions: TransactionAmount[];
+    sourceTransactions: (TransactionSource & {
+      transaction: Transaction;
+    })[];
   }
 ) {
-  const { source_transactions, ...otherFields } = fund;
+  const { sourceTransactions, ...otherFields } = fund;
   return {
     ...otherFields,
-    amount: sumTransactions(source_transactions),
+    sourceTransactions,
+    amount: sumTransactions(sourceTransactions),
   };
 }
 
-function addAmountToFundWithTransactions(
-  fund: Fund & {
-    source_transactions: Transaction[];
-  }
-) {
-  const { source_transactions, ...otherFields } = fund;
-  return {
-    ...otherFields,
-    source_transactions,
-    amount: sumTransactions(source_transactions),
-  };
-}
+// function addAmountToFundWithTransactions(
+//   fund: Fund & {
+//     sourceTransactions: TransactionSource[];
+//   }
+// ) {
+//   const { sourceTransactions, ...otherFields } = fund;
+//   return {
+//     ...otherFields,
+//     sourceTransactions,
+//     amount: sumTransactions(sourceTransactions),
+//   };
+// }
 
 export const fundsRouter = createTRPCRouter({
   getAllData: protectedProcedure.query(async ({ ctx }) => {
@@ -63,9 +74,9 @@ export const fundsRouter = createTRPCRouter({
         userId: ctx.session.user.id,
       },
       include: {
-        source_transactions: {
-          select: {
-            amount: true,
+        sourceTransactions: {
+          include: {
+            transaction: true,
           },
         },
       },
@@ -117,11 +128,22 @@ export const fundsRouter = createTRPCRouter({
           id: input.fundId,
         },
         include: {
-          source_transactions: true,
+          sourceTransactions: {
+            include: {
+              transaction: true,
+            },
+          },
         },
       });
 
-      return fund ? addAmountToFundWithTransactions(fund) : fund;
+      if (!fund) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Fund does not exist",
+        });
+      }
+
+      return addAmountToFund(fund);
     }),
   create: protectedProcedure
     .input(z.object({ name: z.string(), icon: z.string() }))
@@ -139,14 +161,12 @@ export const fundsRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ fundId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      await ctx.prisma.transaction.updateMany({
+      await ctx.prisma.transactionSource.deleteMany({
         where: {
-          fundSourceId: input.fundId,
-          userId: ctx.session.user.id,
-        },
-        data: {
-          sourceType: null,
-          fundSourceId: null,
+          fundId: input.fundId,
+          transaction: {
+            userId: ctx.session.user.id,
+          },
         },
       });
       return ctx.prisma.fund.deleteMany({

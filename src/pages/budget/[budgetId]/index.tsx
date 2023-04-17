@@ -35,11 +35,14 @@ const BudgetPage = () => {
     },
     {
       enabled: !!budgetId,
+      onError: () => void router.back(),
     }
   );
+
+  const budget = budgetData.data;
   const deleteBudget = api.budgets.delete.useMutation();
   const updateBudgetName = api.budgets.update.useMutation();
-  const icon = convertToIcon(budgetData.data?.icon) ?? faMoneyBill1;
+  const icon = convertToIcon(budget?.icon) ?? faMoneyBill1;
   const chartData = [
     { name: "Spent", amount: budgetData.data?.spent },
     { name: "Left", amount: budgetData.data?.leftover },
@@ -103,15 +106,18 @@ const BudgetPage = () => {
       <div className="w-full">
         <h2 className="text-left text-xl text-primary-light">Transactions</h2>
       </div>
-      {!budgetData?.data?.source_transactions?.length && (
+      {!budgetData?.data?.sourceTransactions?.length && (
         <div className="group flex w-full items-center justify-between rounded-xl bg-primary-med px-4 py-2">
           None
         </div>
       )}
       <div className="flex w-full flex-col gap-3">
         {budgetData.data &&
-          budgetData.data.source_transactions.map((transaction) => (
-            <NoSourceTransaction key={transaction.id} data={transaction} />
+          budgetData.data.sourceTransactions.map((source) => (
+            <NoSourceTransaction
+              key={source.transaction.id}
+              data={source.transaction}
+            />
           ))}
       </div>
     </Page>

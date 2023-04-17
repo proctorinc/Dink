@@ -2,15 +2,6 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
-  getUsers: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.user.findMany({
-      include: {
-        bankAccounts: true,
-        funds: true,
-        budgets: true,
-      },
-    });
-  }),
   deleteUser: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .mutation(({ input, ctx }) => {
@@ -35,9 +26,9 @@ export const userRouter = createTRPCRouter({
   updateTargetIncome: protectedProcedure
     .input(z.object({ income: z.number() }))
     .mutation(async ({ input, ctx }) => {
-      return ctx.prisma.user.update({
+      return ctx.prisma.userPreferences.update({
         where: {
-          id: ctx.session.user.id,
+          userId: ctx.session.user.id,
         },
         data: {
           targetIncome: input.income,
@@ -47,24 +38,13 @@ export const userRouter = createTRPCRouter({
   updateCreditUtilization: protectedProcedure
     .input(z.object({ utilization: z.number() }))
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.user.update({
+      return ctx.prisma.userPreferences.update({
         where: {
-          id: ctx.session.user.id,
+          userId: ctx.session.user.id,
         },
         data: {
           creditPercentTarget: input.utilization,
         },
       });
     }),
-  getUserSettings: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.user.findFirst({
-      where: {
-        id: ctx.session.user.id,
-      },
-      select: {
-        creditPercentTarget: true,
-        targetIncome: true,
-      },
-    });
-  }),
 });

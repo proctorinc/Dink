@@ -4,6 +4,8 @@ import {
   type Budget,
   type Fund,
 } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
@@ -12,50 +14,37 @@ import {
   getLastDayOfMonth,
 } from "~/utils";
 
-type TransactionAmount = {
-  amount: Prisma.Decimal;
-};
-
 type BudgetAmount = {
   spent: Prisma.Decimal;
 };
 
-function sumTransactions(transactions: TransactionAmount[]) {
-  return transactions.reduce((acc, transaction) => {
-    return Prisma.Decimal.add(acc, transaction.amount);
+function sumTransactions(
+  sources: {
+    transaction: Transaction;
+  }[]
+) {
+  return sources.reduce((acc, source) => {
+    return Prisma.Decimal.add(acc, source.transaction.amount);
   }, new Prisma.Decimal(0));
 }
 
 function sumBudgetTransactions(
   budgets: (Budget & {
-    source_transactions: TransactionAmount[];
+    sourceTransactions: {
+      transaction: Transaction;
+    }[];
     savingsFund: Fund | null;
   })[]
 ) {
   return budgets.map((budget) => {
-    const { source_transactions, ...otherFields } = budget;
-    const spent = sumTransactions(source_transactions);
+    const { sourceTransactions, ...otherFields } = budget;
+    const spent = sumTransactions(sourceTransactions);
     return {
       ...otherFields,
       spent,
       leftover: Prisma.Decimal.sub(budget.goal, spent),
     };
   });
-}
-
-function addAmountToBudgetWithTransactions(
-  fund: Budget & {
-    source_transactions: Transaction[];
-  }
-) {
-  const { source_transactions, ...otherFields } = fund;
-  const spent = sumTransactions(source_transactions);
-  return {
-    ...otherFields,
-    source_transactions,
-    spent,
-    leftover: Prisma.Decimal.sub(fund.goal, spent),
-  };
 }
 
 function sumBudgetGoals(budgets: Budget[]) {
@@ -82,14 +71,13 @@ export const budgetsRouter = createTRPCRouter({
       const spendingBudgets = await ctx.prisma.budget.findMany({
         where: {
           userId: ctx.session.user.id,
-          isSavings: false,
-          start_date: {
+          startDate: {
             lte: input.startOfMonth,
           },
           OR: [
-            { end_date: { equals: null } },
+            { endDate: { equals: null } },
             {
-              end_date: {
+              endDate: {
                 gte: input.endOfMonth,
               },
             },
@@ -97,15 +85,17 @@ export const budgetsRouter = createTRPCRouter({
         },
         include: {
           savingsFund: true,
-          source_transactions: {
+          sourceTransactions: {
             where: {
-              date: {
-                gte: input.startOfMonth,
-                lte: input.endOfMonth,
+              transaction: {
+                datetime: {
+                  gte: input.startOfMonth,
+                  lte: input.endOfMonth,
+                },
               },
             },
             select: {
-              amount: true,
+              transaction: true,
             },
           },
         },
@@ -113,14 +103,13 @@ export const budgetsRouter = createTRPCRouter({
       const savingsBudgets = await ctx.prisma.budget.findMany({
         where: {
           userId: ctx.session.user.id,
-          isSavings: true,
-          start_date: {
+          startDate: {
             lte: input.startOfMonth,
           },
           OR: [
-            { end_date: { equals: null } },
+            { endDate: { equals: null } },
             {
-              end_date: {
+              endDate: {
                 gte: input.endOfMonth,
               },
             },
@@ -128,15 +117,17 @@ export const budgetsRouter = createTRPCRouter({
         },
         include: {
           savingsFund: true,
-          source_transactions: {
+          sourceTransactions: {
             where: {
-              date: {
-                gte: input.startOfMonth,
-                lte: input.endOfMonth,
+              transaction: {
+                datetime: {
+                  gte: input.startOfMonth,
+                  lte: input.endOfMonth,
+                },
               },
             },
             select: {
-              amount: true,
+              transaction: true,
             },
           },
         },
@@ -148,8 +139,8 @@ export const budgetsRouter = createTRPCRouter({
       savingsBudgets.map(async (budget) => {
         const fundId: string = budget.savingsFundId ?? "";
         if (
-          budget.source_transactions &&
-          budget.source_transactions.length === 0
+          budget.sourceTransactions &&
+          budget.sourceTransactions.length === 0
         ) {
           const today = new Date();
           await ctx.prisma.transaction.upsert({
@@ -165,25 +156,28 @@ export const budgetsRouter = createTRPCRouter({
               }-${today.getMonth()}-${today.getFullYear()}`,
               name: "Monthly Savings",
               note: "",
-              isTransfer: false,
-              isSavings: true,
               amount: budget?.goal ?? 0,
-              date: today,
-              pending: false,
+              date: today.toDateString(),
+              datetime: today,
+              isPending: false,
+              isTransfer: false,
               user: {
                 connect: { id: ctx.session.user.id },
               },
-              fundSource: {
-                connect: { id: fundId },
+              source: {
+                create: {
+                  type: "savings",
+                  fund: {
+                    connect: { id: fundId },
+                  },
+                  budget: {
+                    connect: { id: budget?.id },
+                  },
+                },
               },
-              budgetSource: {
-                connect: { id: budget?.id },
-              },
-              sourceType: "savings",
             },
             select: {
-              fundSource: true,
-              budgetSource: true,
+              source: true,
             },
           });
         }
@@ -238,21 +232,39 @@ export const budgetsRouter = createTRPCRouter({
           id: input.budgetId,
         },
         include: {
-          source_transactions: {
-            where: {
-              date: {
-                gte: input.startOfMonth,
-                lte: input.endOfMonth,
-              },
+          sourceTransactions: {
+            include: {
+              transaction: true,
             },
             orderBy: {
-              date: "desc",
+              transaction: {
+                datetime: "desc",
+              },
             },
           },
         },
       });
+      if (!budget) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Budget does not exist",
+        });
+      }
+      const { sourceTransactions, goal, ...budgetFields } = budget;
 
-      return budget ? addAmountToBudgetWithTransactions(budget) : budget;
+      const spent = sourceTransactions.reduce((acc, source) => {
+        return Decimal.add(acc, source.transaction.amount);
+      }, new Decimal(0));
+
+      const leftover = Decimal.sub(goal, spent);
+
+      return {
+        ...budgetFields,
+        sourceTransactions,
+        spent,
+        goal,
+        leftover,
+      };
     }),
   createSpending: protectedProcedure
     .input(
@@ -268,8 +280,7 @@ export const budgetsRouter = createTRPCRouter({
           icon: input.icon,
           name: input.name,
           goal: input.goal,
-          isSavings: false,
-          start_date: getFirstDayOfMonth(new Date()),
+          startDate: getFirstDayOfMonth(new Date()),
           user: {
             connect: { id: ctx.session.user.id },
           },
@@ -297,8 +308,7 @@ export const budgetsRouter = createTRPCRouter({
             icon: fund?.icon ?? "",
             name: fund?.name,
             goal: input.goal,
-            isSavings: true,
-            start_date: getFirstDayOfMonth(new Date()),
+            startDate: getFirstDayOfMonth(new Date()),
             savingsFund: { connect: { id: input.fundId } },
             user: {
               connect: { id: ctx.session.user.id },
@@ -319,22 +329,20 @@ export const budgetsRouter = createTRPCRouter({
         },
       });
 
-      await ctx.prisma.transaction.updateMany({
+      await ctx.prisma.transactionSource.deleteMany({
         where: {
-          budgetSourceId: input.budgetId,
-          userId: ctx.session.user.id,
-          date: {
-            lte: getLastDayOfMonth(today),
-            gte: getFirstDayOfMonth(today),
+          budgetId: input.budgetId,
+          transaction: {
+            userId: ctx.session.user.id,
+            datetime: {
+              lte: getLastDayOfMonth(today),
+              gte: getFirstDayOfMonth(today),
+            },
           },
-        },
-        data: {
-          sourceType: null,
-          fundSourceId: null,
         },
       });
 
-      if (budget?.start_date && budget?.start_date > endOfLastMonth) {
+      if (budget?.startDate && budget?.startDate > endOfLastMonth) {
         return ctx.prisma.budget.deleteMany({
           where: {
             id: input.budgetId,
@@ -348,7 +356,7 @@ export const budgetsRouter = createTRPCRouter({
           userId: ctx.session.user.id,
         },
         data: {
-          end_date: endOfLastMonth,
+          endDate: endOfLastMonth,
         },
       });
     }),
