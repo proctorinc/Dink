@@ -9,7 +9,7 @@ type CreateItemProps = {
   accessToken: string;
 };
 
-export async function createPlaidItem(data: CreateItemProps) {
+export async function createInstitutionSync(data: CreateItemProps) {
   const { userId, itemId, institutionId, accessToken } = data;
 
   const institution = await plaidClient
