@@ -37,6 +37,7 @@ const TransactionsPage = () => {
     includeCategorized,
     includeUncategorized,
     includeIncome,
+    searchText: search,
   });
 
   const allIncluded =
