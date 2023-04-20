@@ -216,8 +216,6 @@ export const bankAccountRouter = createTRPCRouter({
           },
         },
       });
-      const test = account?.transactions;
-      console.log(test);
       return account
         ? convertLogoBufferToStringWithTransactions(account)
         : null;

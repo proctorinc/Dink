@@ -64,9 +64,6 @@ const CategorizePage = () => {
     return <Spinner />;
   }
 
-  const test = uncategorizedTransactions?.data[0];
-  console.log(test);
-
   return (
     <Page auth title="Categorize">
       <Header back title="Categorize" />
