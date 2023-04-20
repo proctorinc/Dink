@@ -4,7 +4,7 @@ import { z } from "zod";
 import plaidClient from "~/server/api/plaid";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
-  createPlaidItem,
+  createInstitutionSync,
   retrievePlaidItemByInstitutionId,
 } from "./queries/items";
 import { exchangePublicToken } from "./queries/tokens";
@@ -34,7 +34,6 @@ export const plaidRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const { publicToken, institutionId } = input;
       const userId = ctx.session.user.id;
-
       const existingInstitution = await retrievePlaidItemByInstitutionId(
         institutionId
       );
@@ -47,8 +46,7 @@ export const plaidRouter = createTRPCRouter({
       }
 
       const { itemId, accessToken } = await exchangePublicToken(publicToken);
-
-      await createPlaidItem({
+      await createInstitutionSync({
         userId,
         itemId,
         institutionId,
