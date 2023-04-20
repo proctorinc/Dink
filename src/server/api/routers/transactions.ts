@@ -1,6 +1,13 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, type Transaction } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+
+function sumTransactions(transactions: Transaction[]) {
+  return transactions.reduce((acc, transaction) => {
+    return Decimal.add(acc, transaction.amount);
+  }, new Prisma.Decimal(0));
+}
 
 export const transactionsRouter = createTRPCRouter({
   search: protectedProcedure
@@ -13,42 +20,48 @@ export const transactionsRouter = createTRPCRouter({
         includeCategorized: z.boolean(),
         includeUncategorized: z.boolean(),
         includeIncome: z.boolean(),
+        searchText: z.string(),
       })
     )
     .query(async ({ input, ctx }) => {
       const monthFilter = {
-        datetime: {
+        date: {
           gte: input.startOfMonth,
           lte: input.endOfMonth,
         },
       };
-      // TODO: create custom query
+      const textFilter = {
+        name: {
+          contains: input.searchText,
+        },
+      };
       return await ctx.prisma.transaction.findMany({
         where: {
           userId: ctx.session.user.id,
           ...(input.filterMonthly ? monthFilter : {}),
-          // source: {
-          //   OR: [
-          //     {
-          //       ...(input.includeSavings ? { type: "savings" } : {}),
-          //     },
-          //     {
-          //       ...(input.includeUncategorized ? { type: null } : {}),
-          //     },
-          //     {
-          //       ...(input.includeCategorized ? { type: "fund" } : {}),
-          //     },
-          //     {
-          //       ...(input.includeCategorized ? { type: "budget" } : {}),
-          //     },
-          //     {
-          //       ...(input.includeIncome ? { type: "income" } : {}),
-          //     },
-          //   ],
-          // },
+          ...(input.searchText ? textFilter : {}),
+          OR: [
+            {
+              ...(input.includeSavings ? { source: { type: "savings" } } : {}),
+            },
+            {
+              ...(input.includeUncategorized ? { source: null } : {}),
+            },
+            {
+              ...(input.includeCategorized ? { source: { type: "fund" } } : {}),
+            },
+            {
+              ...(input.includeCategorized
+                ? { source: { type: "budget" } }
+                : {}),
+            },
+            {
+              ...(input.includeIncome ? { source: { type: "income" } } : {}),
+            },
+          ],
         },
         orderBy: {
-          datetime: "desc",
+          date: "desc",
         },
         include: {
           source: {
@@ -117,13 +130,20 @@ export const transactionsRouter = createTRPCRouter({
         endOfMonth: z.date(),
       })
     )
-    .query(({ input, ctx }) => {
-      // TODO: create custom query
-      // const income = await ctx.prisma
-      //   .$queryRaw`SELECT * FROM Transaction as t JOIN TransactionSource ON t.sourceId = `;
-
-      // return income[0]?._sum.amount ?? new Prisma.Decimal(0);
-      return new Prisma.Decimal(0);
+    .query(async ({ input, ctx }) => {
+      const incomeTransactions = await ctx.prisma.transaction.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          date: {
+            gte: input.startOfMonth,
+            lte: input.endOfMonth,
+          },
+          source: {
+            type: "income",
+          },
+        },
+      });
+      return sumTransactions(incomeTransactions);
     }),
   categorizeAsFund: protectedProcedure
     .input(
