@@ -34,7 +34,7 @@ model BankAccount {
 
 model Transaction {
   id                          String                              @id @default(cuid())
-  plaidId                     String?
+  plaidId                     String?                             @unique
   accountOwner                String?
   amount                      Decimal                             @db.Decimal(10, 2)
   authorizedDatetime          String?
