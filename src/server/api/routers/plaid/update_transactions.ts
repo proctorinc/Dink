@@ -59,8 +59,8 @@ export async function syncTransactions(userId: string, plaidItemId: string) {
 
   const response = await plaidClient.accountsGet({ access_token: accessToken });
 
-  createAccounts(userId, plaidItemId, response.data.accounts);
-  createOrUpdateTransactions(userId, added.concat(modified));
-  deleteTransactions(userId, removed);
+  await createAccounts(userId, plaidItemId, response.data.accounts);
+  await createOrUpdateTransactions(userId, added.concat(modified));
+  await deleteTransactions(userId, removed);
   await updateItemTransactionsCursor(plaidItemId, cursor);
 }

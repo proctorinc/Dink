@@ -2,16 +2,16 @@ import { TRPCError } from "@trpc/server";
 import { type AccountBase } from "plaid";
 import { prisma } from "~/server/db";
 
-export function createAccounts(
+export async function createAccounts(
   userId: string,
   plaidItemId: string,
   accounts: AccountBase[]
 ) {
-  accounts.map(async (account) => {
+  const createdAccounts = accounts.map(async (account) => {
     const institution = await prisma.institution.findFirst({
       where: {
         syncItem: {
-          id: plaidItemId,
+          plaidId: plaidItemId,
         },
       },
     });
@@ -26,7 +26,6 @@ export function createAccounts(
 
     return await prisma.bankAccount.create({
       data: {
-        id: account.account_id,
         plaidId: account.account_id,
         available: account.balances.available,
         current: account.balances.current,
@@ -47,4 +46,5 @@ export function createAccounts(
       },
     });
   });
+  await Promise.all(createdAccounts);
 }

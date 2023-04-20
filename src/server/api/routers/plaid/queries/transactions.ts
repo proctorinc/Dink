@@ -1,28 +1,29 @@
 import { type Transaction, type RemovedTransaction } from "plaid";
 import { prisma } from "~/server/db";
 
-export function deleteTransactions(
+export async function deleteTransactions(
   userId: string,
   transactions: RemovedTransaction[]
 ) {
-  transactions.map(async (transaction) => {
-    await prisma.transaction.deleteMany({
+  const deletedTransactions = transactions.map(async (transaction) => {
+    return await prisma.transaction.deleteMany({
       where: {
         id: transaction.transaction_id,
         userId: userId,
       },
     });
   });
+  await Promise.all(deletedTransactions);
 }
 
-export function createOrUpdateTransactions(
+export async function createOrUpdateTransactions(
   userId: string,
   transactions: Transaction[]
 ) {
-  transactions.map(async (transaction) => {
-    await prisma.transaction.upsert({
+  const createdTransactions = transactions.map(async (transaction) => {
+    return await prisma.transaction.upsert({
       where: {
-        id: transaction.transaction_id,
+        plaidId: transaction.transaction_id,
       },
       update: {
         amount: transaction.amount * -1,
@@ -68,6 +69,7 @@ export function createOrUpdateTransactions(
         unofficialCurrencyCode: transaction.unofficial_currency_code,
       },
       create: {
+        plaidId: transaction.transaction_id,
         amount: transaction.amount * -1,
         accountOwner: transaction.account_owner,
         authorizedDatetime: transaction.authorized_datetime,
@@ -114,7 +116,7 @@ export function createOrUpdateTransactions(
           },
         },
         account: {
-          connect: { id: transaction.account_id },
+          connect: { plaidId: transaction.account_id },
         },
         user: {
           connect: { id: userId },
@@ -122,4 +124,5 @@ export function createOrUpdateTransactions(
       },
     });
   });
+  await Promise.all(createdTransactions);
 }
