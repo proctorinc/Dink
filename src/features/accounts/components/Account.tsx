@@ -19,19 +19,6 @@ type AccountProps = {
       syncItem: InstitutionSyncItem | null;
     };
   };
-  // | (BankAccount & {
-  //     institution: {
-  //       id: string;
-  //       plaidId: string;
-  //       name: string | null;
-  //       logo: string | null;
-  //       url: string | null;
-  //       primaryColor: string | null;
-  //       userId: string;
-  //       syncItem: InstitutionSyncItem | null;
-  //     };
-  //   })
-  // | null;
 };
 
 const Account: FC<AccountProps> = ({ data: account }) => {
@@ -42,13 +29,13 @@ const Account: FC<AccountProps> = ({ data: account }) => {
       <Card.Body horizontal>
         <Card.Group horizontal>
           {!account?.institution?.logo && !account?.institution?.url && (
-            <div className="flex aspect-square h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-primary-light bg-primary-dark">
+            <div className="flex aspect-square h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary-dark shadow-xl">
               <IconButton icon={faBuildingColumns} />
             </div>
           )}
           {account?.institution.logo !== "null" && (
             <Image
-              className="w-10 rounded-full border border-primary-light"
+              className="w-10 rounded-full shadow-xl"
               width={100}
               height={100}
               src={`data:image/jpeg;base64,${
@@ -59,7 +46,7 @@ const Account: FC<AccountProps> = ({ data: account }) => {
           )}
           {account?.institution.logo === "null" && account.institution.url && (
             <Image
-              className="w-10 rounded-full border border-primary-light bg-white"
+              className="w-10 rounded-full bg-white shadow-xl"
               width={100}
               height={100}
               src={`https://s2.googleusercontent.com/s2/favicons?domain=${account.institution.url}&sz=256`}
