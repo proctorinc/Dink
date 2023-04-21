@@ -22,6 +22,7 @@ model BankAccount {
   subtype                String?
   type                   String
   creditClosingDay       Int?
+  ignore                 Boolean        @default(false)
   transactions           Transaction[]
   institution            Institution   @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   institutionId          String
