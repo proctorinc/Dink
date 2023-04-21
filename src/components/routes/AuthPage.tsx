@@ -19,7 +19,11 @@ const AuthPage: FC<AuthPageProps> = ({ children }) => {
     void router.push("/login");
   }
 
-  return <Spinner />;
+  return (
+    <div className="flex w-full grow items-center justify-center">
+      <Spinner />
+    </div>
+  );
 };
 
 export default AuthPage;
