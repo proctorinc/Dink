@@ -14,8 +14,9 @@ import MonthYearSelector from "~/components/ui/MonthSelector";
 import Spinner from "~/components/ui/Spinner";
 import { api } from "~/utils/api";
 import Card from "~/components/ui/Card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Page from "~/components/ui/Page";
+import useNotifications from "~/hooks/useNotifications";
 
 const TransactionsPage = () => {
   const router = useRouter();
@@ -29,16 +30,31 @@ const TransactionsPage = () => {
   const [includeUncategorized, setIncludeUncategorized] = useState(true);
   const [includeIncome, setIncludeIncome] = useState(true);
 
-  const transactionData = api.transactions.search.useQuery({
-    filterMonthly,
-    startOfMonth,
-    endOfMonth,
-    includeSavings,
-    includeCategorized,
-    includeUncategorized,
-    includeIncome,
-    searchText: search,
-  });
+  const transactionData = api.transactions.search.useQuery(
+    {
+      filterMonthly,
+      startOfMonth,
+      endOfMonth,
+      includeSavings,
+      includeCategorized,
+      includeUncategorized,
+      includeIncome,
+      searchText: search,
+    },
+    {
+      onSuccess: () => clearNotification(),
+      onError: () => setErrorNotification("Failed to fetch transactions"),
+    }
+  );
+
+  const { setLoadingNotification, clearNotification, setErrorNotification } =
+    useNotifications();
+
+  useEffect(() => {
+    if (transactionData.isFetching) {
+      setLoadingNotification("Loading Transactions...");
+    }
+  }, [transactionData, setLoadingNotification]);
 
   const allIncluded =
     includeCategorized &&

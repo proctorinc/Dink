@@ -18,8 +18,9 @@ import Budget, { SavingsBudget, IncomeBudget } from "~/features/budgets";
 import { useRouter } from "next/router";
 import { PieChart } from "~/components/ui/Charts";
 import Page from "~/components/ui/Page";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BarChart } from "~/components/ui/Charts/BarChart";
+import useNotifications from "~/hooks/useNotifications";
 
 export default function Budgets() {
   const router = useRouter();
@@ -31,10 +32,16 @@ export default function Budgets() {
     endOfMonth,
     isCurrentMonth,
   } = useMonthContext();
-  const budgetData = api.budgets.getDataByMonth.useQuery({
-    startOfMonth,
-    endOfMonth,
-  });
+  const budgetData = api.budgets.getDataByMonth.useQuery(
+    {
+      startOfMonth,
+      endOfMonth,
+    },
+    {
+      onSuccess: () => clearNotification(),
+      onError: () => setErrorNotification("Failed to fetch budgets"),
+    }
+  );
   const [showSavings, setShowSavings] = useState(true);
   const [showSpending, setShowSpending] = useState(true);
   const [chartNum, setChartNum] = useState(0);
@@ -42,6 +49,14 @@ export default function Budgets() {
     budgetData?.data?.overall.spent,
     budgetData?.data?.overall.goal
   );
+  const { setLoadingNotification, clearNotification, setErrorNotification } =
+    useNotifications();
+
+  useEffect(() => {
+    if (budgetData.isFetching) {
+      setLoadingNotification("Loading Budgets...");
+    }
+  }, [budgetData, setLoadingNotification]);
 
   const overallData = [
     { name: "Spent", amount: budgetData.data?.overall.spent },
@@ -185,7 +200,10 @@ export default function Budgets() {
             onClick={() => setShowSpending((prev) => !prev)}
           >
             <div className="flex gap-1">
-              <IconButton icon={showSpending ? faAngleUp : faAngleDown} />
+              <IconButton
+                icon={showSpending ? faAngleUp : faAngleDown}
+                noShadow
+              />
               <h3 className="w-full text-left text-xl font-bold text-primary-light">
                 Spending
               </h3>
@@ -205,7 +223,10 @@ export default function Budgets() {
             onClick={() => setShowSavings((prev) => !prev)}
           >
             <div className="flex gap-1">
-              <IconButton icon={showSavings ? faAngleUp : faAngleDown} />
+              <IconButton
+                icon={showSavings ? faAngleUp : faAngleDown}
+                noShadow
+              />
               <h3 className="w-full text-left text-xl font-bold text-primary-light">
                 Savings
               </h3>

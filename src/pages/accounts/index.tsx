@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   accountCategories,
   AccountCategory,
@@ -14,14 +14,26 @@ import { type Serie } from "@nivo/line";
 import Page from "~/components/ui/Page";
 import { PlaidLink } from "~/features/plaid";
 import Account from "~/features/accounts";
+import useNotifications from "~/hooks/useNotifications";
 
 export default function BankAccounts() {
   const [open, setOpen] = useState("");
-  const accountData = api.bankAccounts.getAllData.useQuery();
+  const { clearNotification, setErrorNotification, setLoadingNotification } =
+    useNotifications();
+  const accountData = api.bankAccounts.getAllData.useQuery(undefined, {
+    onSuccess: () => clearNotification(),
+    onError: () => setErrorNotification("Failed to fetch accounts"),
+  });
 
   const handleOpen = (type: AccountCategory) => {
     setOpen((prev) => (prev === type ? "" : type));
   };
+
+  useEffect(() => {
+    if (accountData.isFetching) {
+      setLoadingNotification("Loading Accounts...");
+    }
+  }, [accountData, setLoadingNotification]);
 
   const data: Serie[] = [
     {
