@@ -68,7 +68,6 @@ const CategorizePage = () => {
     <Page auth title="Categorize">
       <Header back title="Categorize" />
       <div className="flex w-full flex-col gap-2">
-        <h2 className="text-left text-xl text-primary-light">Transaction:</h2>
         {uncategorizedTransactions?.data?.length > 0 &&
           uncategorizedTransactions?.data[0] && (
             <NoSourceTransaction data={uncategorizedTransactions?.data[0]} />
