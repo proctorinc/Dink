@@ -71,6 +71,7 @@ export const budgetsRouter = createTRPCRouter({
       const spendingBudgets = await ctx.prisma.budget.findMany({
         where: {
           userId: ctx.session.user.id,
+          savingsFund: null,
           startDate: {
             lte: input.startOfMonth,
           },
@@ -103,6 +104,7 @@ export const budgetsRouter = createTRPCRouter({
       const savingsBudgets = await ctx.prisma.budget.findMany({
         where: {
           userId: ctx.session.user.id,
+          NOT: { savingsFund: null },
           startDate: {
             lte: input.startOfMonth,
           },
@@ -157,7 +159,7 @@ export const budgetsRouter = createTRPCRouter({
               name: "Monthly Savings",
               note: "",
               amount: budget?.goal ?? 0,
-              date: today.toDateString(),
+              date: today,
               datetime: today,
               isPending: false,
               isTransfer: false,
