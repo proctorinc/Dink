@@ -15,7 +15,7 @@ export const ProgressBar: FC<ProgressBarProps> = ({ value, goal, size }) => {
 
   return (
     <div
-      className={`${barHeight} relative w-full rounded-md bg-primary-dark group-hover:bg-primary-med`}
+      className={`${barHeight} relative w-full rounded-md bg-primary-dark shadow-inner group-hover:bg-primary-med`}
     >
       <div
         className="absolute h-full rounded-md bg-gradient-to-r from-secondary-dark to-secondary-med"
