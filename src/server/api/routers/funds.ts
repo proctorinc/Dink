@@ -54,19 +54,6 @@ function addAmountToFund(
   };
 }
 
-// function addAmountToFundWithTransactions(
-//   fund: Fund & {
-//     sourceTransactions: TransactionSource[];
-//   }
-// ) {
-//   const { sourceTransactions, ...otherFields } = fund;
-//   return {
-//     ...otherFields,
-//     sourceTransactions,
-//     amount: sumTransactions(sourceTransactions),
-//   };
-// }
-
 export const fundsRouter = createTRPCRouter({
   getAllData: protectedProcedure.query(async ({ ctx }) => {
     const funds = await ctx.prisma.fund.findMany({
@@ -88,12 +75,13 @@ export const fundsRouter = createTRPCRouter({
       },
       where: {
         userId: ctx.session.user.id,
+        ignore: false,
       },
     });
 
     const fundsWithAmounts = sumFundTransactions(funds);
     const fundsTotal = sumTotalFundAmount(fundsWithAmounts);
-    const accountsTotalBalance = accountTotals.reduce((acc, account) => {
+    const accountsPositiveBalance = accountTotals.reduce((acc, account) => {
       if (
         account.type === AccountCategory.Cash ||
         account.type === AccountCategory.Investment
@@ -103,15 +91,14 @@ export const fundsRouter = createTRPCRouter({
           account._sum.current ?? new Prisma.Decimal(0)
         );
       }
-      return Prisma.Decimal.sub(
-        acc,
-        account._sum.current ?? new Prisma.Decimal(0)
-      );
+      return acc;
     }, new Prisma.Decimal(0));
+
+    console.log(accountsPositiveBalance);
 
     return {
       total: fundsTotal,
-      unallocatedTotal: Prisma.Decimal.sub(accountsTotalBalance, fundsTotal),
+      unallocatedTotal: Prisma.Decimal.sub(accountsPositiveBalance, fundsTotal),
       funds: fundsWithAmounts,
     };
   }),
