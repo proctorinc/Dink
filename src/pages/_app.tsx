@@ -4,10 +4,11 @@ import { SessionProvider } from "next-auth/react";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
-import { MonthProvider } from "~/context/MonthContext";
 import Navbar from "~/components/ui/Nav/Navbar";
 import MobileNavbar from "~/components/ui/Nav/MobileNavbar";
 import Sidebar from "~/components/ui/Nav/Sidebar";
+import { MonthProvider } from "~/context/MonthContext";
+import { NotificationProvider } from "~/context/NotificationContext";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -16,10 +17,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <div className="flex min-h-screen flex-col overflow-x-clip">
       <SessionProvider session={session}>
-        <Navbar />
-        <MonthProvider>
-          <Component {...pageProps} />
-        </MonthProvider>
+        <NotificationProvider>
+          <Navbar />
+          <MonthProvider>
+            <Component {...pageProps} />
+          </MonthProvider>
+        </NotificationProvider>
         <Sidebar />
         <MobileNavbar />
       </SessionProvider>
