@@ -30,7 +30,7 @@ const BasicLayout: FC<LayoutProps> = ({ children }) => {
     <main className="flex flex-col items-center text-white">
       <div className="container flex max-w-md flex-col items-center justify-center gap-12 pb-28 pt-5 sm:pb-4">
         <div className="flex w-full flex-col items-center gap-4">
-          <>{children}</>
+          {children}
         </div>
       </div>
     </main>
@@ -57,11 +57,13 @@ const Page: FC<PageProps> = ({ children, title, auth, style }) => {
     Layout = CenteredLayout;
   }
 
+  const titleText = `Dink | ${title}`;
+
   return (
     <AuthWrapper>
       <>
         <Head>
-          <title>Dink | {title}</title>
+          <title>{titleText}</title>
         </Head>
         <Layout>{children}</Layout>
       </>
