@@ -7,8 +7,13 @@ import Spinner from "~/components/ui/Spinner";
 const Login = () => {
   const { data: sessionData } = useSession();
   const router = useRouter();
+  const { from } = router.query;
 
   if (sessionData) {
+    if (from && typeof from === "string") {
+      console.log(`Redirect to ${from}`);
+      void router.push(`${from}`);
+    }
     void router.push("/");
   }
 
