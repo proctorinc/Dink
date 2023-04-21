@@ -153,20 +153,14 @@ export const transactionsRouter = createTRPCRouter({
       })
     )
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.transaction.update({
-        where: {
-          // userId: ctx.session.user.id,
-          id: input.transactionId,
-        },
+      return ctx.prisma.transactionSource.create({
         data: {
-          isTransfer: false,
-          source: {
-            create: {
-              type: "fund",
-              fund: {
-                connect: { id: input.fundId },
-              },
-            },
+          type: "fund",
+          fund: {
+            connect: { id: input.fundId },
+          },
+          transaction: {
+            connect: { id: input.transactionId },
           },
         },
       });
@@ -179,20 +173,14 @@ export const transactionsRouter = createTRPCRouter({
       })
     )
     .mutation(({ input, ctx }) => {
-      return ctx.prisma.transaction.update({
-        where: {
-          // userId: ctx.session.user.id,
-          id: input.transactionId,
-        },
+      return ctx.prisma.transactionSource.create({
         data: {
-          isTransfer: false,
-          source: {
-            create: {
-              type: "budget",
-              fund: {
-                connect: { id: input.budgetId },
-              },
-            },
+          type: "budget",
+          budget: {
+            connect: { id: input.budgetId },
+          },
+          transaction: {
+            connect: { id: input.transactionId },
           },
         },
       });
