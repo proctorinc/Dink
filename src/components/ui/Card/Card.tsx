@@ -17,6 +17,7 @@ type CardProps = {
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   horizontal?: boolean;
   size?: "sm";
+  noShadow?: boolean;
 };
 
 type CardSubcomponents = {
@@ -36,11 +37,14 @@ const Card: FC<CardProps> & CardSubcomponents = ({
   children,
   onClick,
   size,
+  noShadow,
 }) => {
   const clickable = !!onClick
     ? "group hover:bg-primary-light hover:text-primary-dark cursor-pointer"
     : "";
-  const cardStyle = `flex flex-col w-full rounded-xl bg-primary-med ${clickable}`;
+  const cardStyle = `${
+    noShadow ? "" : "shadow-lg"
+  } flex flex-col w-full rounded-xl bg-primary-med ${clickable}`;
 
   const renderChildren = () => {
     return Children.map(children, (child) => {

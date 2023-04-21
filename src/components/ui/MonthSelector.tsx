@@ -24,6 +24,7 @@ const MonthSelector = () => {
         <FontAwesomeIcon icon={faArrowLeft} onClick={getPreviousMonth} />
       </button>
       <Button
+        noShadow
         title={`${formatToTitleCase(month)} ${formatToTitleCase(year)}`}
       />
       <button

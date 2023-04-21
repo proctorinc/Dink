@@ -32,6 +32,7 @@ const Sidebar = () => {
               onClick={() => void router.push(route.path)}
             >
               <IconButton
+                noShadow
                 key={route.path}
                 icon={route.icon}
                 active={router.pathname === route.path}

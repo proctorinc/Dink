@@ -28,6 +28,7 @@ const MobileNavbar = () => {
           <div className="flex items-center justify-around">
             {routes.map((route) => (
               <IconButton
+                noShadow
                 key={route.path}
                 icon={route.icon}
                 active={router.pathname === route.path}

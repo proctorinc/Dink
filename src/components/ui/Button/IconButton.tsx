@@ -6,11 +6,12 @@ import { type MouseEventHandler, type FC } from "react";
 type IconButtonProps = {
   icon: IconDefinition;
   active?: boolean;
-  style?: "secondary" | "primary";
+  style?: "secondary" | "primary" | "danger";
   size?: "sm" | "xs";
   iconSize?: "xl" | "lg" | "sm" | "xs";
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
+  noShadow?: boolean;
 };
 
 export const IconButton: FC<IconButtonProps> = ({
@@ -21,6 +22,7 @@ export const IconButton: FC<IconButtonProps> = ({
   iconSize,
   onClick,
   className,
+  noShadow,
 }) => {
   let buttonSize = "w-10";
   if (size === "sm") {
@@ -43,6 +45,11 @@ export const IconButton: FC<IconButtonProps> = ({
   } else if (style === "secondary") {
     iconStyle =
       "bg-secondary-dark text-secondary-med group-hover:bg-secondary-med group-hover:text-secondary-light";
+  } else if (active && style === "danger") {
+    iconStyle = "bg-danger-light text-danger-med";
+  } else if (style === "danger") {
+    iconStyle =
+      "bg-danger-dark text-danger-med group-hover:bg-danger-med group-hover:text-danger-light";
   } else if (active) {
     iconStyle = "bg-primary-light text-primary-med";
   }
@@ -50,8 +57,8 @@ export const IconButton: FC<IconButtonProps> = ({
   return (
     <button
       className={`${iconStyle} ${buttonSize} flex aspect-square items-center justify-center rounded-lg ${
-        className ?? ""
-      }`}
+        noShadow ? "" : "shadow-lg"
+      } ${className ?? ""}`}
       onClick={onClick}
     >
       <FontAwesomeIcon size={iconSize ?? innerIconSize} icon={icon} />
