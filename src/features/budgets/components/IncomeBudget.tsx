@@ -7,19 +7,17 @@ import { useMonthContext } from "~/hooks/useMonthContext";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import Button from "~/components/ui/Button";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 
 export const IncomeBudget: FC = () => {
   const router = useRouter();
   const { startOfMonth, endOfMonth } = useMonthContext();
-  const { data: sessionData } = useSession();
-
+  const userPreferences = api.users.getUserPreferences.useQuery();
   const income = api.transactions.getIncomeByMonth.useQuery({
     startOfMonth,
     endOfMonth,
   });
 
-  const targetIncome = sessionData?.user.preferences?.targetIncome;
+  const targetIncome = userPreferences.data?.targetIncome;
 
   if (Number(targetIncome) === 0) {
     return (
