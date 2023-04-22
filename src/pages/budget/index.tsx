@@ -62,18 +62,6 @@ export default function Budgets() {
     { name: "Spent", amount: budgetData.data?.overall.spent },
     { name: "Left", amount: budgetData.data?.overall.leftover },
   ];
-  const spendingData = [
-    {
-      spent: Number(budgetData.data?.spending.total),
-      goal: Number(budgetData.data?.spending.leftover),
-    },
-  ];
-  const savingsData = [
-    {
-      savings: Number(budgetData.data?.savings.total),
-      goal: Number(budgetData.data?.savings.leftover),
-    },
-  ];
   const barGraphData = [
     {
       title: "Spending",
@@ -90,16 +78,16 @@ export default function Budgets() {
   return (
     <Page auth title="Budget">
       <Header title={`Budget`} subtitle={`${month} ${year}`} />
-      <div className="flex w-full items-center justify-center">
+      <div className="flex h-44 w-full items-center justify-center">
         <IconButton
           className={chartNum == 0 ? "invisible" : ""}
           icon={faChevronLeft}
           onClick={() => setChartNum((prev) => prev - 1)}
         />
         {chartNum === 0 && (
-          <div className="relative flex h-52 w-full flex-col items-center justify-center pb-5">
+          <div className="relative flex h-full w-full flex-col items-center justify-center pb-5">
             <div className="absolute flex flex-col items-center justify-center text-xl font-bold">
-              <h2 className="text-3xl font-bold">{percentOverall}</h2>
+              <h2 className="text-2xl font-bold">{percentOverall}</h2>
             </div>
             <PieChart data={overallData} progress />
             <span className="absolute bottom-0 font-bold text-primary-light">
@@ -109,7 +97,7 @@ export default function Budgets() {
           </div>
         )}
         {chartNum === 1 && (
-          <div className="flex h-52 w-full items-center">
+          <div className="flex h-full w-full items-center">
             <div className="relative flex h-40 w-full flex-col items-center justify-center pb-5">
               <BarChart
                 data={barGraphData}
@@ -123,50 +111,8 @@ export default function Budgets() {
             </div>
           </div>
         )}
-        {chartNum === 2 && (
-          <div className="flex h-52 w-full items-center">
-            <div className="relative flex h-40 w-full flex-col items-center justify-center pb-5">
-              <BarChart
-                data={spendingData}
-                keys={["spent", "goal"]}
-                floatRight
-              />
-              <span className="absolute bottom-0 font-bold text-primary-light">
-                {formatToCurrency(budgetData.data?.spending.total)}
-              </span>
-            </div>
-            <div className="relative flex h-40 w-full flex-col items-center justify-center pb-5">
-              <BarChart data={savingsData} keys={["savings", "goal"]} />
-              <span className="absolute bottom-0 font-bold text-primary-light">
-                {formatToCurrency(budgetData.data?.savings.total)}
-              </span>
-            </div>
-          </div>
-        )}
-        {chartNum === 3 && (
-          <div className="flex h-52 w-full items-center">
-            <div className="relative flex h-40 w-full flex-col items-center justify-center pb-5">
-              <div className="absolute flex flex-col items-center justify-center text-xl font-bold">
-                <h2 className="text-sm font-bold">Spending</h2>
-              </div>
-              <PieChart data={spendingData} progress floatRight />
-              <span className="absolute bottom-0 font-bold text-primary-light">
-                {formatToCurrency(budgetData.data?.spending.total)}
-              </span>
-            </div>
-            <div className="relative flex h-40 w-full flex-col items-center justify-center pb-5">
-              <div className="absolute flex flex-col items-center justify-center text-xl font-bold">
-                <h2 className="text-sm font-bold">Savings</h2>
-              </div>
-              <PieChart data={savingsData} progress />
-              <span className="absolute bottom-0 font-bold text-primary-light">
-                {formatToCurrency(budgetData.data?.savings.total)}
-              </span>
-            </div>
-          </div>
-        )}
         <IconButton
-          className={chartNum === 3 ? "invisible" : ""}
+          className={chartNum === 1 ? "invisible" : ""}
           icon={faChevronRight}
           onClick={() => setChartNum((prev) => prev + 1)}
         />
