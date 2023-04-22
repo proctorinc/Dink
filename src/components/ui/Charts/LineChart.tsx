@@ -25,6 +25,7 @@ export const LineChart: FC<LineChartProps> = ({ data }) => (
     yScale={{
       type: "linear",
       max: "auto",
+      min: "auto",
       stacked: true,
       reverse: false,
     }}
@@ -36,12 +37,17 @@ export const LineChart: FC<LineChartProps> = ({ data }) => (
     enableGridY={false}
     enableCrosshair={false}
     enableSlices={false}
+    enablePointLabel={false}
     axisBottom={{
       tickSize: 0,
     }}
     axisLeft={{
       tickSize: 0,
     }}
+    pointSize={12}
+    pointColor="#167B8D"
+    pointBorderWidth={3}
+    pointBorderColor="#00C6C5"
     enablePoints={false}
     enableArea={true}
     lineWidth={5}
