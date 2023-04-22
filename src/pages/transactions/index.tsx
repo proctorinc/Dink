@@ -132,6 +132,7 @@ const TransactionsPage = () => {
                   size="sm"
                   icon={filterMonthly ? faSquare : faSquareCheck}
                   style={filterMonthly ? "primary" : "secondary"}
+                  noShadow={filterMonthly}
                   onClick={() => setFilterMonthly(false)}
                 />
                 <Button
@@ -139,6 +140,7 @@ const TransactionsPage = () => {
                   size="sm"
                   icon={filterMonthly ? faSquareCheck : faSquare}
                   style={filterMonthly ? "secondary" : "primary"}
+                  noShadow={!filterMonthly}
                   onClick={() => setFilterMonthly(true)}
                 />
               </Card.Group>
@@ -149,6 +151,7 @@ const TransactionsPage = () => {
                   size="sm"
                   icon={allIncluded ? faSquareCheck : faSquare}
                   style={allIncluded ? "secondary" : "primary"}
+                  noShadow={!allIncluded}
                   onClick={handleToggleAll}
                 />
                 <Button
@@ -156,6 +159,7 @@ const TransactionsPage = () => {
                   size="sm"
                   icon={includeCategorized ? faSquareCheck : faSquare}
                   style={includeCategorized ? "secondary" : "primary"}
+                  noShadow={!includeCategorized}
                   onClick={() => setIncludeCategorized((prev) => !prev)}
                 />
                 <Button
@@ -163,6 +167,7 @@ const TransactionsPage = () => {
                   size="sm"
                   icon={includeUncategorized ? faSquareCheck : faSquare}
                   style={includeUncategorized ? "secondary" : "primary"}
+                  noShadow={!includeUncategorized}
                   onClick={() => setIncludeUncategorized((prev) => !prev)}
                 />
                 <Button
@@ -170,6 +175,7 @@ const TransactionsPage = () => {
                   size="sm"
                   icon={includeSavings ? faSquareCheck : faSquare}
                   style={includeSavings ? "secondary" : "primary"}
+                  noShadow={!includeSavings}
                   onClick={() => setIncludeSavings((prev) => !prev)}
                 />
                 <Button
@@ -177,6 +183,7 @@ const TransactionsPage = () => {
                   size="sm"
                   icon={includeIncome ? faSquareCheck : faSquare}
                   style={includeIncome ? "secondary" : "primary"}
+                  noShadow={!includeIncome}
                   onClick={() => setIncludeIncome((prev) => !prev)}
                 />
               </Card.Group>
