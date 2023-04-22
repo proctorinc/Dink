@@ -11,7 +11,7 @@ const Login = () => {
   const router = useRouter();
   const { from } = router.query;
 
-  if (sessionData) {
+  if (sessionData?.user) {
     if (from && typeof from === "string") {
       console.log(`Redirect to ${from}`);
       void router.push(`${from}`);
@@ -19,7 +19,7 @@ const Login = () => {
     void router.push("/");
   }
 
-  if (!sessionData) {
+  if (!sessionData?.user) {
     return (
       <Page title="Login" style="centered">
         <div className="w-full px-4">
