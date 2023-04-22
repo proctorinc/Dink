@@ -2,6 +2,13 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
+  getUserPreferences: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.userPreferences.findUnique({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+  }),
   deleteUser: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .mutation(({ input, ctx }) => {
@@ -26,11 +33,19 @@ export const userRouter = createTRPCRouter({
   updateTargetIncome: protectedProcedure
     .input(z.object({ income: z.number() }))
     .mutation(async ({ input, ctx }) => {
-      return ctx.prisma.userPreferences.update({
+      return ctx.prisma.userPreferences.upsert({
         where: {
           userId: ctx.session.user.id,
         },
-        data: {
+        create: {
+          targetIncome: input.income,
+          user: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+        update: {
           targetIncome: input.income,
         },
       });
