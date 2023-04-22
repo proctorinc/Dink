@@ -1,6 +1,8 @@
+import { faG } from "@fortawesome/free-solid-svg-icons";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Button from "~/components/ui/Button";
+import Header from "~/components/ui/Header";
 import Page from "~/components/ui/Page";
 import Spinner from "~/components/ui/Spinner";
 
@@ -20,23 +22,15 @@ const Login = () => {
   if (!sessionData) {
     return (
       <Page title="Login" style="centered">
-        <div className="mb-10 flex w-full rounded-xl px-12 text-primary-light">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-5xl font-bold">Login</h1>
-          </div>
+        <div className="w-full px-4">
+          <Header title="Login" />
         </div>
-        <div className="flex w-full flex-col gap-4 px-12">
-          {/* <input
-            id="email-input"
-            placeholder="Enter Email..."
-            className="relative rounded-xl bg-primary-med py-2 px-4 font-bold text-primary-light placeholder-primary-light ring ring-primary-med focus:placeholder-primary-med"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />*/}
+        <div className="flex w-full flex-col gap-4 px-4 pt-10">
           <Button
-            title="Login"
+            title="Login with Google"
             className="w-full"
             style="secondary"
+            icon={faG}
             onClick={() => void signIn("google")}
           />
           <div className="flex items-center justify-center gap-3 py-2">
