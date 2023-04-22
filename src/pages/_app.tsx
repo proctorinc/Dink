@@ -9,6 +9,7 @@ import MobileNavbar from "~/components/ui/Nav/MobileNavbar";
 import Sidebar from "~/components/ui/Nav/Sidebar";
 import { MonthProvider } from "~/context/MonthContext";
 import { NotificationProvider } from "~/context/NotificationContext";
+import { ProfileSetup } from "~/components/routes/ProfileSetup";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -19,12 +20,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <SessionProvider session={session}>
         <NotificationProvider>
           <Navbar />
-          <MonthProvider>
-            <Component {...pageProps} />
-          </MonthProvider>
+          <ProfileSetup>
+            <MonthProvider>
+              <Component {...pageProps} />
+            </MonthProvider>
+            <Sidebar />
+            <MobileNavbar />
+          </ProfileSetup>
         </NotificationProvider>
-        <Sidebar />
-        <MobileNavbar />
       </SessionProvider>
     </div>
   );
