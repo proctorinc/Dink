@@ -18,8 +18,11 @@ import { api } from "~/utils/api";
 
 export default function AllocateFundsPage() {
   const router = useRouter();
+  const ctx = api.useContext();
   const fundsData = api.funds.getAllData.useQuery();
-  const createAllocation = api.transactions.createFundAllocation.useMutation();
+  const createAllocation = api.transactions.createFundAllocation.useMutation({
+    onSuccess: () => void ctx.invalidate(),
+  });
   const [fund, setFund] = useState<
     (FundType & { amount: Prisma.Decimal }) | null
   >();
