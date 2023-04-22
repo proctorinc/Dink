@@ -40,7 +40,7 @@ const BasicLayout: FC<LayoutProps> = ({ children }) => {
 const CenteredLayout: FC<LayoutProps> = ({ children }) => {
   return (
     <main className="flex flex-grow flex-grow flex-col items-center justify-center text-white">
-      <div className="flex w-full max-w-md flex-grow flex-grow flex-col items-center justify-center">
+      <div className="flex w-full max-w-md flex-grow flex-grow flex-col items-center justify-center px-4">
         {children}
       </div>
     </main>
