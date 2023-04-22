@@ -228,7 +228,7 @@ export const transactionsRouter = createTRPCRouter({
           note: "",
           isTransfer: false,
           amount: input.amount,
-          date: today.toDateString(),
+          date: today,
           datetime: today,
           isPending: false,
           user: {
