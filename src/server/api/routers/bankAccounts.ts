@@ -1,3 +1,4 @@
+import { type Serie } from "@nivo/line";
 import {
   type BankAccount,
   Prisma,
@@ -8,9 +9,15 @@ import {
   type Budget,
   type Fund,
 } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime";
 import { z } from "zod";
 import { AccountCategory } from "~/config";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+
+type NetMonthlySpending = {
+  month: string;
+  spent: Decimal;
+};
 
 function sumAccountsBalance(accounts: BankAccount[]) {
   return accounts.reduce((acc, account) => {
@@ -140,6 +147,25 @@ export const bankAccountRouter = createTRPCRouter({
       },
     });
 
+    const userId = ctx.session.user.id;
+    const netSpendingByMonth: NetMonthlySpending[] = await ctx.prisma.$queryRaw`
+      SELECT
+        DATE_FORMAT(t.date, '%Y-%m') as month,
+        SUM(t.amount) AS spent
+      FROM dink.Transaction as t
+      LEFT JOIN dink.TransactionSource as ts
+      ON t.id = ts.transactionId
+      WHERE
+        t.userId = ${userId}
+        AND (
+          ts.type IS NULL
+          OR ts.type = 'fund'
+          OR ts.type = 'budget'
+        )
+      GROUP BY month
+      ORDER BY month DESC
+      LIMIT 6
+    `;
     const cashBalance = sumAccountsBalance(cashAccounts);
     const creditBalance = sumAccountsBalance(creditAccounts);
     const investmentBalance = sumAccountsBalance(investmentAccounts);
@@ -152,9 +178,29 @@ export const bankAccountRouter = createTRPCRouter({
       loanBalance
     );
 
+    let monthlyTotal = total;
+
+    const chartData: Serie[] = [
+      {
+        id: "Line",
+        data: netSpendingByMonth.map((monthSpending, index) => {
+          monthlyTotal = Decimal.sub(monthlyTotal, monthSpending.spent);
+          return {
+            x: index,
+            y: Number(monthlyTotal),
+            // month: new Date(monthSpending.month).toLocaleString("en-US", {
+            //   month: "short",
+            //   year: "numeric",
+            // }),
+          };
+        }),
+      },
+    ];
+
     return {
       count: allAccounts.length,
       total: total,
+      chartData,
       categories: {
         [AccountCategory.Cash]: {
           total: cashBalance,
