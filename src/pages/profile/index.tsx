@@ -14,7 +14,7 @@ const UserPage = () => {
   const { data: sessionData } = useSession();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const userPreferences = sessionData?.user.preferences;
+  const userPreferences = api.users.getUserPreferences.useQuery();
   const updateNickname = api.users.updateNickname.useMutation();
   const updateIncome = api.users.updateTargetIncome.useMutation();
   const updateCreditUtilization =
@@ -36,13 +36,15 @@ const UserPage = () => {
     <Page auth title="Profile">
       <Header title="Profile" />
       <div className="flex items-center gap-2">
-        <Image
-          className="w-30 rounded-full ring ring-primary-med"
-          width={100}
-          height={100}
-          src={sessionData?.user.image ?? "/dink.ico"}
-          alt="user-image"
-        />
+        {sessionData?.user.image && (
+          <Image
+            className="w-30 rounded-full ring ring-primary-med"
+            width={100}
+            height={100}
+            src={`${sessionData.user.image}?sz=256`}
+            alt="user-image"
+          />
+        )}
         <div className="flex flex-col gap-1">
           <EditableTitle
             className="text-3xl font-bold"
@@ -84,7 +86,7 @@ const UserPage = () => {
                     Monthly Income:
                   </span>
                   <EditableTitle
-                    value={String(userPreferences.targetIncome ?? "0")}
+                    value={String(userPreferences.data?.targetIncome ?? "0")}
                     onUpdate={handleIncomeUpdate}
                   />
                 </Card.Group>
@@ -95,7 +97,9 @@ const UserPage = () => {
                     Credit Utilization Target:
                   </span>
                   <EditableTitle
-                    value={String(userPreferences.creditPercentTarget ?? "0")}
+                    value={String(
+                      userPreferences.data?.creditPercentTarget ?? "0"
+                    )}
                     onUpdate={handleCreditUtilizationUpdate}
                   />
                 </Card.Group>
