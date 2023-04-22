@@ -43,7 +43,7 @@ const Navbar = () => {
           )}
         </div>
       </nav>
-      <div className="min-h-4">
+      <div className="h-5">
         {type && message && <Notification type={type} message={message} />}
       </div>
     </>
