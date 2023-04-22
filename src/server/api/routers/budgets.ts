@@ -38,11 +38,17 @@ function sumBudgetTransactions(
 ) {
   return budgets.map((budget) => {
     const { sourceTransactions, ...otherFields } = budget;
-    const spent = sumTransactions(sourceTransactions);
+    let spent = sumTransactions(sourceTransactions);
+    const leftover = Prisma.Decimal.add(budget.goal, spent);
+
+    if (Number(spent) !== 0) {
+      spent = Decimal.mul(spent, new Decimal(-1));
+    }
+
     return {
       ...otherFields,
       spent,
-      leftover: Prisma.Decimal.sub(budget.goal, spent),
+      leftover,
     };
   });
 }
@@ -87,16 +93,16 @@ export const budgetsRouter = createTRPCRouter({
         include: {
           savingsFund: true,
           sourceTransactions: {
+            include: {
+              transaction: true,
+            },
             where: {
               transaction: {
-                datetime: {
+                date: {
                   gte: input.startOfMonth,
                   lte: input.endOfMonth,
                 },
               },
-            },
-            select: {
-              transaction: true,
             },
           },
         },
@@ -120,16 +126,16 @@ export const budgetsRouter = createTRPCRouter({
         include: {
           savingsFund: true,
           sourceTransactions: {
+            include: {
+              transaction: true,
+            },
             where: {
               transaction: {
-                datetime: {
+                date: {
                   gte: input.startOfMonth,
                   lte: input.endOfMonth,
                 },
               },
-            },
-            select: {
-              transaction: true,
             },
           },
         },
@@ -184,30 +190,27 @@ export const budgetsRouter = createTRPCRouter({
           });
         }
       });
-
-      const overallSpending = sumTotalBudgetSpent([
-        ...spendingWithAmounts,
-        ...savingsWithAmounts,
-      ]);
-      const overallGoal = sumBudgetGoals([
-        ...spendingBudgets,
-        ...savingsBudgets,
-      ]);
-
       const spendingTotal = sumTotalBudgetSpent(spendingWithAmounts);
       const spendingGoal = sumBudgetGoals(spendingWithAmounts);
-      const savingsTotal = sumTotalBudgetSpent(savingsWithAmounts);
+      const savingsTotal = Decimal.abs(sumTotalBudgetSpent(savingsWithAmounts));
       const savingsGoal = sumBudgetGoals(savingsWithAmounts);
+
+      const overallGoal = Decimal.add(savingsGoal, spendingGoal);
+      const overallSpending = Decimal.add(
+        savingsTotal,
+        Decimal.abs(spendingTotal)
+      );
+      const overallLeftover = Decimal.sub(overallGoal, overallSpending);
 
       return {
         overall: {
           goal: overallGoal,
-          spent: overallSpending,
-          leftover: Prisma.Decimal.sub(overallGoal, overallSpending),
+          spent: Decimal.abs(overallSpending),
+          leftover: overallLeftover,
         },
         spending: {
           budgets: spendingWithAmounts,
-          total: spendingTotal,
+          total: Decimal.abs(spendingTotal),
           goal: spendingGoal,
           leftover: Prisma.Decimal.sub(spendingGoal, spendingTotal),
         },
@@ -240,7 +243,7 @@ export const budgetsRouter = createTRPCRouter({
             },
             orderBy: {
               transaction: {
-                datetime: "desc",
+                date: "desc",
               },
             },
           },
@@ -336,7 +339,7 @@ export const budgetsRouter = createTRPCRouter({
           budgetId: input.budgetId,
           transaction: {
             userId: ctx.session.user.id,
-            datetime: {
+            date: {
               lte: getLastDayOfMonth(today),
               gte: getFirstDayOfMonth(today),
             },
