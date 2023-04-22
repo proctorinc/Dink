@@ -25,7 +25,10 @@ const Account: FC<AccountProps> = ({ data: account }) => {
   const router = useRouter();
 
   return (
-    <Card onClick={() => void router.push(`/accounts/${account?.id ?? ""}`)}>
+    <Card
+      onClick={() => void router.push(`/accounts/${account?.id ?? ""}`)}
+      noShadow
+    >
       <Card.Body horizontal>
         <Card.Group horizontal>
           {!account?.institution?.logo && !account?.institution?.url && (
