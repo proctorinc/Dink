@@ -57,7 +57,7 @@ export const IconButton: FC<IconButtonProps> = ({
   return (
     <button
       className={`${iconStyle} ${buttonSize} flex aspect-square items-center justify-center rounded-lg ${
-        noShadow ? "" : "shadow-lg"
+        noShadow ? "" : "shadow-xl"
       } ${className ?? ""}`}
       onClick={onClick}
     >
