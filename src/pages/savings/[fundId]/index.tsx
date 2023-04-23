@@ -41,7 +41,7 @@ const FundPage = () => {
 
   const handleDeleteFund = () => {
     deleteFund.mutate({ fundId: fund?.id ?? "" });
-    void router.push("/funds");
+    void router.push("/savings");
   };
 
   const handleNameUpdate = (name: string) => {
@@ -99,7 +99,7 @@ const FundPage = () => {
             title="Allocate"
             icon={faCoins}
             style="secondary"
-            onClick={() => void router.push("/funds/allocate")}
+            onClick={() => void router.push("/savings/allocate")}
           />
         </ButtonBar>
         {settingsOpen && (
@@ -125,7 +125,7 @@ const FundPage = () => {
                   icon={faArrowRight}
                   style="secondary"
                   iconRight
-                  onClick={() => void router.push("/funds/allocate")}
+                  onClick={() => void router.push("/savings/allocate")}
                 />
                 <Button
                   title="Categorize Transactions"

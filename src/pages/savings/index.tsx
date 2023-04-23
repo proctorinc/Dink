@@ -45,9 +45,9 @@ export default function Funds() {
   ];
 
   return (
-    <Page auth title="Funds">
+    <Page auth title="Savings">
       <Header
-        title="Funds"
+        title="Savings"
         subtitle={`Total: ${formatToCurrency(fundsData?.data?.total)}`}
       />
       <div className="flex w-full items-end overflow-x-clip">
@@ -71,13 +71,13 @@ export default function Funds() {
           title="Fund"
           icon={faPlus}
           style={isFundsEmpty ? "secondary" : "primary"}
-          onClick={() => void router.push("/funds/create")}
+          onClick={() => void router.push("/savings/create")}
         />
         <Button
           title="Allocate"
           icon={faCoins}
           style={isFundsEmpty ? "primary" : "secondary"}
-          onClick={() => void router.push("/funds/allocate")}
+          onClick={() => void router.push("/savings/allocate")}
         />
       </ButtonBar>
       {fundsData.isLoading && <Spinner />}
@@ -86,7 +86,7 @@ export default function Funds() {
           <Fund
             key={fund.id}
             data={fund}
-            onClick={() => void router.push(`/funds/${fund.id}`)}
+            onClick={() => void router.push(`/savings/${fund.id}`)}
           />
         ))}
       </div>

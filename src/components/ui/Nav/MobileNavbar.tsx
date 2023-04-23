@@ -17,7 +17,7 @@ const MobileNavbar = () => {
     { path: "/accounts", icon: faBuildingColumns },
     { path: "/budget", icon: faCalendarAlt },
     { path: "/", icon: faHome },
-    { path: "/funds", icon: faPiggyBank },
+    { path: "/savings", icon: faPiggyBank },
     { path: "/transactions", icon: faReceipt },
   ];
 

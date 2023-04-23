@@ -12,19 +12,20 @@ type FundProps = {
     amount: Prisma.Decimal;
   };
   onClick?: MouseEventHandler<HTMLDivElement>;
+  noShadow?: boolean;
 };
 
-const Fund: FC<FundProps> = ({ data: fund, onClick }) => {
+const Fund: FC<FundProps> = ({ data: fund, onClick, noShadow }) => {
   const router = useRouter();
   const { convertToIcon } = useIcons();
   const icon = convertToIcon(fund?.icon) ?? faPiggyBank;
 
   const navigateToFund = () => {
-    void router.push(`/funds/${fund?.id ?? ""}`);
+    void router.push(`/savings/${fund?.id ?? ""}`);
   };
 
   return (
-    <Card onClick={onClick ?? navigateToFund}>
+    <Card onClick={onClick ?? navigateToFund} noShadow={noShadow}>
       <Card.Body horizontal>
         <Card.Group horizontal size="xl">
           <IconButton size="sm" icon={icon} style="secondary" />

@@ -64,7 +64,7 @@ export const config = {
     "/login",
     "/transactions/:path*",
     "/budget/:path*",
-    "/funds/:path*",
+    "/savings/:path*",
     "/profile/:path*",
   ],
 };

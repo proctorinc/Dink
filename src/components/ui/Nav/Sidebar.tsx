@@ -17,7 +17,7 @@ const Sidebar = () => {
     { path: "/accounts", name: "Accounts", icon: faBuildingColumns },
     { path: "/budget", name: "Budget", icon: faCalendarAlt },
     { path: "/", name: "Home", icon: faHome },
-    { path: "/funds", name: "Funds", icon: faPiggyBank },
+    { path: "/savings", name: "Savings", icon: faPiggyBank },
     { path: "/transactions", name: "Transactions", icon: faReceipt },
   ];
 

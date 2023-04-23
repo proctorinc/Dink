@@ -34,7 +34,7 @@ export default function AllocateFundsPage() {
   const allocateFunds = () => {
     if (isValidData) {
       createAllocation.mutate({ fundId: fund.id, amount, name });
-      void router.push("/funds");
+      void router.push("/savings");
     }
   };
 
@@ -54,8 +54,8 @@ export default function AllocateFundsPage() {
         <Card.Collapse open={!!fund}>
           <Card onClick={() => setFund(null)}>
             <div className="flex gap-3">
-              {fund && <Fund data={fund} />}
-              <IconButton icon={faAngleRight} />
+              {fund && <Fund data={fund} noShadow />}
+              <IconButton icon={faAngleRight} noShadow />
             </div>
           </Card>
         </Card.Collapse>

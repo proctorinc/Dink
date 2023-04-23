@@ -3,7 +3,7 @@ import Header from "~/components/ui/Header";
 import { formatToMonthYear } from "~/utils";
 import { BudgetSummary } from "~/features/budgets";
 import { TransactionsSummary } from "~/features/transactions";
-import { FundsSummary } from "~/features/funds";
+import { SavingsSummary } from "~/features/funds";
 import { AccountSummary, CreditCardSummary } from "~/features/accounts";
 import Page from "~/components/ui/Page";
 
@@ -18,7 +18,7 @@ export default function Home() {
       />
       <TransactionsSummary />
       <BudgetSummary />
-      <FundsSummary />
+      <SavingsSummary />
       <AccountSummary />
       <CreditCardSummary />
     </Page>
