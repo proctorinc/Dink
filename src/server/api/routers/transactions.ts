@@ -121,6 +121,13 @@ export const transactionsRouter = createTRPCRouter({
         userId: ctx.session.user.id,
         source: null,
       },
+      include: {
+        category: true,
+        personalFinanceCategory: true,
+        paymentMetadata: true,
+        location: true,
+        account: true,
+      },
     });
   }),
   getIncomeByMonth: protectedProcedure
