@@ -1,4 +1,5 @@
 import {
+  faAngleRight,
   faCheck,
   faCoins,
   faDollarSign,
@@ -84,7 +85,7 @@ export default function CreateBudgetPage() {
         <Card.Collapse open={!!isSavings}>
           <Card>
             <Card.Body horizontal>
-              <Card.Group>
+              <Card.Group className="w-full">
                 <label htmlFor="amount-input" className="font-bold">
                   Monthly Amount:
                 </label>
@@ -102,7 +103,18 @@ export default function CreateBudgetPage() {
                 </Card.Group>
                 <label className="font-bold">Choose Fund:</label>
                 <Card.Collapse open={!!fund}>
-                  {fund && <Fund data={fund} />}
+                  <Card onClick={() => setFund(null)}>
+                    <div className="flex gap-3">
+                      {fund && (
+                        <Fund
+                          data={fund}
+                          noShadow
+                          onClick={() => setFund(null)}
+                        />
+                      )}
+                      <IconButton icon={faAngleRight} />
+                    </div>
+                  </Card>
                 </Card.Collapse>
                 <Card.Collapse
                   open={fund === null}
