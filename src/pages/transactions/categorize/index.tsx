@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useMonthContext } from "~/hooks/useMonthContext";
 import Header from "~/components/ui/Header";
 import { api } from "~/utils/api";
-import { NoSourceTransaction } from "~/features/transactions";
+import { DetailedTransaction } from "~/features/transactions";
 import Card from "~/components/ui/Card";
 import Budget from "~/features/budgets";
 import Fund from "~/features/funds";
@@ -70,7 +70,7 @@ const CategorizePage = () => {
       <div className="flex w-full flex-col gap-2">
         {uncategorizedTransactions?.data?.length > 0 &&
           uncategorizedTransactions?.data[0] && (
-            <NoSourceTransaction data={uncategorizedTransactions?.data[0]} />
+            <DetailedTransaction data={uncategorizedTransactions?.data[0]} />
           )}
       </div>
       {uncategorizedTransactions.data.length === 0 && (
@@ -115,6 +115,7 @@ const CategorizePage = () => {
                 <Budget
                   key={budget.id}
                   data={budget}
+                  noShadow
                   onClick={() => selectById(budget.id)}
                 />
               ))}
@@ -124,6 +125,7 @@ const CategorizePage = () => {
                 <Fund
                   key={fund.id}
                   data={fund}
+                  noShadow
                   onClick={() => selectById(fund.id)}
                 />
               ))}
