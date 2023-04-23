@@ -35,7 +35,7 @@ const Button: FC<ButtonProps> = ({
   } else if (disabled && style === "danger") {
     buttonColors = "text-danger-med ring ring-danger-med";
   } else if (disabled) {
-    buttonColors = "text-primary-med bg-primary-med/25 ring ring-primary-med";
+    buttonColors = "text-primary-med ring ring-primary-med";
   } else if (style === "secondary") {
     buttonColors =
       "bg-secondary-med text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light";
