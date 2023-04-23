@@ -85,7 +85,7 @@ model TransactionSource {
 model TransactionCategory {
   id            String      @id @default(cuid())
   name          String
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   transactionId String      @unique
 
   @@index([transactionId])
@@ -101,7 +101,7 @@ model TransactionLocation {
   postalCode    String?
   region        String?
   storeNumber   String?
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   transactionId String      @unique
 
   @@index([transactionId])
@@ -117,7 +117,7 @@ model TransactionPaymentMetadata {
   ppdId            String?
   reason           String?
   referenceNumber  String?
-  transaction      Transaction @relation(fields: [transactionId], references: [id])
+  transaction      Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   transactionId    String      @unique
 
   @@index([transactionId])
@@ -127,7 +127,7 @@ model TransactionPersonalFinanceCategory {
   id            String      @id @default(cuid())
   primary       String?
   detailed      String?
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   transactionId String      @unique
 
   @@index([transactionId])
