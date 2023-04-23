@@ -94,10 +94,9 @@ export const fundsRouter = createTRPCRouter({
       return acc;
     }, new Prisma.Decimal(0));
 
-    console.log(accountsPositiveBalance);
-
     return {
       total: fundsTotal,
+      available: accountsPositiveBalance,
       unallocatedTotal: Prisma.Decimal.sub(accountsPositiveBalance, fundsTotal),
       funds: fundsWithAmounts,
     };
