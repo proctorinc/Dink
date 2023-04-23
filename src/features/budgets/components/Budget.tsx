@@ -13,10 +13,11 @@ export type BudgetProps = {
     spent: Prisma.Decimal;
     leftover: Prisma.Decimal;
   };
+  noShadow?: boolean;
   onClick?: MouseEventHandler<HTMLDivElement>;
 };
 
-const Budget: FC<BudgetProps> = ({ data: budget, onClick }) => {
+const Budget: FC<BudgetProps> = ({ data: budget, onClick, noShadow }) => {
   const router = useRouter();
   const { convertToIcon } = useIcons();
   const icon = convertToIcon(budget?.icon) ?? faMoneyBill1;
@@ -26,7 +27,7 @@ const Budget: FC<BudgetProps> = ({ data: budget, onClick }) => {
   };
 
   return (
-    <Card size="sm" onClick={onClick ?? navigateToBudget}>
+    <Card size="sm" onClick={onClick ?? navigateToBudget} noShadow={noShadow}>
       <Card.Body horizontal>
         <IconButton icon={icon} style="secondary" />
         <Card.Group size="sm" className="w-full gap-1 pl-2">
