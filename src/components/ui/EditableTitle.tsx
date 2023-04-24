@@ -6,7 +6,6 @@ import {
 import { useState, type FC } from "react";
 import { IconButton } from "./Button";
 import Card from "./Card";
-import Spinner from "./Spinner";
 
 type EditableTitleProps = {
   value?: string;
