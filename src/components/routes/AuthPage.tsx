@@ -1,7 +1,8 @@
+import { faCircleHalfStroke } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type FC, type ReactNode } from "react";
-import Spinner from "../ui/Spinner";
 
 type AuthPageProps = {
   children: ReactNode;
@@ -20,9 +21,17 @@ const AuthPage: FC<AuthPageProps> = ({ children }) => {
   }
 
   return (
-    <div className="flex w-full grow items-center justify-center">
-      <Spinner />
-    </div>
+    <main className="flex flex-grow flex-col items-center justify-center text-white">
+      <div className="flex w-full max-w-md flex-grow flex-col items-center justify-center px-4">
+        <div className="animate-spin">
+          <FontAwesomeIcon
+            size="3x"
+            className="text-primary-light"
+            icon={faCircleHalfStroke}
+          />
+        </div>
+      </div>
+    </main>
   );
 };
 
