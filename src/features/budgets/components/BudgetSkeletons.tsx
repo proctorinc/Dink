@@ -20,26 +20,16 @@ export const BudgetSkeletons = () => {
           style="secondary"
         />
         <Card.Group size="sm" className="w-full gap-1 pl-2">
-          <TextSkeleton maxWidth={75} minWidth={50} />
+          <TextSkeleton width={100} />
           <ProgressBar
             size="sm"
-            value={new Prisma.Decimal(30)}
+            value={new Prisma.Decimal(60)}
             goal={new Prisma.Decimal(100)}
             className="bg-gradient-to-r from-secondary-dark/75 to-secondary-med/75"
           />
           <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
-            <TextSkeleton
-              size="sm"
-              color="primary"
-              maxWidth={125}
-              minWidth={80}
-            />
-            <TextSkeleton
-              size="sm"
-              color="primary"
-              maxWidth={100}
-              minWidth={50}
-            />
+            <TextSkeleton size="sm" color="primary" width={125} />
+            <TextSkeleton size="sm" color="primary" width={100} />
           </div>
         </Card.Group>
       </Card.Body>
@@ -52,11 +42,11 @@ export const BudgetSkeletons = () => {
         <Card.Group size="sm">
           <Card.Group horizontal>
             <IconButton icon={faSackDollar} size="sm" style="secondary" />
-            <TextSkeleton maxWidth={125} minWidth={50} />
+            <TextSkeleton width={125} color="primary" />
           </Card.Group>
         </Card.Group>
         <Card.Group horizontal size="sm">
-          <TextSkeleton color="primary" maxWidth={125} minWidth={50} />
+          <TextSkeleton color="primary" width={125} />
         </Card.Group>
       </Card.Body>
     </CardSkeleton>
@@ -76,7 +66,7 @@ export const BudgetSkeletons = () => {
             Spending
           </h3>
         </div>
-        <TextSkeleton width={50} />
+        <TextSkeleton width={50} color="primary" />
       </div>
       <div className="flex w-full flex-col gap-3">
         <BudgetSkeleton />
@@ -94,7 +84,7 @@ export const BudgetSkeletons = () => {
             Savings
           </h3>
         </div>
-        <TextSkeleton width={50} />
+        <TextSkeleton width={50} color="primary" />
       </div>
       <div className="flex w-full flex-col gap-3">
         <SavingsBudgetSkeleton />

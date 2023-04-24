@@ -32,7 +32,7 @@ export const TextSkeleton: FC<TextSkeletonProps> = ({
   }
 
   let textWidth = width;
-  let textColor = "bg-white/75";
+  let textColor = "bg-white/60";
 
   if (!width && minWidth && maxWidth) {
     textWidth = randomWidth;

@@ -8,7 +8,7 @@ export const IncomeBudgetSkeleton = () => {
     <CardSkeleton>
       <Card.Header size="sm">
         <h3 className="text-xl text-white/50">Income</h3>
-        <TextSkeleton size="sm" width={150} />
+        <TextSkeleton size="sm" width={150} color="primary" />
       </Card.Header>
       <Card.Body>
         <ProgressBar
