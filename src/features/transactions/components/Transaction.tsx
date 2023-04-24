@@ -31,7 +31,7 @@ const Transaction: FC<TransactionProps> = ({ data: transaction }) => {
   };
 
   return (
-    <Card size="sm" key={transaction.id} onClick={handleOnClick}>
+    <Card key={transaction.id} onClick={handleOnClick}>
       <Card.Body horizontal size="sm">
         <Card.Group size="sm">
           <span className="font-bold">{transaction.name}</span>

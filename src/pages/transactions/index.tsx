@@ -7,14 +7,13 @@ import {
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import { useRouter } from "next/router";
 import { useMonthContext } from "~/hooks/useMonthContext";
-import Transaction from "~/features/transactions";
+import Transaction, { TransactionSkeletons } from "~/features/transactions";
 import Button, { ButtonBar, IconButton } from "~/components/ui/Button";
 import Header from "~/components/ui/Header";
 import MonthYearSelector from "~/components/ui/MonthSelector";
-import Spinner from "~/components/ui/Spinner";
 import { api } from "~/utils/api";
 import Card from "~/components/ui/Card";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Page from "~/components/ui/Page";
 import useNotifications from "~/hooks/useNotifications";
 
@@ -41,20 +40,10 @@ const TransactionsPage = () => {
       includeIncome,
       searchText: search,
     },
-    {
-      onSuccess: () => clearNotification(),
-      onError: () => setErrorNotification("Failed to fetch transactions"),
-    }
+    { onError: () => setErrorNotification("Failed to fetch transactions") }
   );
 
-  const { setLoadingNotification, clearNotification, setErrorNotification } =
-    useNotifications();
-
-  useEffect(() => {
-    if (transactionData.isFetching) {
-      setLoadingNotification("Loading Transactions...");
-    }
-  }, [transactionData, setLoadingNotification]);
+  const { setErrorNotification } = useNotifications();
 
   const allIncluded =
     includeCategorized &&
@@ -193,8 +182,8 @@ const TransactionsPage = () => {
       )}
       {filterMonthly && <MonthYearSelector />}
       <div className="flex w-full flex-col gap-3">
-        {transactionData.isLoading && <Spinner />}
-        {transactionData?.data?.length === 0 && (
+        {!transactionData.data && <TransactionSkeletons />}
+        {transactionData?.data && transactionData.data.length === 0 && (
           <Card>
             <Card.Header size="xl">
               <Card.Group>
