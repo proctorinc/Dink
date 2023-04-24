@@ -1,13 +1,19 @@
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import { api } from "~/utils/api";
+import { type FC } from "react";
 import Button from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 
-export const AccountSummary = () => {
-  const router = useRouter();
+type AccountSummaryProps = {
+  data: {
+    count: number;
+  };
+};
 
-  const accountData = api.bankAccounts.getAllData.useQuery();
+export const AccountSummary: FC<AccountSummaryProps> = ({
+  data: accountData,
+}) => {
+  const router = useRouter();
 
   return (
     <Card horizontal onClick={() => void router.push("/accounts")}>
@@ -15,12 +21,12 @@ export const AccountSummary = () => {
         <div className="flex flex-col">
           <h3 className="text-xl font-bold">Accounts</h3>
           <span className="text-sm text-primary-light group-hover:text-primary-med">
-            {accountData.data?.count ?? "No"} linked accounts
+            {accountData.count ?? "No"} linked accounts
           </span>
         </div>
         <Button
-          title={accountData.data?.count ? "View" : "Link"}
-          icon={faArrowRight}
+          title={accountData.count ? "View" : "Link"}
+          icon={accountData.count ? faArrowRight : faPlus}
           style="secondary"
           iconRight
         />
