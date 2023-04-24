@@ -1,8 +1,10 @@
-import { faG } from "@fortawesome/free-solid-svg-icons";
+import { faCircleHalfStroke, faG } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Button from "~/components/ui/Button";
 import Header from "~/components/ui/Header";
+import LoadingPage from "~/components/ui/LoadingPage";
 import Page from "~/components/ui/Page";
 import Spinner from "~/components/ui/Spinner";
 
@@ -49,7 +51,7 @@ const Login = () => {
       </Page>
     );
   }
-  return <Spinner />;
+  return <LoadingPage />;
 };
 
 export default Login;
