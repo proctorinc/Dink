@@ -1,30 +1,55 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { type Fund, type Prisma } from "@prisma/client";
 import { useRouter } from "next/router";
+import { type FC } from "react";
 import Button from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import { ProgressBar } from "~/components/ui/Charts";
-import {
-  formatToCurrency,
-  formatToPercentage,
-  getFirstDayOfMonth,
-  getLastDayOfMonth,
-} from "~/utils";
-import { api } from "~/utils/api";
+import { formatToCurrency, formatToPercentage } from "~/utils";
 
-export const BudgetSummary = () => {
+type BudgetSummaryProps = {
+  data: {
+    overall: {
+      goal: Prisma.Decimal;
+      spent: Prisma.Decimal;
+    };
+    spending: {
+      budgets: {
+        spent: Prisma.Decimal;
+        leftover: Prisma.Decimal;
+        id: string;
+        goal: Prisma.Decimal;
+        icon: string;
+        name: string;
+        startDate: Date;
+        endDate: Date | null;
+        savingsFundId: string | null;
+        userId: string;
+        savingsFund: Fund | null;
+      }[];
+    };
+    savings: {
+      budgets: {
+        spent: Prisma.Decimal;
+        leftover: Prisma.Decimal;
+        id: string;
+        goal: Prisma.Decimal;
+        icon: string;
+        name: string;
+        startDate: Date;
+        endDate: Date | null;
+        savingsFundId: string | null;
+        userId: string;
+        savingsFund: Fund | null;
+      }[];
+    };
+  };
+};
+
+export const BudgetSummary: FC<BudgetSummaryProps> = ({ data }) => {
   const router = useRouter();
-  const today = new Date();
-  const startOfMonth = getFirstDayOfMonth(today);
-  const endOfMonth = getLastDayOfMonth(today);
-  const budgetData = api.budgets.getDataByMonth.useQuery({
-    startOfMonth,
-    endOfMonth,
-  });
 
-  if (
-    budgetData.data?.spending.budgets.length === 0 &&
-    budgetData.data?.savings.budgets.length
-  ) {
+  if (data.spending.budgets.length === 0 && data.savings.budgets.length) {
     return (
       <Card onClick={() => void router.push("/budget")}>
         <Card.Body horizontal>
@@ -49,21 +74,14 @@ export const BudgetSummary = () => {
         >
           <h3>Budget</h3>
           <h3 className="text-lg text-primary-light group-hover:text-primary-med">
-            {formatToPercentage(
-              budgetData.data?.overall.spent,
-              budgetData.data?.overall.goal
-            )}{" "}
-            Spent
+            Spent: {formatToPercentage(data.overall.spent, data.overall.goal)}
           </h3>
         </Card.Group>
         <span className="text-sm text-primary-light group-hover:text-primary-med">
-          {formatToCurrency(budgetData.data?.overall.spent)} /{" "}
-          {formatToCurrency(budgetData.data?.overall.goal)}
+          {formatToCurrency(data.overall.spent)} /{" "}
+          {formatToCurrency(data.overall.goal)}
         </span>
-        <ProgressBar
-          value={budgetData.data?.overall.spent}
-          goal={budgetData.data?.overall.goal}
-        />
+        <ProgressBar value={data.overall.spent} goal={data.overall.goal} />
       </Card.Body>
     </Card>
   );
