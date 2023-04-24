@@ -11,7 +11,7 @@ import CardCollapse, { type CardCollapseProps } from "./CardCollapse";
 import CardGroup, { type CardGroupProps } from "./CardGroup";
 import CardHeader, { type CardHeaderProps } from "./CardHeader";
 
-type CardProps = {
+export type CardProps = {
   className?: string;
   children: ReactNode;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
