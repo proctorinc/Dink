@@ -10,7 +10,6 @@ import { api } from "~/utils/api";
 import Button, { IconButton } from "../ui/Button";
 import Header from "../ui/Header";
 import Page from "../ui/Page";
-import Spinner from "../ui/Spinner";
 
 type ProfileSetupProps = {
   children: ReactNode;
@@ -42,7 +41,7 @@ export const ProfileSetup: FC<ProfileSetupProps> = ({ children }) => {
   });
 
   if (userPreferences.isLoading) {
-    return <Spinner />;
+    return <></>;
   }
 
   if (sessionData?.user && !userPreferences.data?.targetIncome) {
