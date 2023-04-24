@@ -1,24 +1,21 @@
-import { useEffect, useState } from "react";
-import {
-  accountCategories,
-  AccountCategory,
-  AccountCategoryIcons,
-} from "~/config";
-import { formatToCurrency, formatToTitleCase } from "~/utils";
+import { useState } from "react";
+import { accountCategories, type AccountCategory } from "~/config";
+import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
 import Header from "~/components/ui/Header";
-import { ButtonBar, IconButton } from "~/components/ui/Button";
-import Card from "~/components/ui/Card";
+import { ButtonBar } from "~/components/ui/Button";
 import { LineChart } from "~/components/ui/Charts";
 import Page from "~/components/ui/Page";
 import { PlaidLink } from "~/features/plaid";
-import Account from "~/features/accounts";
 import useNotifications from "~/hooks/useNotifications";
+import {
+  AccountCategoriesList,
+  AccountCategorySkeleton,
+} from "~/features/accounts";
 
 export default function BankAccounts() {
   const [open, setOpen] = useState("");
-  const { clearNotification, setErrorNotification, setLoadingNotification } =
-    useNotifications();
+  const { clearNotification, setErrorNotification } = useNotifications();
   const accountData = api.bankAccounts.getAllData.useQuery(undefined, {
     onSuccess: () => clearNotification(),
     onError: () => setErrorNotification("Failed to fetch accounts"),
@@ -27,12 +24,6 @@ export default function BankAccounts() {
   const handleOpen = (type: AccountCategory) => {
     setOpen((prev) => (prev === type ? "" : type));
   };
-
-  useEffect(() => {
-    if (accountData.isFetching) {
-      setLoadingNotification("Loading Accounts...");
-    }
-  }, [accountData, setLoadingNotification]);
 
   return (
     <Page auth title="Accounts" style="basic">
@@ -51,42 +42,20 @@ export default function BankAccounts() {
         <ButtonBar>
           <PlaidLink />
         </ButtonBar>
-        {accountCategories.map((category) => (
-          <Card key={category}>
-            <Card.Header size="xl" onClick={() => handleOpen(category)}>
-              <Card.Group size="xl" horizontal>
-                <IconButton
-                  icon={AccountCategoryIcons[category]}
-                  size="sm"
-                  iconSize="sm"
-                  style="secondary"
-                />
-                <h3 className="text-lg font-bold">
-                  {category === AccountCategory.Cash
-                    ? "Cash"
-                    : formatToTitleCase(category)}
-                </h3>
-              </Card.Group>
-              <span className="text-lg font-bold text-primary-light group-hover:text-primary-med">
-                {formatToCurrency(accountData.data?.categories[category].total)}
-              </span>
-            </Card.Header>
-            <Card.Collapse open={open === category}>
-              {accountData.data?.categories[category].accounts.map(
-                (account) => (
-                  <Account key={account.id} data={account} />
-                )
-              )}
-              {accountData.data?.categories[category].accounts.length === 0 && (
-                <Card size="sm">
-                  <Card.Body>
-                    <PlaidLink />
-                  </Card.Body>
-                </Card>
-              )}
-            </Card.Collapse>
-          </Card>
-        ))}
+        {accountData.data &&
+          accountCategories.map((category) => (
+            <AccountCategoriesList
+              key={category}
+              category={category}
+              data={accountData.data.categories[category]}
+              open={open}
+              setOpen={(category) => handleOpen(category)}
+            />
+          ))}
+        {!accountData.data &&
+          accountCategories.map((category) => (
+            <AccountCategorySkeleton key={category} category={category} />
+          ))}
       </div>
     </Page>
   );
