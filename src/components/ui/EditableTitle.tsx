@@ -29,10 +29,6 @@ const EditableTitle: FC<EditableTitleProps> = ({
     }
   };
 
-  if (value === null) {
-    return <Spinner />;
-  }
-
   if (editing) {
     return (
       <Card size="sm">
