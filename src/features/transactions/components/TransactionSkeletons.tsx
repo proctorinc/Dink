@@ -24,9 +24,6 @@ export const TransactionSkeletons = () => {
       <TransactionSkeleton />
       <TransactionSkeleton />
       <TransactionSkeleton />
-      <TransactionSkeleton />
-      <TransactionSkeleton />
-      <TransactionSkeleton />
     </>
   );
 };
