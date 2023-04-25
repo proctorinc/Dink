@@ -1,7 +1,8 @@
+import { faCircleHalfStroke } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type FC, type ReactNode } from "react";
-import LoadingPage from "../ui/LoadingPage";
 
 type AuthPageProps = {
   children: ReactNode;
@@ -19,7 +20,18 @@ const AuthPage: FC<AuthPageProps> = ({ children }) => {
     void router.push("/login");
   }
 
-  return <LoadingPage />;
+  return (
+    <>
+      {children}
+      <div className="absolute z-50 flex h-screen w-full items-center justify-center bg-primary-dark/50 backdrop-blur-sm">
+        <FontAwesomeIcon
+          size="3x"
+          className="animate-spin text-primary-light"
+          icon={faCircleHalfStroke}
+        />
+      </div>
+    </>
+  );
 };
 
 export default AuthPage;
