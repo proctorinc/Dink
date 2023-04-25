@@ -83,6 +83,21 @@ function convertLogoBufferToStringWithTransactions(
   };
 }
 
+function convertInstitutionsLogostoStrings(
+  institutions: (Institution & {
+    linkedAccounts: BankAccount[];
+  })[]
+) {
+  return institutions.map((institution) => {
+    const { logo: blob, ...institutionValues } = institution;
+
+    return {
+      ...institutionValues,
+      logo: blob ? blob?.toString("utf-8") : null,
+    };
+  });
+}
+
 export const bankAccountRouter = createTRPCRouter({
   getAllData: protectedProcedure.query(async ({ ctx }) => {
     const allAccounts = await ctx.prisma.bankAccount.findMany({
@@ -276,4 +291,17 @@ export const bankAccountRouter = createTRPCRouter({
         },
       });
     }),
+  getInstitutions: protectedProcedure.query(async ({ ctx }) => {
+    const institutions = await ctx.prisma.institution.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      include: {
+        linkedAccounts: true,
+        syncItem: true,
+      },
+    });
+
+    return convertInstitutionsLogostoStrings(institutions);
+  }),
 });
