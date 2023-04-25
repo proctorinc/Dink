@@ -5,5 +5,7 @@ export * from "./components/AccountSummarySkeleton";
 export * from "./components/AccountCategoriesList";
 export * from "./components/AccountCategorySkeleton";
 export * from "./components/CreditCardSummary";
+export * from "./components/Institution";
+export * from "./components/InstitutionSkeletons";
 
 export default Account;
