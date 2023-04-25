@@ -56,6 +56,7 @@ export const PlaidLink: FC = () => {
     <Button
       title="Account"
       icon={faPlus}
+      noShadow
       onClick={() => getLinkToken.mutate()}
     />
   );
