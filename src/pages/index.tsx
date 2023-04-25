@@ -35,6 +35,20 @@ export default function Home() {
   const accountData = api.bankAccounts.getAllData.useQuery();
   const creditAccounts = api.bankAccounts.getCreditAccounts.useQuery();
 
+  const isLoading =
+    transactionData.isLoading ||
+    budgetData.isLoading ||
+    fundsData.isLoading ||
+    accountData.isLoading ||
+    creditAccounts.isLoading;
+
+  const dataIsLoaded =
+    transactionData.data &&
+    budgetData.data &&
+    fundsData.data &&
+    accountData.data &&
+    creditAccounts.data;
+
   return (
     <Page auth title="Home">
       <Header
@@ -44,15 +58,23 @@ export default function Home() {
       {transactionData?.data && (
         <TransactionsSummary data={transactionData.data} />
       )}
-      {!transactionData.data && <TransactionsSummarySkeleton />}
-      {budgetData.data && <BudgetSummary data={budgetData.data} />}
-      {!budgetData.data && <BudgetSummarySkeleton />}
-      {fundsData.data && <SavingsSummary data={fundsData.data} />}
-      {!fundsData.data && <SavingsSummarySkeleton />}
-      {accountData.data && <AccountSummary data={accountData.data} />}
-      {!accountData.data && <AccountSummarySkeleton />}
-      {creditAccounts.data && <CreditCardSummary data={creditAccounts.data} />}
-      {!creditAccounts.data && <CreditCardSummarySkeleton />}
+      {dataIsLoaded && (
+        <>
+          <BudgetSummary data={budgetData.data} />
+          <SavingsSummary data={fundsData.data} />
+          <AccountSummary data={accountData.data} />
+          <CreditCardSummary data={creditAccounts.data} />
+        </>
+      )}
+      {isLoading && (
+        <>
+          <TransactionsSummarySkeleton />
+          <BudgetSummarySkeleton />
+          <SavingsSummarySkeleton />
+          <AccountSummarySkeleton />
+          <CreditCardSummarySkeleton />
+        </>
+      )}
     </Page>
   );
 }
