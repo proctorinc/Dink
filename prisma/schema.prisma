@@ -135,7 +135,7 @@ model TransactionPersonalFinanceCategory {
 
 model Institution {
   id             String               @id @default(cuid())
-  name           String?
+  name           String
   logo           Bytes?
   url            String?
   primaryColor   String?
