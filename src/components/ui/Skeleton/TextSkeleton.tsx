@@ -33,6 +33,7 @@ export const TextSkeleton: FC<TextSkeletonProps> = ({
 
   let textWidth = width;
   let textColor = "bg-white/60";
+  let padding = "py-0.5";
 
   if (!width && minWidth && maxWidth) {
     textWidth = randomWidth;
@@ -44,8 +45,12 @@ export const TextSkeleton: FC<TextSkeletonProps> = ({
     textColor = "bg-secondary-light/50";
   }
 
+  if (size === "xl") {
+    padding = "py-1";
+  }
+
   return (
-    <div className="py-0.5">
+    <div className={padding}>
       <div
         style={{ width: textWidth ?? "100%" }}
         className={`${height} ${textColor} w-28 animate-pulse rounded-md`}
