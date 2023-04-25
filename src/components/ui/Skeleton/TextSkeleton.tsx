@@ -45,9 +45,11 @@ export const TextSkeleton: FC<TextSkeletonProps> = ({
   }
 
   return (
-    <div
-      style={{ width: textWidth ?? "100%" }}
-      className={`${height} ${textColor} w-28 animate-pulse rounded-md`}
-    />
+    <div className="py-0.5">
+      <div
+        style={{ width: textWidth ?? "100%" }}
+        className={`${height} ${textColor} w-28 animate-pulse rounded-md`}
+      />
+    </div>
   );
 };
