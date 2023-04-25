@@ -10,6 +10,7 @@ import React, { type FC, useState } from "react";
 import { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
+import { AccountManage } from "./AccountManage";
 
 type InstitutionProps = {
   data: {
@@ -66,7 +67,8 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
           <Card.Group size="sm">
             <h3>{institution.name}</h3>
             <h3 className="text-sm font-normal text-primary-light">
-              {institution.linkedAccounts.length} Linked Accounts
+              {institution.linkedAccounts.length} Linked Account
+              {institution.linkedAccounts.length === 1 ? "" : "s"}
             </h3>
           </Card.Group>
         </Card.Group>
@@ -90,19 +92,17 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
         <div className="flex gap-1" onClick={toggleAccountsOpen}>
           <IconButton
             icon={accountsOpen ? faAngleUp : faAngleDown}
-            size="sm"
+            size="xs"
             noShadow
           />
-          <h3 className="w-full text-left font-bold text-primary-light">
+          <h3 className="w-full text-left text-sm font-bold text-primary-light">
             {accountsOpen ? "Hide" : "Show"} Accounts
           </h3>
         </div>
       </Card.Body>
       <Card.Collapse open={accountsOpen}>
         {institution.linkedAccounts.map((account) => (
-          <Card key={account.id} noShadow>
-            <Card.Body>{account.name}</Card.Body>
-          </Card>
+          <AccountManage key={account.id} data={account} />
         ))}
       </Card.Collapse>
     </Card>
