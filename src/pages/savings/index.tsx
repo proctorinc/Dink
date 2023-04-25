@@ -4,6 +4,7 @@ import { ButtonBar } from "~/components/ui/Button";
 import Button from "~/components/ui/Button/Button";
 import Header from "~/components/ui/Header";
 import Page from "~/components/ui/Page";
+import { TextSkeleton } from "~/components/ui/Skeleton";
 import Fund, { FundSkeletons, SavingsCharts } from "~/features/funds";
 import useNotifications from "~/hooks/useNotifications";
 import { formatToCurrency } from "~/utils";
@@ -23,7 +24,13 @@ export default function Funds() {
     <Page auth title="Savings">
       <Header
         title="Savings"
-        subtitle={`Total: ${formatToCurrency(fundsData?.data?.total)}`}
+        subtitle={
+          fundsData.data ? (
+            `Total: ${formatToCurrency(fundsData?.data?.total)}`
+          ) : (
+            <TextSkeleton width={200} size="xl" color="primary" />
+          )
+        }
       />
       <SavingsCharts data={fundsData?.data} />
       <ButtonBar>

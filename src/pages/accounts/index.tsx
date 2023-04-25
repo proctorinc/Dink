@@ -14,6 +14,7 @@ import {
 } from "~/features/accounts";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
+import { TextSkeleton } from "~/components/ui/Skeleton";
 
 export default function BankAccounts() {
   const router = useRouter();
@@ -32,7 +33,13 @@ export default function BankAccounts() {
       <div className="w-full px-4">
         <Header
           title="Accounts"
-          subtitle={`Net worth: ${formatToCurrency(accountData.data?.total)}`}
+          subtitle={
+            accountData.data ? (
+              `Net worth: ${formatToCurrency(accountData.data?.total)}`
+            ) : (
+              <TextSkeleton width={250} size="xl" color="primary" />
+            )
+          }
         />
       </div>
       <div className="flex h-40 w-full flex-col">
