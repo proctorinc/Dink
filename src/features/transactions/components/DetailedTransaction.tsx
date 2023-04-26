@@ -1,22 +1,11 @@
-import {
-  type BankAccount,
-  type TransactionCategory,
-  type TransactionLocation,
-  type TransactionPaymentMetadata,
-  type TransactionPersonalFinanceCategory,
-  type Transaction,
-} from "@prisma/client";
+import { type Transaction, type TransactionSource } from "@prisma/client";
 import { type FC } from "react";
 import Card from "~/components/ui/Card";
 import { formatToCurrency } from "~/utils";
 
 type DetailedTransactionProps = {
   data: Transaction & {
-    personalFinanceCategory: TransactionPersonalFinanceCategory | null;
-    paymentMetadata: TransactionPaymentMetadata | null;
-    location: TransactionLocation | null;
-    category: TransactionCategory[];
-    account: BankAccount | null;
+    source: TransactionSource | null;
   };
 };
 
