@@ -3,7 +3,6 @@ import {
   faAngleUp,
   faPlus,
   faRedo,
-  faTags,
 } from "@fortawesome/free-solid-svg-icons";
 import { useMonthContext } from "~/hooks/useMonthContext";
 import { ButtonBar, IconButton } from "~/components/ui/Button";
@@ -62,13 +61,6 @@ export default function Budgets() {
             style="secondary"
           />
         )}
-        <Button
-          title="Transactions"
-          icon={faTags}
-          onClick={() => {
-            void router.push("/transactions/categorize");
-          }}
-        />
       </ButtonBar>
       <MonthYearSelector />
       {!budgetData.data && <BudgetSkeletons />}
