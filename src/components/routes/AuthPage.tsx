@@ -23,7 +23,7 @@ const AuthPage: FC<AuthPageProps> = ({ children }) => {
   return (
     <>
       {children}
-      <div className="absolute z-50 flex h-screen w-full items-center justify-center bg-primary-dark/50 backdrop-blur-sm">
+      <div className="absolute z-50 flex h-screen w-full items-center justify-center bg-primary-dark/60 backdrop-blur-sm">
         <FontAwesomeIcon
           size="3x"
           className="animate-spin text-primary-light"
