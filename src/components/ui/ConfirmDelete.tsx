@@ -40,7 +40,7 @@ const ConfirmDelete: FC<ConfirmDeleteProps> = ({
         />
       )}
       {clickedDelete && (
-        <Card>
+        <Card noShadow>
           <Card.Body>
             <Card.Group>
               <label htmlFor="name-input" className="text-primary-light">
