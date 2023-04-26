@@ -1,17 +1,21 @@
-import { faGear, faToggleOn } from "@fortawesome/free-solid-svg-icons";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { type BankAccount } from "@prisma/client";
-import { type FC } from "react";
+import { type MouseEventHandler, type FC } from "react";
 import { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 
 type AccountManageProps = {
   data: BankAccount;
+  onClick?: MouseEventHandler<HTMLDivElement>;
 };
 
-export const AccountManage: FC<AccountManageProps> = ({ data: account }) => {
+export const AccountManage: FC<AccountManageProps> = ({
+  data: account,
+  onClick,
+}) => {
   return (
-    <Card noShadow onClick={() => console.log("Account Settings Modal")}>
+    <Card noShadow onClick={onClick}>
       <Card.Body horizontal>
         <Card.Group horizontal className="w-full">
           <Card.Group size="sm" className="grow">
