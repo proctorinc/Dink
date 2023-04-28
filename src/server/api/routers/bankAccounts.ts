@@ -86,6 +86,7 @@ function convertLogoBufferToStringWithTransactions(
 function convertInstitutionsLogostoStrings(
   institutions: (Institution & {
     linkedAccounts: BankAccount[];
+    syncItem: InstitutionSyncItem | null;
   })[]
 ) {
   return institutions.map((institution) => {
