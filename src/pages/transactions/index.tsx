@@ -201,11 +201,13 @@ const TransactionsPage = () => {
             ))}
         </div>
       </Page>
-      {modalOpen && (
-        <Modal title="Categorize" onClose={() => setModalOpen(false)}>
-          <CategorizeTransactions transactions={transactionData.data ?? []} />
-        </Modal>
-      )}
+      <Modal
+        open={modalOpen}
+        title="Categorize"
+        onClose={() => setModalOpen(false)}
+      >
+        <CategorizeTransactions transactions={transactionData.data ?? []} />
+      </Modal>
     </>
   );
 };
