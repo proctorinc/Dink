@@ -1,11 +1,7 @@
-import {
-  faPencil,
-  faSquareCheck,
-  faSquareXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import { useState, type FC } from "react";
-import { IconButton } from "./Button";
-import Card from "./Card";
+import Button, { IconButton } from "./Button";
+import Modal from "./Modal";
 
 type EditableTitleProps = {
   value?: string;
@@ -21,47 +17,35 @@ const EditableTitle: FC<EditableTitleProps> = ({
   const [value, setValue] = useState(initialValue);
   const [editing, setEditing] = useState(false);
 
-  const handleUpdate = (updatedValue?: string) => {
-    if (updatedValue) {
-      onUpdate(updatedValue);
+  const handleUpdate = () => {
+    if (value) {
+      onUpdate(value);
       setEditing(false);
     }
   };
 
-  if (editing) {
-    return (
-      <Card size="sm">
-        <Card.Body horizontal>
-          <input
-            id="input"
-            placeholder={"Enter name..."}
-            className="bg-primary-med text-xl font-bold text-primary-light placeholder-primary-light"
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-          />
-          {!!value && value.length > 0 && (
-            <IconButton
-              icon={faSquareCheck}
-              size="xs"
-              onClick={() => handleUpdate(value)}
-            />
-          )}
-          {value?.length === 0 && (
-            <IconButton
-              icon={faSquareXmark}
-              size="xs"
-              onClick={() => setEditing(false)}
-            />
-          )}
-        </Card.Body>
-      </Card>
-    );
-  }
   return (
-    <div className="flex gap-2">
-      <h3 className={className}>{value}</h3>
-      <IconButton icon={faPencil} size="xs" onClick={() => setEditing(true)} />
-    </div>
+    <>
+      <div className="flex items-center gap-2">
+        <h3 className={className}>{value}</h3>
+        <IconButton
+          className="aspect-square h-6 w-6"
+          icon={faPencil}
+          size="xs"
+          onClick={() => setEditing(true)}
+        />
+      </div>
+      <Modal title="Edit" open={editing} onClose={() => setEditing(false)}>
+        <input
+          id="input"
+          placeholder={"..."}
+          className="rounded-xl bg-primary-light/50 p-2 text-xl font-bold text-primary-dark placeholder-primary-light"
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+        />
+        <Button title="Confirm" onClick={handleUpdate} style="secondary" />
+      </Modal>
+    </>
   );
 };
 
