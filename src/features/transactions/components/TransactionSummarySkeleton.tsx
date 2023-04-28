@@ -8,7 +8,7 @@ export const TransactionsSummarySkeleton = () => {
       <Card.Body horizontal>
         <div className="flex flex-col">
           <h3 className="text-xl font-bold text-white/60">Transactions</h3>
-          <TextSkeleton color="primary" width={125} />
+          <TextSkeleton color="primary" size="sm" width={125} />
         </div>
         <Button className="w-36" style="secondary" />
       </Card.Body>
