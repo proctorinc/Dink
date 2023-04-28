@@ -34,7 +34,7 @@ export const IconButton: FC<IconButtonProps> = ({
   if (size === "sm") {
     innerIconSize = "lg";
   } else if (size === "xs") {
-    innerIconSize = "xs";
+    innerIconSize = "2xs";
   }
 
   let iconStyle =
