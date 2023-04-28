@@ -26,7 +26,7 @@ export const TextSkeleton: FC<TextSkeletonProps> = ({
   if (size === "sm") {
     height = "h-4";
   } else if (size === "xs") {
-    height = "h-2";
+    height = "h-3";
   } else if (size === "xl") {
     height = "h-6";
   }
