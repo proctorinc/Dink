@@ -28,7 +28,7 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = ({
   const router = useRouter();
 
   return (
-    <Card onClick={() => void router.push("/transactions/categorize")}>
+    <Card onClick={() => void router.push("/transactions")}>
       <Card.Body horizontal>
         <div className="flex flex-col">
           <h3 className="text-xl font-bold">Transactions</h3>
