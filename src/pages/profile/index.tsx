@@ -38,7 +38,7 @@ const UserPage = () => {
       <div className="flex items-center gap-2">
         {sessionData?.user.image && (
           <Image
-            className="w-30 rounded-full ring ring-primary-med"
+            className="w-20 rounded-full shadow-lg"
             width={100}
             height={100}
             src={`${sessionData.user.image}?sz=256`}
