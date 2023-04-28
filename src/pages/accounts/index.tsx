@@ -53,7 +53,7 @@ export default function BankAccounts() {
             icon={faGear}
             onClick={() => void router.push("/accounts/manage")}
           />
-          <PlaidLink />
+          <PlaidLink style="secondary" />
         </ButtonBar>
         {accountData.data &&
           accountCategories.map((category) => (
