@@ -261,12 +261,12 @@ export const budgetsRouter = createTRPCRouter({
         return Decimal.add(acc, source.transaction.amount);
       }, new Decimal(0));
 
-      const leftover = Decimal.sub(goal, spent);
+      const leftover = Decimal.add(goal, spent);
 
       return {
         ...budgetFields,
         sourceTransactions,
-        spent,
+        spent: Decimal.mul(spent, new Decimal(-1)),
         goal,
         leftover,
       };
