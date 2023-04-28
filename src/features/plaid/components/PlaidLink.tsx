@@ -5,7 +5,11 @@ import Button from "~/components/ui/Button";
 import useNotifications from "~/hooks/useNotifications";
 import { api } from "~/utils/api";
 
-export const PlaidLink: FC = () => {
+type PlaidLinkProps = {
+  style?: "primary" | "secondary";
+};
+
+export const PlaidLink: FC<PlaidLinkProps> = ({ style }) => {
   const ctx = api.useContext();
   const [linkToken, setLinkToken] = useState<string | null>(null);
 
@@ -56,6 +60,7 @@ export const PlaidLink: FC = () => {
     <Button
       title="Account"
       icon={faPlus}
+      style={style}
       noShadow
       onClick={() => getLinkToken.mutate()}
     />
