@@ -1,17 +1,17 @@
 import {
-  faAngleDown,
   faAngleUp,
   faBuildingColumns,
   faGear,
   faToggleOn,
 } from "@fortawesome/free-solid-svg-icons";
-import { type BankAccount } from "@prisma/client";
+import { type InstitutionSyncItem, type BankAccount } from "@prisma/client";
 import Image from "next/image";
 import React, { type FC, useState } from "react";
 import { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
 import Modal from "~/components/ui/Modal";
+import Account from "./Account";
 import { AccountManage } from "./AccountManage";
 
 type InstitutionProps = {
@@ -23,19 +23,16 @@ type InstitutionProps = {
     primaryColor: string | null;
     userId: string;
     linkedAccounts: BankAccount[];
+    syncItem: InstitutionSyncItem | null;
   };
 };
 
 export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [accountsOpen, setAccountsOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<BankAccount | null>(
     null
   );
 
-  const toggleAccountsOpen = () => {
-    setAccountsOpen((prev) => !prev);
-  };
   const toggleSettingsOpen = () => {
     setSettingsOpen((prev) => !prev);
   };
@@ -43,7 +40,7 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
   return (
     <>
       <Card key={institution.id}>
-        <Card.Header>
+        <Card.Header size="xl" onClick={toggleSettingsOpen}>
           <Card.Group horizontal>
             {!institution?.logo && !institution?.url && (
               <div className="flex aspect-square h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary-dark shadow-xl">
@@ -72,7 +69,7 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
             )}
             <Card.Group size="sm">
               <h3>{institution.name}</h3>
-              <h3 className="text-sm font-normal text-primary-light">
+              <h3 className="text-sm font-normal text-primary-light group-hover:text-primary-med">
                 {institution.linkedAccounts.length} Linked Account
                 {institution.linkedAccounts.length === 1 ? "" : "s"}
               </h3>
@@ -80,6 +77,7 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
           </Card.Group>
           <IconButton
             icon={settingsOpen ? faAngleUp : faGear}
+            className="group-hover:text-primary-med"
             noShadow
             size="sm"
             onClick={toggleSettingsOpen}
@@ -93,20 +91,6 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
               onDelete={() => console.log("delete")}
             />
           </Card.Body>
-        </Card.Collapse>
-        <Card.Body>
-          <div className="flex gap-1" onClick={toggleAccountsOpen}>
-            <IconButton
-              icon={accountsOpen ? faAngleUp : faAngleDown}
-              size="xs"
-              noShadow
-            />
-            <h3 className="w-full text-left text-sm font-bold text-primary-light">
-              {accountsOpen ? "Hide" : "Show"} Accounts
-            </h3>
-          </div>
-        </Card.Body>
-        <Card.Collapse open={accountsOpen}>
           {institution.linkedAccounts.map((account) => (
             <AccountManage
               key={account.id}
@@ -116,23 +100,36 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
           ))}
         </Card.Collapse>
       </Card>
-      {selectedAccount && (
-        <Modal
-          title={selectedAccount.name}
-          onClose={() => setSelectedAccount(null)}
-        >
-          <ConfirmDelete
-            confirmationText={selectedAccount.name}
-            onDelete={() => console.log("Delete Account")}
-          />
+      <Modal
+        title="Manage Account"
+        open={!!selectedAccount}
+        onClose={() => setSelectedAccount(null)}
+      >
+        {!!selectedAccount && (
+          <Account data={{ ...selectedAccount, institution }} />
+        )}
+        <div className="flex flex-col gap-2">
+          <h1 className="text-left text-xl font-bold">Settings:</h1>
           <Card noShadow size="sm" onClick={() => console.log("ok")}>
-            <Card.Body horizontal>
-              <h3 className="text-lg">Hide from Savings</h3>
+            <Card.Group horizontal className="justify-between">
+              <h3 className="text-primary-light">Setting #1</h3>
               <IconButton icon={faToggleOn} noShadow />
-            </Card.Body>
+            </Card.Group>
           </Card>
-        </Modal>
-      )}
+          <Card noShadow size="sm" onClick={() => console.log("ok")}>
+            <Card.Group horizontal className="justify-between">
+              <h3 className="text-primary-light">Setting #2</h3>
+              <IconButton icon={faToggleOn} noShadow />
+            </Card.Group>
+          </Card>
+          <Card noShadow size="sm" onClick={() => console.log("ok")}>
+            <Card.Group horizontal className="justify-between">
+              <h3 className="text-primary-light">Setting #3</h3>
+              <IconButton icon={faToggleOn} noShadow />
+            </Card.Group>
+          </Card>
+        </div>
+      </Modal>
     </>
   );
 };
