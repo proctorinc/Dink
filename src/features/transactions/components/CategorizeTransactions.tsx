@@ -13,7 +13,6 @@ import Budget from "~/features/budgets";
 import Fund from "~/features/funds";
 import Button, { IconButton } from "~/components/ui/Button";
 import { type Transaction, type TransactionSource } from "@prisma/client";
-import Spinner from "~/components/ui/Spinner";
 
 type CategorizeTransactionsProps = {
   transactions: (Transaction & {
@@ -29,7 +28,6 @@ type CategorizeTransactionsProps = {
 export const CategorizeTransactions: FC<CategorizeTransactionsProps> = ({
   transactions,
 }) => {
-  const [loading, setLoading] = useState(false);
   const [type, setType] = useState<string | null>(null);
   const ctx = api.useContext();
   const fundsData = api.funds.getAllData.useQuery();
@@ -43,19 +41,16 @@ export const CategorizeTransactions: FC<CategorizeTransactionsProps> = ({
   }, [transactions]);
   const categorizeAsBudget = api.transactions.categorizeAsBudget.useMutation({
     onSuccess: () => {
-      setLoading(false);
       void ctx.invalidate();
     },
   });
   const categorizeAsFund = api.transactions.categorizeAsFund.useMutation({
     onSuccess: () => {
-      setLoading(false);
       void ctx.invalidate();
     },
   });
   const categorizeAsIncome = api.transactions.categorizeAsIncome.useMutation({
     onSuccess: () => {
-      setLoading(false);
       void ctx.invalidate();
     },
   });
@@ -65,7 +60,6 @@ export const CategorizeTransactions: FC<CategorizeTransactionsProps> = ({
     : null;
 
   const selectById = (sourceId: string) => {
-    setLoading(true);
     if (type === "fund") {
       categorizeAsFund.mutate({
         transactionId: current?.id ?? "",
@@ -81,28 +75,11 @@ export const CategorizeTransactions: FC<CategorizeTransactionsProps> = ({
   };
 
   const selectIncome = () => {
-    setLoading(true);
     categorizeAsIncome.mutate({ id: current?.id ?? "" });
   };
 
-  if (loading) {
-    return (
-      <div className="flex h-96 items-center justify-center">
-        <Spinner />
-      </div>
-    );
-  }
-
-  if (!uncategorizedTransactions) {
-    return (
-      <div className="flex h-96 items-center justify-center">
-        <div>No Transactions</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex h-96 flex-col items-center justify-center gap-4 overflow-y-scroll">
+    <div className="flex flex-col items-center justify-center gap-4 overflow-y-scroll">
       <div className="flex w-full flex-col gap-2">
         {uncategorizedTransactions?.length > 0 &&
           uncategorizedTransactions[0] && (
@@ -121,29 +98,29 @@ export const CategorizeTransactions: FC<CategorizeTransactionsProps> = ({
               <h3>Choose a {type ?? "category"}:</h3>
             </Card.Header>
             <Card.Collapse open={!type}>
-              <Card onClick={() => setType("fund")}>
-                <Card.Header size="xl">
+              <Card size="sm" noShadow onClick={() => setType("fund")}>
+                <Card.Body horizontal>
                   <Card.Group horizontal>
                     <IconButton icon={faPiggyBank} style="secondary" />
-                    <h3>Fund</h3>
+                    <h3 className="text-xl font-bold">Fund</h3>
                   </Card.Group>
-                </Card.Header>
+                </Card.Body>
               </Card>
-              <Card noShadow onClick={() => setType("budget")}>
-                <Card.Header size="xl">
+              <Card size="sm" noShadow onClick={() => setType("budget")}>
+                <Card.Body horizontal>
                   <Card.Group horizontal>
                     <IconButton icon={faCalendarAlt} style="secondary" />
-                    <h3>Budget</h3>
+                    <h3 className="text-xl font-bold">Budget</h3>
                   </Card.Group>
-                </Card.Header>
+                </Card.Body>
               </Card>
-              <Card noShadow onClick={selectIncome}>
-                <Card.Header size="xl">
+              <Card size="sm" noShadow onClick={selectIncome}>
+                <Card.Body horizontal>
                   <Card.Group horizontal>
                     <IconButton icon={faSackDollar} style="secondary" />
-                    <h3>Income</h3>
+                    <h3 className="text-xl font-bold">Income</h3>
                   </Card.Group>
-                </Card.Header>
+                </Card.Body>
               </Card>
             </Card.Collapse>
             <Card.Collapse open={type === "budget"} className="rounded-xl">
