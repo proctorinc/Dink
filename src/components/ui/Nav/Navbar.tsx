@@ -27,12 +27,12 @@ const Navbar = () => {
           </button>
           {sessionData?.user && (
             <button
-              className="aspect-square w-10 rounded-full bg-secondary-dark text-secondary-med shadow-lg hover:bg-secondary-med hover:text-secondary-light"
+              className="aspect-square w-10 rounded-full shadow-lg"
               onClick={() => void router.push("/profile")}
             >
               {sessionData?.user.image && (
                 <Image
-                  className="w-full rounded-full border-2 border-primary-med"
+                  className="w-full rounded-full shadow-lg"
                   width={10}
                   height={10}
                   src={sessionData?.user.image}
@@ -40,6 +40,9 @@ const Navbar = () => {
                 />
               )}
             </button>
+          )}
+          {!sessionData?.user && (
+            <div className="aspect-square w-10 animate-pulse rounded-full bg-primary-med/50 shadow-lg" />
           )}
         </div>
       </nav>
