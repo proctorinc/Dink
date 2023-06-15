@@ -1,55 +1,63 @@
-import { faG } from "@fortawesome/free-solid-svg-icons";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { faEnvelope, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { type GetServerSideProps } from "next";
+import { getSession, signIn } from "next-auth/react";
 import Button from "~/components/ui/Button";
 import Header from "~/components/ui/Header";
-import LoadingPage from "~/components/ui/LoadingPage";
 import Page from "~/components/ui/Page";
 
 const Login = () => {
-  const { data: sessionData } = useSession();
-  const router = useRouter();
-  const { from } = router.query;
+  return (
+    <Page title="Login" style="centered">
+      <div className="w-full max-w-sm px-4">
+        <Header title="Login" />
+      </div>
+      <div className="flex w-full max-w-sm flex-col gap-4 px-4 pt-10">
+        <Button
+          title="Try the Demo"
+          className="w-full"
+          style="secondary"
+          icon={faPaperPlane}
+          onClick={() => void signIn("google")}
+        />
+        <div className="flex items-center justify-center gap-3 py-2">
+          <div className="h-0.5 w-full rounded-full bg-primary-med" />
+          <span className="text-xs font-bold text-primary-light">OR</span>
+          <div className="h-0.5 w-full rounded-full bg-primary-med" />
+        </div>
+        <Button
+          title="Request Access"
+          className="w-full"
+          style="primary"
+          icon={faEnvelope}
+          disabled
+          onClick={() =>
+            alert("This functionality has not been implemented yet")
+          }
+        />
+      </div>
+    </Page>
+  );
+};
 
-  if (sessionData?.user) {
-    if (from && typeof from === "string") {
-      console.log(`Redirect to ${from}`);
-      void router.push(`${from}`);
-    }
-    void router.push("/");
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
+  const session = await getSession({ req });
+  const from = query.from;
+
+  if (session) {
+    return {
+      redirect: {
+        destination: from ?? "/",
+        permanent: false,
+      },
+    };
   }
 
-  if (!sessionData?.user) {
-    return (
-      <Page title="Login" style="centered">
-        <div className="w-full px-4">
-          <Header title="Login" />
-        </div>
-        <div className="flex w-full flex-col gap-4 px-4 pt-10">
-          <Button
-            title="Login with Google"
-            className="w-full"
-            style="secondary"
-            icon={faG}
-            onClick={() => void signIn("google")}
-          />
-          <div className="flex items-center justify-center gap-3 py-2">
-            <div className="h-0.5 w-full rounded-full bg-primary-med" />
-            <span className="text-xs font-bold text-primary-light">OR</span>
-            <div className="h-0.5 w-full rounded-full bg-primary-med" />
-          </div>
-          <Button
-            title="Try Demo"
-            className="w-full"
-            style="primary"
-            onClick={() => void signIn("google")}
-            disabled
-          />
-        </div>
-      </Page>
-    );
-  }
-  return <LoadingPage />;
+  return {
+    props: {},
+  };
 };
 
 export default Login;
