@@ -15,11 +15,15 @@ import {
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { TextSkeleton } from "~/components/ui/Skeleton";
+import { useSession } from "next-auth/react";
+import { Notification } from "~/components/ui/Notification/Notification";
 
 export default function BankAccounts() {
   const router = useRouter();
+  const { data: sessionData } = useSession();
   const [open, setOpen] = useState("");
   const { setErrorNotification } = useNotifications();
+
   const accountData = api.bankAccounts.getAllData.useQuery(undefined, {
     onError: () => setErrorNotification("Failed to fetch accounts"),
   });
@@ -30,6 +34,12 @@ export default function BankAccounts() {
 
   return (
     <Page auth title="Accounts" style="basic">
+      {sessionData?.user.role === "demo" && (
+        <Notification
+          type="info"
+          message="Only sample accounts are available for the demo"
+        />
+      )}
       <div className="w-full px-4">
         <Header
           title="Accounts"
