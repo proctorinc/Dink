@@ -13,7 +13,50 @@ import {
 } from "./queries/items";
 import { exchangePublicToken } from "./queries/tokens";
 import { syncTransactions } from "./update_transactions";
-import institutions from "../../../data/institutions.json";
+import institutionsJson from "../../../data/institutions.json";
+import savingsFundsJson from "../../../data/savings.json";
+import budgetsJson from "../../../data/budgets.json";
+import { getFirstDayOfMonth } from "~/utils";
+
+const demoInstitutionsSchema = z
+  .object({
+    name: z.string(),
+    logo: z.string(),
+    url: z.string(),
+    primaryColor: z.string(),
+    accounts: z
+      .object({
+        available: z.number(),
+        current: z.number(),
+        isoCurrencyCode: z.string(),
+        unofficialCurrencyCode: z.string(),
+        creditLimit: z.number(),
+        mask: z.string(),
+        name: z.string(),
+        officialName: z.string(),
+        subtype: z.string(),
+        type: z.string(),
+        creditClosingDay: z.number(),
+        ignore: z.boolean(),
+      })
+      .array(),
+  })
+  .array();
+
+const demoFundsSchema = z
+  .object({
+    icon: z.string(),
+    name: z.string(),
+  })
+  .array();
+
+const demoBudgetsSchema = z
+  .object({
+    goal: z.number(),
+    icon: z.string(),
+    name: z.string(),
+  })
+  .array();
 
 export const plaidRouter = createTRPCRouter({
   getLinkToken: userProcedure.mutation(async ({ ctx }) => {
@@ -60,15 +103,85 @@ export const plaidRouter = createTRPCRouter({
 
       await syncTransactions(userId, itemId);
     }),
-  loadDemoData: protectedProcedure.mutation(({ ctx }) => {
-    const userId = ctx.session.user.id;
-    // Create Institutions
-    institutions.map((institution) => console.log(institution));
+  loadDemoData: protectedProcedure.query(({ ctx }) => {
+    // Confirm that demo data has not been updated already
+    // Then upsert the demo data
 
-    // Create bank accounts
-    // Create transactions
-    // Create savings funds
-    // Create budgets
+    if (ctx.session.user.role === "demo") {
+      const userId = ctx.session.user.id;
+      const institutions = demoInstitutionsSchema.parse(institutionsJson);
+
+      // Create Institutions and bank accounts
+      institutions.map(async (institutionData) => {
+        const itemId = `${userId}-demo-${institutionData.name}`;
+        const institution = await ctx.prisma.institution.create({
+          data: {
+            name: institutionData.name,
+            logo: Buffer.from(String(institutionData.logo), "utf-8"),
+            url: institutionData.url,
+            primaryColor: institutionData.primaryColor,
+            syncItem: {
+              create: {
+                plaidId: itemId,
+                accessToken: "demo",
+                status: "demo",
+              },
+            },
+            user: {
+              connect: { id: userId },
+            },
+          },
+        });
+        institutionData.accounts.map(async (bankAccount) => {
+          await ctx.prisma.bankAccount.create({
+            data: {
+              plaidId: `${userId}-demo-${bankAccount.name}`,
+              ...bankAccount,
+              user: {
+                connect: { id: userId },
+              },
+              institution: {
+                connect: { id: institution.id },
+              },
+            },
+          });
+        });
+      });
+
+      const savingsFunds = demoFundsSchema.parse(savingsFundsJson);
+
+      // Create transactions
+      // Create savings funds
+      savingsFunds.map(async (fund) => {
+        await ctx.prisma.fund.create({
+          data: {
+            icon: fund.icon,
+            name: fund.name,
+            user: {
+              connect: { id: userId },
+            },
+          },
+        });
+      });
+
+      const budgets = demoBudgetsSchema.parse(budgetsJson);
+
+      // Create budgets
+      budgets.map(async (budget) => {
+        await ctx.prisma.budget.create({
+          data: {
+            icon: budget.icon,
+            name: budget.name,
+            goal: budget.goal,
+            startDate: getFirstDayOfMonth(new Date()),
+            user: {
+              connect: { id: userId },
+            },
+          },
+        });
+      });
+    }
+
     return true;
   }),
 });
