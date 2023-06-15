@@ -24,6 +24,7 @@ type AccountProps = {
 const Account: FC<AccountProps> = ({ data: account }) => {
   const router = useRouter();
 
+  console.log(account?.institution.logo);
   return (
     <Card
       onClick={() => void router.push(`/accounts/${account?.id ?? ""}`)}
@@ -36,7 +37,7 @@ const Account: FC<AccountProps> = ({ data: account }) => {
               <IconButton icon={faBuildingColumns} />
             </div>
           )}
-          {account?.institution.logo !== "null" && (
+          {account?.institution.logo && (
             <Image
               className="w-10 rounded-full shadow-xl"
               width={100}
@@ -47,7 +48,7 @@ const Account: FC<AccountProps> = ({ data: account }) => {
               alt="logo"
             />
           )}
-          {account?.institution.logo === "null" && account.institution.url && (
+          {!account?.institution.logo && account.institution.url && (
             <Image
               className="w-10 rounded-full bg-white shadow-xl"
               width={100}
