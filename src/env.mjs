@@ -22,8 +22,9 @@ const server = z.object({
   GOOGLE_CLIENT_SECRET: z.string(),
   PLAID_ENV: z.string(),
   PLAID_CLIENT_ID: z.string(),
-  PLAID_DEV_SECRET: z.string(),
-  PLAID_SANDBOX_SECRET: z.string(),
+  PLAID_DEV_SECRET: z.string().optional(),
+  PLAID_SANDBOX_SECRET: z.string().optional(),
+  PLAID_PROD_SECRET: z.string().optional(),
 });
 
 /**
@@ -51,6 +52,7 @@ const processEnv = {
   PLAID_CLIENT_ID: process.env.PLAID_CLIENT_ID,
   PLAID_DEV_SECRET: process.env.PLAID_DEV_SECRET,
   PLAID_SANDBOX_SECRET: process.env.PLAID_SANDBOX_SECRET,
+  PLAID_PROD_SECRET: process.env.PLAID_PROD_SECRET,
 };
 
 // Don't touch the part below
