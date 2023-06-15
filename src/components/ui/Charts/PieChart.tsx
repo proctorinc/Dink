@@ -7,9 +7,15 @@ type PieChartProps = {
   data: unknown[];
   progress?: boolean;
   floatRight?: boolean;
+  style?: "dark";
 };
 
-export const PieChart: FC<PieChartProps> = ({ data, progress, floatRight }) => {
+export const PieChart: FC<PieChartProps> = ({
+  data,
+  progress,
+  floatRight,
+  style,
+}) => {
   const theme = {
     fontSize: 15,
   };
@@ -47,7 +53,9 @@ export const PieChart: FC<PieChartProps> = ({ data, progress, floatRight }) => {
     <ResponsivePie
       theme={theme}
       data={data}
-      colors={progress ? ["#00C6C5", "#3D3F71"] : []}
+      colors={
+        progress ? ["#00C6C5", style === "dark" ? "#292B4C" : "#3D3F71"] : []
+      }
       defs={patterns}
       fill={
         progress
