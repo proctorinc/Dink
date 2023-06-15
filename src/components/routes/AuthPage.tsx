@@ -12,12 +12,18 @@ const AuthPage: FC<AuthPageProps> = ({ children }) => {
   const { status } = useSession();
 
   if (typeof window !== "undefined" && status === "unauthenticated") {
-    void router.push({
-      pathname: "/login",
-      query: {
-        from: router.pathname,
-      },
-    });
+    if (router.pathname === "/") {
+      void router.push({
+        pathname: "/login",
+      });
+    } else {
+      void router.push({
+        pathname: "/login",
+        query: {
+          from: router.pathname,
+        },
+      });
+    }
   }
 
   if (typeof window !== "undefined" && status === "authenticated") {
