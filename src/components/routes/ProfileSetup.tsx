@@ -21,35 +21,37 @@ export const ProfileSetup: FC<ProfileSetupProps> = ({ children }) => {
   const { setLoadingNotification, setErrorNotification, clearNotification } =
     useNotifications();
 
-  const [name, setName] = useState("");
+  const [nameComplete, setNameComplete] = useState(false);
+  const [profileComplete, setProfileComplete] = useState(false);
+  const [nickname, setNickname] = useState("");
   const [income, setIncome] = useState(0);
 
-  const userPreferences = api.users.getUserPreferences.useQuery();
-  const updateNickname = api.users.updateNickname.useMutation({
-    onSuccess: () => {
-      clearNotification();
-      void ctx.invalidate();
-    },
-    onError: () => setErrorNotification("Failed to update name"),
-  });
-  const updateIncome = api.users.updateTargetIncome.useMutation({
-    onSuccess: () => {
-      clearNotification();
-      void ctx.invalidate();
-    },
-    onError: () => setErrorNotification("Failed to update name"),
+  const loadDemoData = api.plaid.loadDemoData.useMutation({
+    onError: () => setErrorNotification("Failed to load demo data"),
   });
 
-  if (userPreferences.isLoading) {
-    return <>{children}</>;
-  }
+  const completeProfile = api.users.completeProfile.useMutation({
+    onSuccess: () => {
+      setProfileComplete(true);
+      clearNotification();
+      if (sessionData?.user.role === "demo") {
+        loadDemoData.mutate();
+      }
+      void ctx.invalidate();
+    },
+    onError: () => setErrorNotification("Failed to update profile. Try again"),
+  });
 
-  if (sessionData?.user && !userPreferences.data?.targetIncome) {
+  if (
+    !profileComplete &&
+    sessionData?.user &&
+    !sessionData.user.isProfileComplete
+  ) {
     return (
       <Page auth title="Get Started" style="centered">
         <Header title="Welcome!" subtitle="Let's get started" />
         <div className="flex w-full flex-col gap-4 pt-10">
-          {!sessionData?.user.nickname && (
+          {!nameComplete && (
             <>
               <h3 className="text-xl font-bold">Enter your name:</h3>
               <div className="relative w-full">
@@ -57,8 +59,8 @@ export const ProfileSetup: FC<ProfileSetupProps> = ({ children }) => {
                   id="name-input"
                   placeholder="Enter your name..."
                   className="relative w-full rounded-lg bg-primary-med py-2 pr-4 pl-10 font-bold text-primary-light placeholder-primary-light ring ring-primary-med focus:placeholder-primary-med"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
+                  value={nickname}
+                  onChange={(event) => setNickname(event.target.value)}
                 />
                 <IconButton
                   className="absolute top-0 h-full"
@@ -72,13 +74,12 @@ export const ProfileSetup: FC<ProfileSetupProps> = ({ children }) => {
                 icon={faArrowRight}
                 iconRight
                 onClick={() => {
-                  updateNickname.mutate({ name });
-                  setLoadingNotification("Updating name...");
+                  setNameComplete(true);
                 }}
               />
             </>
           )}
-          {sessionData?.user.nickname && (
+          {nameComplete && (
             <>
               <h3 className="text-xl font-bold">Enter your monthly income:</h3>
               <div className="relative w-full">
@@ -101,8 +102,8 @@ export const ProfileSetup: FC<ProfileSetupProps> = ({ children }) => {
                 icon={faArrowRight}
                 iconRight
                 onClick={() => {
-                  updateIncome.mutate({ income });
-                  setLoadingNotification("Updating income...");
+                  completeProfile.mutate({ income, nickname });
+                  setLoadingNotification("Updating profile...");
                 }}
               />
             </>
