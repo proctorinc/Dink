@@ -8,7 +8,6 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
-import { type UserPreferences } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -20,14 +19,16 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      role: string;
       nickname: string;
-      preferences: UserPreferences;
+      isProfileComplete: boolean;
     } & DefaultSession["user"];
   }
 
   interface User {
     nickname: string;
-    preferences: UserPreferences;
+    role: string;
+    isProfileComplete: boolean;
   }
 }
 
@@ -41,8 +42,9 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        session.user.role = user.role;
         session.user.nickname = user.nickname;
-        session.user.preferences = user.preferences;
+        session.user.isProfileComplete = user.isProfileComplete;
       }
       return session;
     },
