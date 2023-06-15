@@ -22,7 +22,11 @@ const config = {
   },
 
   images: {
-    domains: ["lh3.googleusercontent.com", "s2.googleusercontent.com"],
+    domains: [
+      "lh3.googleusercontent.com",
+      "s2.googleusercontent.com",
+      "dink-proctorinc.vercel.app",
+    ],
   },
 };
 export default config;
