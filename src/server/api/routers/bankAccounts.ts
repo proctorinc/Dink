@@ -12,7 +12,11 @@ import {
 import { Decimal } from "@prisma/client/runtime";
 import { z } from "zod";
 import { AccountCategory } from "~/config";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  userProcedure,
+} from "~/server/api/trpc";
 
 type NetMonthlySpending = {
   month: string;
@@ -282,7 +286,7 @@ export const bankAccountRouter = createTRPCRouter({
         ? convertLogoBufferToStringWithTransactions(account)
         : null;
     }),
-  delete: protectedProcedure
+  delete: userProcedure
     .input(z.object({ accountId: z.string() }))
     .mutation(({ input, ctx }) => {
       return ctx.prisma.bankAccount.deleteMany({
