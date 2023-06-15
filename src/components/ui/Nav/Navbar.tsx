@@ -8,7 +8,7 @@ import { Notification } from "../Notification/Notification";
 
 const Navbar = () => {
   const router = useRouter();
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
   const { type, message } = useNotifications();
 
   return (
@@ -25,7 +25,7 @@ const Navbar = () => {
             />
             <span>Dink</span>
           </button>
-          {sessionData?.user && (
+          {status === "authenticated" && (
             <button
               className="aspect-square w-10 rounded-full shadow-lg"
               onClick={() => void router.push("/profile")}
@@ -41,7 +41,7 @@ const Navbar = () => {
               )}
             </button>
           )}
-          {!sessionData?.user && (
+          {status === "loading" && (
             <div className="aspect-square w-10 animate-pulse rounded-full bg-primary-med/50 shadow-lg" />
           )}
         </div>
