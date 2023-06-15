@@ -19,6 +19,7 @@ import {
 import Page from "~/components/ui/Page";
 import { api } from "~/utils/api";
 import { CreditCardSummarySkeleton } from "~/features/accounts/components/CreditCardSummarySkeleton";
+import { Notification } from "~/components/ui/Notification/Notification";
 
 export default function Home() {
   const { data: sessionData } = useSession();
@@ -50,31 +51,37 @@ export default function Home() {
     creditAccounts.data;
 
   return (
-    <Page auth title="Home">
-      <Header
-        title={`Hi, ${sessionData?.user?.nickname ?? ""}`}
-        subtitle={formatToMonthYear(new Date())}
-      />
-      {transactionData?.data && (
-        <TransactionsSummary data={transactionData.data} />
+    <Page auth title="Home" style="basic">
+      {sessionData?.user.role === "demo" && (
+        <Notification type="info" message="Welcome to the Demo!" />
       )}
-      {dataIsLoaded && (
-        <>
-          <BudgetSummary data={budgetData.data} />
-          <SavingsSummary data={fundsData.data} />
-          <AccountSummary data={accountData.data} />
-          <CreditCardSummary data={creditAccounts.data} />
-        </>
-      )}
-      {isLoading && (
-        <>
-          <TransactionsSummarySkeleton />
-          <BudgetSummarySkeleton />
-          <SavingsSummarySkeleton />
-          <AccountSummarySkeleton />
-          <CreditCardSummarySkeleton />
-        </>
-      )}
+
+      <div className="flex w-full flex-col gap-4 px-4">
+        <Header
+          title={`Hi, ${sessionData?.user?.nickname ?? ""}`}
+          subtitle={formatToMonthYear(new Date())}
+        />
+        {transactionData?.data && (
+          <TransactionsSummary data={transactionData.data} />
+        )}
+        {dataIsLoaded && (
+          <>
+            <BudgetSummary data={budgetData.data} />
+            <SavingsSummary data={fundsData.data} />
+            <AccountSummary data={accountData.data} />
+            <CreditCardSummary data={creditAccounts.data} />
+          </>
+        )}
+        {isLoading && (
+          <>
+            <TransactionsSummarySkeleton />
+            <BudgetSummarySkeleton />
+            <SavingsSummarySkeleton />
+            <AccountSummarySkeleton />
+            <CreditCardSummarySkeleton />
+          </>
+        )}
+      </div>
     </Page>
   );
 }
