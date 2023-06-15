@@ -40,6 +40,26 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+  updateTargetIncome: protectedProcedure
+    .input(z.object({ income: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      return ctx.prisma.userPreferences.upsert({
+        where: {
+          userId: ctx.session.user.id,
+        },
+        create: {
+          targetIncome: input.income,
+          user: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+        update: {
+          targetIncome: input.income,
+        },
+      });
+    }),
   completeProfile: protectedProcedure
     .input(z.object({ income: z.number(), nickname: z.string() }))
     .mutation(async ({ input, ctx }) => {
