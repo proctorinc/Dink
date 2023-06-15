@@ -1,4 +1,4 @@
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { type BankAccount, Prisma } from "@prisma/client";
 import { useRouter } from "next/router";
 import { formatToCurrency, formatToPercentage } from "~/utils";
@@ -22,7 +22,7 @@ export const CreditCardSummary: FC<CreditCardSummaryProps> = ({
           <Card.Action
             title="Credit Cards"
             subtitle="No linked credit cards"
-            actionIcon={faArrowRight}
+            actionIcon={faPlus}
             actionText="Link"
           />
         </Card.Body>
