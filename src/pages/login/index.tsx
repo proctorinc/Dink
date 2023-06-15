@@ -52,6 +52,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         destination: from ?? "/",
         permanent: false,
       },
+      props: {},
     };
   }
 
