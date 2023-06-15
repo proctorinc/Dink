@@ -1,4 +1,5 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { useSession } from "next-auth/react";
 import { type FC, useEffect, useState } from "react";
 import { type PlaidLinkOnSuccess, usePlaidLink } from "react-plaid-link";
 import Button from "~/components/ui/Button";
@@ -11,6 +12,7 @@ type PlaidLinkProps = {
 
 export const PlaidLink: FC<PlaidLinkProps> = ({ style }) => {
   const ctx = api.useContext();
+  const { data: sessionData } = useSession();
   const [linkToken, setLinkToken] = useState<string | null>(null);
 
   const { setLoadingNotification, setErrorNotification } = useNotifications();
@@ -62,6 +64,7 @@ export const PlaidLink: FC<PlaidLinkProps> = ({ style }) => {
       icon={faPlus}
       style={style}
       noShadow
+      disabled={sessionData?.user.role === "demo"}
       onClick={() => getLinkToken.mutate()}
     />
   );
