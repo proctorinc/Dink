@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Chase",
+    "logo": "",
+    "url": "https://www.chase.com",
+    "primaryColor": "#095aa6"
+  },
+  {
+    "name": "Vanguard",
+    "logo": "",
+    "url": "https://www.vanguard.com/",
+    "primaryColor": "#96151d"
+  },
+  {
+    "name": "Fidelity",
+    "logo": "",
+    "url": "https://www.fidelity.com",
+    "primaryColor": "#408800"
+  }
+]

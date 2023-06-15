@@ -1,0 +1,17 @@
+[
+  {
+    "goal": 1500,
+    "icon": "house",
+    "name": "Rent"
+  },
+  {
+    "goal": 175,
+    "icon": "wallet",
+    "name": "Utilities"
+  },
+  {
+    "goal": 200,
+    "icon": "dollar-bill",
+    "name": "Miscellaneous"
+  }
+]

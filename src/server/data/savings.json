@@ -1,0 +1,14 @@
+[
+  {
+    "icon": "car",
+    "name": "Car Savings"
+  },
+  {
+    "icon": "house",
+    "name": "Emergency Fund"
+  },
+  {
+    "icon": "earth",
+    "name": "Vacation"
+  }
+]
