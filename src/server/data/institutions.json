@@ -3,18 +3,122 @@
     "name": "Chase",
     "logo": "",
     "url": "https://www.chase.com",
-    "primaryColor": "#095aa6"
+    "primaryColor": "#095aa6",
+    "accounts": [
+      {
+        "available": 2248.43,
+        "current": 2348.43,
+        "isoCurrencyCode": "USD",
+        "unofficialCurrencyCode": "",
+        "creditLimit": null,
+        "mask": "3489",
+        "name": "Chase Checking",
+        "officialName": "Chase Standard Checking",
+        "subtype": "checking",
+        "type": "depository",
+        "creditClosingDay": null,
+        "ignore": false
+      },
+      {
+        "available": null,
+        "current": 1543.0,
+        "isoCurrencyCode": "USD",
+        "unofficialCurrencyCode": "",
+        "creditLimit": null,
+        "mask": "3490",
+        "name": "Chase Savings",
+        "officialName": "Chase High Yield Savings",
+        "subtype": "savings",
+        "type": "depository",
+        "creditClosingDay": null,
+        "ignore": false
+      },
+      {
+        "available": null,
+        "current": 353.3,
+        "isoCurrencyCode": "USD",
+        "unofficialCurrencyCode": "",
+        "creditLimit": 4000,
+        "mask": "0018",
+        "name": "Chase Credit",
+        "officialName": "Premium Plus Gold Credit Card",
+        "subtype": "credit card",
+        "type": "credit",
+        "creditClosingDay": 6,
+        "ignore": false
+      }
+    ]
   },
   {
     "name": "Vanguard",
     "logo": "",
     "url": "https://www.vanguard.com/",
-    "primaryColor": "#96151d"
+    "primaryColor": "#96151d",
+    "accounts": [
+      {
+        "available": null,
+        "current": 37024.2,
+        "isoCurrencyCode": "USD",
+        "unofficialCurrencyCode": "",
+        "creditLimit": null,
+        "mask": "3942",
+        "name": "Vanguage Student Loan",
+        "officialName": null,
+        "subtype": "student loan",
+        "type": "loan",
+        "creditClosingDay": null,
+        "ignore": false
+      },
+      {
+        "available": null,
+        "current": 76302.3,
+        "isoCurrencyCode": "USD",
+        "unofficialCurrencyCode": "",
+        "creditLimit": null,
+        "mask": "9372",
+        "name": "Vanguage Money Market",
+        "officialName": null,
+        "subtype": "money market",
+        "type": "investment",
+        "creditClosingDay": null,
+        "ignore": false
+      }
+    ]
   },
   {
     "name": "Fidelity",
     "logo": "",
     "url": "https://www.fidelity.com",
-    "primaryColor": "#408800"
+    "primaryColor": "#408800",
+    "accounts": [
+      {
+        "available": null,
+        "current": 209034.0,
+        "isoCurrencyCode": "USD",
+        "unofficialCurrencyCode": "",
+        "creditLimit": null,
+        "mask": "4004",
+        "name": "Fidelity Mortgage",
+        "officialName": null,
+        "subtype": "mortgage",
+        "type": "loan",
+        "creditClosingDay": null,
+        "ignore": false
+      },
+      {
+        "available": null,
+        "current": 27304.4,
+        "isoCurrencyCode": "USD",
+        "unofficialCurrencyCode": "",
+        "creditLimit": null,
+        "mask": "4888",
+        "name": "Fidelity 401k",
+        "officialName": null,
+        "subtype": "401k",
+        "type": "investment",
+        "creditClosingDay": null,
+        "ignore": false
+      }
+    ]
   }
 ]
