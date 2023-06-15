@@ -2,16 +2,21 @@ import { TRPCError } from "@trpc/server";
 import { CountryCode, Products } from "plaid";
 import { z } from "zod";
 import plaidClient from "~/server/api/plaid";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  userProcedure,
+} from "~/server/api/trpc";
 import {
   createInstitutionSync,
   retrievePlaidItemByInstitutionId,
 } from "./queries/items";
 import { exchangePublicToken } from "./queries/tokens";
 import { syncTransactions } from "./update_transactions";
+import institutions from "../../../data/institutions.json";
 
 export const plaidRouter = createTRPCRouter({
-  getLinkToken: protectedProcedure.mutation(async ({ ctx }) => {
+  getLinkToken: userProcedure.mutation(async ({ ctx }) => {
     return await plaidClient
       .linkTokenCreate({
         user: {
@@ -24,7 +29,7 @@ export const plaidRouter = createTRPCRouter({
       })
       .then((response) => response.data.link_token);
   }),
-  createInstitution: protectedProcedure
+  createInstitution: userProcedure
     .input(
       z.object({
         publicToken: z.string(),
@@ -55,4 +60,15 @@ export const plaidRouter = createTRPCRouter({
 
       await syncTransactions(userId, itemId);
     }),
+  loadDemoData: protectedProcedure.mutation(({ ctx }) => {
+    const userId = ctx.session.user.id;
+    // Create Institutions
+    institutions.map((institution) => console.log(institution));
+
+    // Create bank accounts
+    // Create transactions
+    // Create savings funds
+    // Create budgets
+    return true;
+  }),
 });
