@@ -9,6 +9,7 @@ import useNotifications from "~/hooks/useNotifications";
 import { api } from "~/utils/api";
 import Button, { IconButton } from "../ui/Button";
 import Header from "../ui/Header";
+import LoadingPage from "../ui/LoadingPage";
 import Page from "../ui/Page";
 
 type ProfileSetupProps = {
@@ -26,7 +27,7 @@ export const ProfileSetup: FC<ProfileSetupProps> = ({ children }) => {
   const [nickname, setNickname] = useState("");
   const [income, setIncome] = useState(0);
 
-  const loadDemoData = api.plaid.loadDemoData.useMutation({
+  const demoDataQuery = api.plaid.loadDemoData.useQuery(undefined, {
     onError: () => setErrorNotification("Failed to load demo data"),
   });
 
@@ -34,18 +35,19 @@ export const ProfileSetup: FC<ProfileSetupProps> = ({ children }) => {
     onSuccess: () => {
       setProfileComplete(true);
       clearNotification();
-      if (sessionData?.user.role === "demo") {
-        loadDemoData.mutate();
-      }
       void ctx.invalidate();
     },
     onError: () => setErrorNotification("Failed to update profile. Try again"),
   });
 
+  if (profileComplete && demoDataQuery.isLoading) {
+    return <LoadingPage />;
+  }
+
   if (
-    !profileComplete &&
     sessionData?.user &&
-    !sessionData.user.isProfileComplete
+    !sessionData.user.isProfileComplete &&
+    !profileComplete
   ) {
     return (
       <Page auth title="Get Started" style="centered">
