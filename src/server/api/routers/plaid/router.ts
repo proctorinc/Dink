@@ -26,17 +26,17 @@ const demoInstitutionsSchema = z
     primaryColor: z.string(),
     accounts: z
       .object({
-        available: z.number(),
+        available: z.number().nullable(),
         current: z.number(),
         isoCurrencyCode: z.string(),
         unofficialCurrencyCode: z.string(),
-        creditLimit: z.number(),
+        creditLimit: z.number().nullable(),
         mask: z.string(),
         name: z.string(),
-        officialName: z.string(),
+        officialName: z.string().nullable(),
         subtype: z.string(),
         type: z.string(),
-        creditClosingDay: z.number(),
+        creditClosingDay: z.number().nullable(),
         ignore: z.boolean(),
       })
       .array(),
@@ -123,7 +123,7 @@ export const plaidRouter = createTRPCRouter({
             syncItem: {
               create: {
                 plaidId: itemId,
-                accessToken: "demo",
+                accessToken: `${itemId}-access-token`,
                 status: "demo",
               },
             },
