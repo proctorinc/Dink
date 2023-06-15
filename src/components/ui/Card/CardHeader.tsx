@@ -4,9 +4,15 @@ export type CardHeaderProps = {
   children: ReactNode;
   size?: "sm" | "xl";
   onClick?: MouseEventHandler<HTMLDivElement>;
+  className?: string;
 };
 
-const CardHeader: FC<CardHeaderProps> = ({ size, children, onClick }) => {
+const CardHeader: FC<CardHeaderProps> = ({
+  size,
+  children,
+  onClick,
+  className,
+}) => {
   let verticalPadding = "pt-4";
 
   const clickable = !!onClick
@@ -21,7 +27,9 @@ const CardHeader: FC<CardHeaderProps> = ({ size, children, onClick }) => {
 
   return (
     <div
-      className={`${clickable} ${verticalPadding} flex w-full items-center justify-between rounded-xl px-4 text-xl font-bold`}
+      className={`${clickable} ${verticalPadding} flex w-full items-center justify-between rounded-xl px-4 text-xl font-bold ${
+        className ?? ""
+      }`}
       onClick={onClick}
     >
       {children}
