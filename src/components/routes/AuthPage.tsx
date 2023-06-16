@@ -11,45 +11,35 @@ const AuthPage: FC<AuthPageProps> = ({ children }) => {
   const router = useRouter();
   const { data: sessionData, status } = useSession();
 
-  if (typeof window !== "undefined" && status === "unauthenticated") {
-    if (router.pathname === "/") {
-      void router.push({
-        pathname: "/login",
-      });
-    } else {
-      void router.push({
-        pathname: "/login",
-        query: {
-          from: router.pathname,
-        },
-      });
+  if (typeof window !== "undefined") {
+    if (status === "unauthenticated") {
+      if (router.pathname === "/") {
+        void router.push({
+          pathname: "/login",
+        });
+      } else {
+        void router.push({
+          pathname: "/login",
+          query: {
+            from: router.pathname,
+          },
+        });
+      }
+    } else if (status === "authenticated") {
+      if (router.pathname === "/profile/setup") {
+        if (sessionData?.user.isProfileComplete) {
+          void router.push({
+            pathname: "/",
+          });
+        }
+      } else if (!sessionData?.user.isProfileComplete) {
+        void router.push({
+          pathname: "/profile/setup",
+        });
+      }
+      return <>{children}</>;
     }
   }
-
-  if (
-    typeof window !== "undefined" &&
-    router.pathname !== "/profile/setup" &&
-    !sessionData?.user.isProfileComplete
-  ) {
-    void router.push({
-      pathname: "/profile/setup",
-    });
-  }
-
-  if (
-    typeof window !== "undefined" &&
-    router.pathname === "/profile/setup" &&
-    sessionData?.user.isProfileComplete
-  ) {
-    void router.push({
-      pathname: "/",
-    });
-  }
-
-  if (typeof window !== "undefined" && status === "authenticated") {
-    return <>{children}</>;
-  }
-
   return <LoadingPage />;
 };
 
