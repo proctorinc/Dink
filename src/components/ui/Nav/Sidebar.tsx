@@ -23,7 +23,7 @@ const Sidebar = () => {
 
   if (status === "authenticated" && sessionData?.user.isProfileComplete) {
     return (
-      <aside className="fixed left-[10%] top-1/2 hidden -translate-y-1/2 text-white sm:flex">
+      <aside className="fixed left-6 top-1/2 hidden -translate-y-1/2 text-white sm:flex lg:left-[10%]">
         <div className="flex flex-col gap-3">
           {routes.map((route) => (
             <div
@@ -36,7 +36,6 @@ const Sidebar = () => {
                 key={route.path}
                 icon={route.icon}
                 active={router.pathname === route.path}
-                onClick={() => void router.push(route.path)}
               />
               <span className="invisible select-none font-bold text-primary-light group-hover:visible">
                 {route.name}
