@@ -17,7 +17,198 @@
         "subtype": "checking",
         "type": "depository",
         "creditClosingDay": null,
-        "ignore": false
+        "ignore": false,
+        "transactions": [
+          {
+            "name": "Utilities",
+            "note": "",
+            "isTransfer": false,
+            "amount": -94.3,
+            "isPending": false,
+            "monthsAgo": 6,
+            "daysAgo": 5
+          },
+          {
+            "name": "Internet Bill",
+            "note": "",
+            "isTransfer": false,
+            "amount": -50,
+            "isPending": false,
+            "monthsAgo": 6,
+            "daysAgo": 3
+          },
+          {
+            "name": "Paycheck",
+            "note": "",
+            "isTransfer": false,
+            "amount": 2509.34,
+            "isPending": true,
+            "monthsAgo": 6,
+            "daysAgo": 0
+          },
+          {
+            "name": "Utilities",
+            "note": "",
+            "isTransfer": false,
+            "amount": -94.3,
+            "isPending": false,
+            "monthsAgo": 5,
+            "daysAgo": 5
+          },
+          {
+            "name": "Internet Bill",
+            "note": "",
+            "isTransfer": false,
+            "amount": -50,
+            "isPending": false,
+            "monthsAgo": 5,
+            "daysAgo": 3
+          },
+          {
+            "name": "Paycheck",
+            "note": "",
+            "isTransfer": false,
+            "amount": 2509.34,
+            "isPending": true,
+            "monthsAgo": 5,
+            "daysAgo": 0
+          },
+          {
+            "name": "Utilities",
+            "note": "",
+            "isTransfer": false,
+            "amount": -94.3,
+            "isPending": false,
+            "monthsAgo": 4,
+            "daysAgo": 5
+          },
+          {
+            "name": "Internet Bill",
+            "note": "",
+            "isTransfer": false,
+            "amount": -50,
+            "isPending": false,
+            "monthsAgo": 4,
+            "daysAgo": 3
+          },
+          {
+            "name": "Paycheck",
+            "note": "",
+            "isTransfer": false,
+            "amount": 2509.34,
+            "isPending": true,
+            "monthsAgo": 4,
+            "daysAgo": 0
+          },
+          {
+            "name": "Utilities",
+            "note": "",
+            "isTransfer": false,
+            "amount": -100,
+            "isPending": false,
+            "monthsAgo": 3,
+            "daysAgo": 5
+          },
+          {
+            "name": "Internet Bill",
+            "note": "",
+            "isTransfer": false,
+            "amount": -50,
+            "isPending": false,
+            "monthsAgo": 3,
+            "daysAgo": 3
+          },
+          {
+            "name": "Paycheck",
+            "note": "",
+            "isTransfer": false,
+            "amount": 2509.34,
+            "isPending": true,
+            "monthsAgo": 3,
+            "daysAgo": 0
+          },
+          {
+            "name": "Utilities",
+            "note": "",
+            "isTransfer": false,
+            "amount": -80.23,
+            "isPending": false,
+            "monthsAgo": 2,
+            "daysAgo": 5
+          },
+          {
+            "name": "Internet Bill",
+            "note": "",
+            "isTransfer": false,
+            "amount": -50,
+            "isPending": false,
+            "monthsAgo": 2,
+            "daysAgo": 3
+          },
+          {
+            "name": "Paycheck",
+            "note": "",
+            "isTransfer": false,
+            "amount": 2509.34,
+            "isPending": true,
+            "monthsAgo": 2,
+            "daysAgo": 0
+          },
+          {
+            "name": "Utilities",
+            "note": "",
+            "isTransfer": false,
+            "amount": -100.43,
+            "isPending": false,
+            "monthsAgo": 1,
+            "daysAgo": 5
+          },
+          {
+            "name": "Internet Bill",
+            "note": "",
+            "isTransfer": false,
+            "amount": -50,
+            "isPending": false,
+            "monthsAgo": 1,
+            "daysAgo": 3
+          },
+          {
+            "name": "Paycheck",
+            "note": "",
+            "isTransfer": false,
+            "amount": 2509.34,
+            "isPending": true,
+            "monthsAgo": 1,
+            "daysAgo": 0
+          },
+          {
+            "name": "Utilities",
+            "note": "",
+            "isTransfer": false,
+            "amount": -122.23,
+            "isPending": false,
+            "monthsAgo": 0,
+            "daysAgo": 5
+          },
+          {
+            "name": "Internet Bill",
+            "note": "",
+            "isTransfer": false,
+            "amount": -50,
+            "isPending": false,
+            "monthsAgo": 0,
+            "daysAgo": 3
+          },
+          {
+            "name": "Paycheck",
+            "note": "",
+            "isTransfer": false,
+            "amount": 2509.34,
+            "isPending": true,
+            "monthsAgo": 0,
+            "daysAgo": 0
+          }
+        ]
       },
       {
         "available": null,
@@ -31,7 +222,54 @@
         "subtype": "savings",
         "type": "depository",
         "creditClosingDay": null,
-        "ignore": false
+        "ignore": false,
+        "transactions": [
+          {
+            "name": "Monthly Interest",
+            "note": "",
+            "isTransfer": false,
+            "amount": 0.34,
+            "isPending": false,
+            "monthsAgo": 5,
+            "daysAgo": 0
+          },
+          {
+            "name": "Monthly Interest",
+            "note": "",
+            "isTransfer": false,
+            "amount": 0.43,
+            "isPending": false,
+            "monthsAgo": 4,
+            "daysAgo": 0
+          },
+          {
+            "name": "Monthly Interest",
+            "note": "",
+            "isTransfer": false,
+            "amount": 0.49,
+            "isPending": false,
+            "monthsAgo": 3,
+            "daysAgo": 0
+          },
+          {
+            "name": "Monthly Interest",
+            "note": "",
+            "isTransfer": false,
+            "amount": 0.52,
+            "isPending": false,
+            "monthsAgo": 2,
+            "daysAgo": 0
+          },
+          {
+            "name": "Monthly Interest",
+            "note": "",
+            "isTransfer": false,
+            "amount": 0.58,
+            "isPending": false,
+            "monthsAgo": 1,
+            "daysAgo": 0
+          }
+        ]
       },
       {
         "available": null,
@@ -45,7 +283,189 @@
         "subtype": "credit card",
         "type": "credit",
         "creditClosingDay": 6,
-        "ignore": false
+        "ignore": false,
+        "transactions": [
+          {
+            "name": "Shopping Center",
+            "note": "",
+            "isTransfer": false,
+            "amount": -24.99,
+            "isPending": false,
+            "monthsAgo": 6,
+            "daysAgo": 12
+          },
+          {
+            "name": "Best Buy Electronics",
+            "note": "",
+            "isTransfer": false,
+            "amount": -2000,
+            "isPending": false,
+            "monthsAgo": 6,
+            "daysAgo": 8
+          },
+          {
+            "name": "Starbucks",
+            "note": "",
+            "isTransfer": false,
+            "amount": -5.38,
+            "isPending": false,
+            "monthsAgo": 5,
+            "daysAgo": 9
+          },
+          {
+            "name": "Shopping Center Refund",
+            "note": "",
+            "isTransfer": false,
+            "amount": 24.99,
+            "isPending": false,
+            "monthsAgo": 5,
+            "daysAgo": 2
+          },
+          {
+            "name": "Starbucks",
+            "note": "",
+            "isTransfer": false,
+            "amount": -6.45,
+            "isPending": false,
+            "monthsAgo": 5,
+            "daysAgo": 1
+          },
+          {
+            "name": "Grocery Store",
+            "note": "",
+            "isTransfer": false,
+            "amount": -64.39,
+            "isPending": false,
+            "monthsAgo": 4,
+            "daysAgo": 0
+          },
+          {
+            "name": "Car Repair Shop",
+            "note": "",
+            "isTransfer": false,
+            "amount": -3249.2,
+            "isPending": false,
+            "monthsAgo": 4,
+            "daysAgo": 0
+          },
+          {
+            "name": "Alaska Airlines",
+            "note": "",
+            "isTransfer": false,
+            "amount": -543.3,
+            "isPending": false,
+            "monthsAgo": 4,
+            "daysAgo": 18
+          },
+          {
+            "name": "Starbucks",
+            "note": "",
+            "isTransfer": false,
+            "amount": -6.48,
+            "isPending": false,
+            "monthsAgo": 3,
+            "daysAgo": 4
+          },
+          {
+            "name": "El Pollo Loco",
+            "note": "",
+            "isTransfer": false,
+            "amount": -20.02,
+            "isPending": false,
+            "monthsAgo": 3,
+            "daysAgo": 0
+          },
+          {
+            "name": "Hardware Store",
+            "note": "",
+            "isTransfer": false,
+            "amount": -39.84,
+            "isPending": false,
+            "monthsAgo": 3,
+            "daysAgo": 2
+          },
+          {
+            "name": "Grocery Store",
+            "note": "",
+            "isTransfer": false,
+            "amount": -74.68,
+            "isPending": false,
+            "monthsAgo": 2,
+            "daysAgo": 6
+          },
+          {
+            "name": "7 Eleven",
+            "note": "",
+            "isTransfer": false,
+            "amount": -23.0,
+            "isPending": false,
+            "monthsAgo": 2,
+            "daysAgo": 5
+          },
+          {
+            "name": "Grocery Store",
+            "note": "",
+            "isTransfer": false,
+            "amount": -23.03,
+            "isPending": false,
+            "monthsAgo": 1,
+            "daysAgo": 2
+          },
+          {
+            "name": "Starbucks",
+            "note": "",
+            "isTransfer": false,
+            "amount": -6.45,
+            "isPending": false,
+            "monthsAgo": 1,
+            "daysAgo": 0
+          },
+          {
+            "name": "Farmers Market",
+            "note": "",
+            "isTransfer": false,
+            "amount": -45.48,
+            "isPending": false,
+            "monthsAgo": 0,
+            "daysAgo": 5
+          },
+          {
+            "name": "Gas Station",
+            "note": "",
+            "isTransfer": false,
+            "amount": -48.93,
+            "isPending": false,
+            "monthsAgo": 0,
+            "daysAgo": 3
+          },
+          {
+            "name": "Dunkin Donuts",
+            "note": "",
+            "isTransfer": false,
+            "amount": -12.89,
+            "isPending": false,
+            "monthsAgo": 0,
+            "daysAgo": 1
+          },
+          {
+            "name": "Grocery Store",
+            "note": "",
+            "isTransfer": false,
+            "amount": -109.4,
+            "isPending": true,
+            "monthsAgo": 0,
+            "daysAgo": 0
+          },
+          {
+            "name": "Metro Station",
+            "note": "",
+            "isTransfer": false,
+            "amount": -4.99,
+            "isPending": true,
+            "monthsAgo": 0,
+            "daysAgo": 0
+          }
+        ]
       }
     ]
   },
@@ -67,7 +487,54 @@
         "subtype": "student loan",
         "type": "loan",
         "creditClosingDay": null,
-        "ignore": false
+        "ignore": false,
+        "transactions": [
+          {
+            "name": "Student Loan Payment",
+            "note": "",
+            "isTransfer": false,
+            "amount": -230.03,
+            "isPending": false,
+            "monthsAgo": 4,
+            "daysAgo": 0
+          },
+          {
+            "name": "Student Loan Payment",
+            "note": "",
+            "isTransfer": false,
+            "amount": -237.03,
+            "isPending": false,
+            "monthsAgo": 3,
+            "daysAgo": 2
+          },
+          {
+            "name": "Student Loan Payment",
+            "note": "",
+            "isTransfer": false,
+            "amount": -237.03,
+            "isPending": false,
+            "monthsAgo": 2,
+            "daysAgo": 2
+          },
+          {
+            "name": "Student Loan Payment",
+            "note": "",
+            "isTransfer": false,
+            "amount": -245.39,
+            "isPending": false,
+            "monthsAgo": 1,
+            "daysAgo": 6
+          },
+          {
+            "name": "Student Loan Payment",
+            "note": "",
+            "isTransfer": false,
+            "amount": -237.03,
+            "isPending": false,
+            "monthsAgo": 0,
+            "daysAgo": 4
+          }
+        ]
       },
       {
         "available": null,
@@ -81,7 +548,8 @@
         "subtype": "money market",
         "type": "investment",
         "creditClosingDay": null,
-        "ignore": false
+        "ignore": false,
+        "transactions": []
       }
     ]
   },
@@ -103,7 +571,54 @@
         "subtype": "mortgage",
         "type": "loan",
         "creditClosingDay": null,
-        "ignore": false
+        "ignore": false,
+        "transactions": [
+          {
+            "name": "Mortgage Payment",
+            "note": "",
+            "isTransfer": false,
+            "amount": -2045.3,
+            "isPending": false,
+            "monthsAgo": 4,
+            "daysAgo": 0
+          },
+          {
+            "name": "Mortgage Payment",
+            "note": "",
+            "isTransfer": false,
+            "amount": -2045.3,
+            "isPending": false,
+            "monthsAgo": 3,
+            "daysAgo": 0
+          },
+          {
+            "name": "Mortgage Payment",
+            "note": "",
+            "isTransfer": false,
+            "amount": -2045.3,
+            "isPending": false,
+            "monthsAgo": 2,
+            "daysAgo": 0
+          },
+          {
+            "name": "Mortgage Payment",
+            "note": "",
+            "isTransfer": false,
+            "amount": -2045.3,
+            "isPending": false,
+            "monthsAgo": 1,
+            "daysAgo": 0
+          },
+          {
+            "name": "Mortgage Payment",
+            "note": "",
+            "isTransfer": false,
+            "amount": -2045.3,
+            "isPending": true,
+            "monthsAgo": 0,
+            "daysAgo": 0
+          }
+        ]
       },
       {
         "available": null,
@@ -117,7 +632,54 @@
         "subtype": "401k",
         "type": "investment",
         "creditClosingDay": null,
-        "ignore": false
+        "ignore": false,
+        "transactions": [
+          {
+            "name": "Monthly 401k Savings",
+            "note": "",
+            "isTransfer": false,
+            "amount": 500,
+            "isPending": false,
+            "monthsAgo": 4,
+            "daysAgo": 3
+          },
+          {
+            "name": "Monthly 401k Savings",
+            "note": "",
+            "isTransfer": false,
+            "amount": 500,
+            "isPending": false,
+            "monthsAgo": 3,
+            "daysAgo": 3
+          },
+          {
+            "name": "Monthly 401k Savings",
+            "note": "",
+            "isTransfer": false,
+            "amount": 500,
+            "isPending": false,
+            "monthsAgo": 2,
+            "daysAgo": 3
+          },
+          {
+            "name": "Monthly 401k Savings",
+            "note": "",
+            "isTransfer": false,
+            "amount": 500,
+            "isPending": false,
+            "monthsAgo": 1,
+            "daysAgo": 3
+          },
+          {
+            "name": "Monthly 401k Savings",
+            "note": "",
+            "isTransfer": false,
+            "amount": 500,
+            "isPending": false,
+            "monthsAgo": 0,
+            "daysAgo": 3
+          }
+        ]
       }
     ]
   }
