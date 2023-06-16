@@ -14,6 +14,7 @@ type ButtonProps = {
   size?: "sm";
   className?: string;
   noShadow?: boolean;
+  type?: "submit" | "button" | "reset";
 };
 
 const Button: FC<ButtonProps> = ({
@@ -26,6 +27,7 @@ const Button: FC<ButtonProps> = ({
   size,
   className,
   noShadow,
+  type,
 }) => {
   let buttonColors =
     "bg-primary-med text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light";
@@ -35,7 +37,7 @@ const Button: FC<ButtonProps> = ({
   } else if (disabled && style === "danger") {
     buttonColors = "text-danger-med ring ring-danger-med";
   } else if (disabled) {
-    buttonColors = "text-primary-med ring ring-primary-med";
+    buttonColors = "text-primary-med ring ring-primary-med bg-primary-dark";
   } else if (style === "secondary") {
     buttonColors =
       "bg-secondary-med text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light";
@@ -56,6 +58,7 @@ const Button: FC<ButtonProps> = ({
       } ${className ?? ""}`}
       onClick={onClick}
       disabled={disabled}
+      type={type ?? "button"}
     >
       {icon && !iconRight && <FontAwesomeIcon icon={icon} />}
       {title && <span>{title}</span>}
