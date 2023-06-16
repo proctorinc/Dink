@@ -23,6 +23,7 @@ export default function BankAccounts() {
             <TextSkeleton width={200} size="xl" color="primary" />
           )
         }
+        back
       />
       {institutions?.data &&
         institutions.data.map((institution) => (
