@@ -209,6 +209,11 @@ model User {
   budgets       Budget[]
 }
 
+model RequestAccess {
+  id    String @id @default(cuid())
+  email String
+}
+
 model UserPreferences {
   id                  String  @id @default(cuid())
   creditPercentTarget Int     @default(10)
