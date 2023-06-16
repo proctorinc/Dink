@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { loadDemoData } from "./plaid/queries/demo";
 
 export const userRouter = createTRPCRouter({
   setProfileComplete: protectedProcedure.mutation(({ ctx }) => {
@@ -72,6 +73,11 @@ export const userRouter = createTRPCRouter({
           isProfileComplete: true,
         },
       });
+
+      if (ctx.session.user.role === "demo") {
+        loadDemoData(ctx.session.user.id, ctx.prisma);
+      }
+
       return ctx.prisma.userPreferences.upsert({
         where: {
           userId: ctx.session.user.id,
