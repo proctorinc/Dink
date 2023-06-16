@@ -3,8 +3,7 @@ import {
   faDollarSign,
   faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { type GetServerSideProps } from "next";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import LoadingPage from "~/components/ui/LoadingPage";
@@ -34,7 +33,7 @@ export default function ProfileSetup() {
     onError: () => setErrorNotification("Failed to update profile. Try again"),
   });
 
-  if (sessionData?.user.isProfileComplete) {
+  if (status === "authenticated" && sessionData?.user.isProfileComplete) {
     void router.push("/");
   }
 
@@ -114,35 +113,3 @@ export default function ProfileSetup() {
 
   return <LoadingPage />;
 }
-
-export const getServerSideProps: GetServerSideProps = async ({
-  req,
-  query,
-}) => {
-  const session = await getSession({ req });
-  const from = query.from as string;
-
-  if (session) {
-    if (session.user.isProfileComplete) {
-      return {
-        redirect: {
-          destination: from ?? "/",
-          permanent: false,
-        },
-        props: {},
-      };
-    }
-
-    return {
-      props: {},
-    };
-  } else {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-      props: {},
-    };
-  }
-};
