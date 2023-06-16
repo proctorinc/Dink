@@ -1,14 +1,38 @@
 [
   {
     "icon": "car",
-    "name": "Car Savings"
+    "name": "Car Savings",
+    "budget": {
+      "goal": 100,
+      "name": "Monthly Savings Car Savings"
+    },
+    "allocation": {
+      "name": "Towards future car",
+      "amount": 3000
+    }
   },
   {
     "icon": "house",
-    "name": "Emergency Fund"
+    "name": "Emergency Fund",
+    "budget": {
+      "goal": 25,
+      "name": "Monthly Savings Emergency Fund"
+    },
+    "allocation": {
+      "name": "For Emergency Savings",
+      "amount": 10000
+    }
   },
   {
     "icon": "earth",
-    "name": "Vacation"
+    "name": "Vacation",
+    "budget": {
+      "goal": 75,
+      "name": "Monthly Savings Vacation"
+    },
+    "allocation": {
+      "name": "For Vacation",
+      "amount": 500
+    }
   }
 ]
