@@ -13,7 +13,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-30 flex w-full justify-center bg-primary-dark/90 py-2 pl-2 pr-4 text-primary-light backdrop-blur-sm md:flex">
+      <nav className="sticky top-0 z-30 flex w-full flex-col items-center justify-center gap-1 bg-primary-dark/90 py-2 pl-2 pr-4 text-primary-light backdrop-blur-sm md:flex">
         <div className="flex w-full max-w-lg items-center justify-between sm:max-w-4xl">
           <button
             className="flex items-center gap-2 rounded-xl py-1 px-3 text-3xl font-bold"
@@ -45,12 +45,14 @@ const Navbar = () => {
             <div className="aspect-square w-10 animate-pulse rounded-full bg-primary-med/50 shadow-lg" />
           )}
         </div>
+        {type && message && (
+          <div className="flex w-full justify-center">
+            <div className="w-full max-w-md">
+              <Notification type={type} message={message} />
+            </div>
+          </div>
+        )}
       </nav>
-      <div className="flex w-full justify-center">
-        <div className="w-full max-w-md">
-          {type && message && <Notification type={type} message={message} />}
-        </div>
-      </div>
     </>
   );
 };
