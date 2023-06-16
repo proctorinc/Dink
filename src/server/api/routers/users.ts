@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { loadDemoData } from "./plaid/queries/demo";
 
 export const userRouter = createTRPCRouter({
@@ -20,15 +24,13 @@ export const userRouter = createTRPCRouter({
       },
     });
   }),
-  deleteUser: protectedProcedure
-    .input(z.object({ userId: z.string() }))
-    .mutation(({ input, ctx }) => {
-      return ctx.prisma.user.delete({
-        where: {
-          id: input.userId,
-        },
-      });
-    }),
+  deleteUser: protectedProcedure.mutation(({ ctx }) => {
+    return ctx.prisma.user.delete({
+      where: {
+        id: ctx.session.user.id,
+      },
+    });
+  }),
   updateNickname: protectedProcedure
     .input(z.object({ name: z.string() }))
     .mutation(({ input, ctx }) => {
@@ -104,6 +106,19 @@ export const userRouter = createTRPCRouter({
         },
         data: {
           creditPercentTarget: input.utilization,
+        },
+      });
+    }),
+  requestFullAccess: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+      })
+    )
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.requestAccess.create({
+        data: {
+          email: input.email,
         },
       });
     }),
