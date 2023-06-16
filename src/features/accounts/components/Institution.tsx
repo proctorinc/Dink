@@ -47,7 +47,7 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
                 <IconButton icon={faBuildingColumns} />
               </div>
             )}
-            {institution.logo !== "null" && (
+            {institution.logo && (
               <Image
                 className="w-10 rounded-full shadow-xl"
                 width={100}
@@ -58,7 +58,7 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
                 alt="logo"
               />
             )}
-            {institution.logo === "null" && institution.url && (
+            {!institution.logo && institution.url && (
               <Image
                 className="w-10 rounded-full bg-white shadow-xl"
                 width={100}
