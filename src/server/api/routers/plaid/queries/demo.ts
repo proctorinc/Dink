@@ -25,6 +25,17 @@ const demoInstitutionsSchema = z
         type: z.string(),
         creditClosingDay: z.number().nullable(),
         ignore: z.boolean(),
+        transactions: z
+          .object({
+            name: z.string(),
+            note: z.string(),
+            isTransfer: z.boolean(),
+            amount: z.number(),
+            isPending: z.boolean(),
+            monthsAgo: z.number(),
+            daysAgo: z.number(),
+          })
+          .array(),
       })
       .array(),
   })
@@ -76,8 +87,9 @@ export function loadDemoData(userId: string, prisma: PrismaClient) {
         },
       },
     });
-    institutionData.accounts.map(async (bankAccount) => {
-      await prisma.bankAccount.create({
+    institutionData.accounts.map(async (accountData) => {
+      const { transactions, ...bankAccount } = accountData;
+      const account = await prisma.bankAccount.create({
         data: {
           plaidId: `${userId}-demo-${bankAccount.name}`,
           ...bankAccount,
@@ -88,6 +100,28 @@ export function loadDemoData(userId: string, prisma: PrismaClient) {
             connect: { id: institution.id },
           },
         },
+      });
+
+      transactions.map(async (transactionData) => {
+        const { monthsAgo, daysAgo, ...transaction } = transactionData;
+
+        const date = new Date();
+        date.setDate(date.getDate() - daysAgo);
+        date.setMonth(date.getMonth() - monthsAgo);
+
+        await prisma.transaction.create({
+          data: {
+            ...transaction,
+            date: date,
+            datetime: date,
+            user: {
+              connect: { id: userId },
+            },
+            account: {
+              connect: { id: account.id },
+            },
+          },
+        });
       });
     });
   });
