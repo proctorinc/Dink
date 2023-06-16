@@ -44,13 +44,13 @@ export const getServerSideProps: GetServerSideProps = async ({
   query,
 }) => {
   const session = await getSession({ req });
-  const from = query.from as string;
+  const from = query.from;
 
   if (session) {
-    if (!session.user.isProfileComplete) {
+    if (session.user.isProfileComplete) {
       return {
         redirect: {
-          destination: "/profile/setup",
+          destination: from ?? "/",
           permanent: false,
         },
         props: {},
@@ -58,7 +58,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     } else {
       return {
         redirect: {
-          destination: from ?? "/",
+          destination: "/profile/setup",
           permanent: false,
         },
         props: {},
