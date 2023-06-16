@@ -8,17 +8,22 @@ import ConfirmDelete from "~/components/ui/ConfirmDelete";
 import EditableTitle from "~/components/ui/EditableTitle";
 import Header from "~/components/ui/Header";
 import Page from "~/components/ui/Page";
+import useNotifications from "~/hooks/useNotifications";
 import { api } from "~/utils/api";
 
 const UserPage = () => {
   const { data: sessionData } = useSession();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const notifications = useNotifications();
 
   const userPreferences = api.users.getUserPreferences.useQuery();
   const updateNickname = api.users.updateNickname.useMutation();
   const updateIncome = api.users.updateTargetIncome.useMutation();
   const updateCreditUtilization =
     api.users.updateCreditUtilization.useMutation();
+  const deleteUserMutation = api.users.deleteUser.useMutation({
+    onSuccess: () => signOut(),
+  });
 
   const handleProfileUpdate = (name: string) => {
     updateNickname.mutate({ name });
@@ -30,6 +35,11 @@ const UserPage = () => {
 
   const handleCreditUtilizationUpdate = (value: string) => {
     updateCreditUtilization.mutate({ utilization: Number(value) });
+  };
+
+  const handleDeleteUser = () => {
+    notifications.setLoadingNotification("Deleting account");
+    deleteUserMutation.mutate();
   };
 
   return (
@@ -69,7 +79,7 @@ const UserPage = () => {
           <ConfirmDelete
             buttonText="Delete account"
             confirmationText="Delete my account"
-            onDelete={() => console.log("Confirmed Delete")}
+            onDelete={() => handleDeleteUser()}
           />
         </ButtonBar>
       )}
