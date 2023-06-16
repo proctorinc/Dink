@@ -46,8 +46,10 @@ const Navbar = () => {
           )}
         </div>
       </nav>
-      <div>
-        {type && message && <Notification type={type} message={message} />}
+      <div className="flex w-full justify-center">
+        <div className="w-full max-w-md">
+          {type && message && <Notification type={type} message={message} />}
+        </div>
       </div>
     </>
   );

@@ -1,6 +1,7 @@
 import {
+  faCheckCircle,
   faExclamationTriangle,
-  faInfo,
+  faInfoCircle,
   faXmarkSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,39 +18,48 @@ export type NotificationProps = {
 export const Notification: FC<NotificationProps> = ({ type, message }) => {
   const { clearNotification } = useNotifications();
 
-  let styling = "bg-primary-dark text-sm text-primary-light shadow-none";
+  let styling = "bg-secondary-dark text-secondary-med";
+  let closeStyling: "secondary" | "primary" | "danger" = "secondary";
 
   if (type === "info") {
-    styling = "bg-secondary-dark text-sm font-semibold text-secondary-med";
+    styling = "bg-primary-light text-primary-med";
+    closeStyling = "primary";
   } else if (type === "error") {
     styling = "bg-danger-dark text-danger-med";
+    closeStyling = "danger";
+  } else if (type === "loading") {
+    styling = "text-primary-light shadow-none";
   }
 
-  return (
-    <div
-      className={`relative flex w-full items-center justify-center gap-2 rounded-xl p-2 pl-12 text-center font-bold shadow-md ${styling}`}
-    >
-      <div className="absolute left-5">
-        {type === "loading" && <Spinner size="xs" />}
-        {type === "error" && <FontAwesomeIcon icon={faExclamationTriangle} />}
-        {type === "info" && (
-          <FontAwesomeIcon
-            icon={faInfo}
-            className="h-3 rounded-full border-2 border-secondary-med px-2 py-1"
-          />
+  if (message) {
+    return (
+      <div
+        className={`relative flex w-full items-center justify-center gap-2 rounded-xl py-2 px-12 text-center text-sm font-semibold shadow-md ${styling}`}
+      >
+        <div className="absolute left-5">
+          {type === "success" && (
+            <FontAwesomeIcon icon={faCheckCircle} size="lg" />
+          )}
+          {type === "loading" && <Spinner size="xs" />}
+          {type === "error" && (
+            <FontAwesomeIcon icon={faExclamationTriangle} size="lg" />
+          )}
+          {type === "info" && <FontAwesomeIcon icon={faInfoCircle} size="lg" />}
+        </div>
+        <p>{message}</p>
+        {type !== "loading" && (
+          <div className="absolute right-3">
+            <IconButton
+              noShadow
+              style={closeStyling}
+              size="sm"
+              icon={faXmarkSquare}
+              onClick={() => clearNotification()}
+            />
+          </div>
         )}
       </div>
-      <p>{message}</p>
-      {type === "error" && (
-        <div className="absolute right-3">
-          <IconButton
-            style="danger"
-            size="sm"
-            icon={faXmarkSquare}
-            onClick={clearNotification}
-          />
-        </div>
-      )}
-    </div>
-  );
+    );
+  }
+  return <></>;
 };
