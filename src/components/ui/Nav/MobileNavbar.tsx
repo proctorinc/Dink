@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 
 const MobileNavbar = () => {
   const router = useRouter();
-  const { status } = useSession();
+  const { data: sessionData, status } = useSession();
 
   const routes = [
     { path: "/accounts", icon: faBuildingColumns },
@@ -21,7 +21,7 @@ const MobileNavbar = () => {
     { path: "/transactions", icon: faReceipt },
   ];
 
-  if (status === "authenticated") {
+  if (status === "authenticated" && sessionData?.user.isProfileComplete) {
     return (
       <nav className="fixed inset-x-0 bottom-0 z-30 flex w-full justify-center px-3 text-primary-light sm:hidden">
         <div className="flex h-full w-full max-w-md flex-col rounded-t-3xl bg-primary-dark/90 px-4 pt-2 pb-10 backdrop-blur-sm">
