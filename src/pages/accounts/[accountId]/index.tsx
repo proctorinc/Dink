@@ -31,17 +31,16 @@ const AccountPage = () => {
             <IconButton icon={faBuildingColumns} />
           </div>
         )}
-        {account?.institution?.logo &&
-          account?.institution?.logo !== "null" && (
-            <Image
-              className="h-12 w-12 rounded-full border border-primary-light"
-              width={100}
-              height={100}
-              src={`data:image/jpeg;base64,${account?.institution.logo}`}
-              alt="logo"
-            />
-          )}
-        {account?.institution?.logo === "null" && account?.institution?.url && (
+        {account?.institution?.logo && account?.institution?.logo && (
+          <Image
+            className="h-12 w-12 rounded-full border border-primary-light"
+            width={100}
+            height={100}
+            src={`data:image/jpeg;base64,${account?.institution.logo}`}
+            alt="logo"
+          />
+        )}
+        {!account?.institution?.logo && account?.institution?.url && (
           <Image
             className="w-10 rounded-full border border-primary-light bg-white"
             width={100}
