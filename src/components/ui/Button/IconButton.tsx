@@ -12,6 +12,7 @@ type IconButtonProps = {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
   noShadow?: boolean;
+  disabled?: boolean;
 };
 
 export const IconButton: FC<IconButtonProps> = ({
@@ -23,6 +24,7 @@ export const IconButton: FC<IconButtonProps> = ({
   onClick,
   className,
   noShadow,
+  disabled,
 }) => {
   let buttonSize = "w-10";
   if (size === "sm") {
@@ -60,6 +62,7 @@ export const IconButton: FC<IconButtonProps> = ({
         noShadow ? "" : "shadow-xl"
       } ${className ?? ""}`}
       onClick={onClick}
+      disabled={disabled}
     >
       <FontAwesomeIcon size={iconSize ?? innerIconSize} icon={icon} />
     </button>
