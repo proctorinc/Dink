@@ -207,11 +207,7 @@ export const bankAccountRouter = createTRPCRouter({
           monthlyTotal = Decimal.sub(monthlyTotal, monthSpending.spent);
           return {
             x: index,
-            y: Number(monthlyTotal),
-            // month: new Date(monthSpending.month).toLocaleString("en-US", {
-            //   month: "short",
-            //   year: "numeric",
-            // }),
+            y: Math.abs(Number(monthlyTotal)),
           };
         }),
       },
