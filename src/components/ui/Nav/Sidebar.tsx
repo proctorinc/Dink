@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 
 const Sidebar = () => {
   const router = useRouter();
-  const { status } = useSession();
+  const { status, data: sessionData } = useSession();
 
   const routes = [
     { path: "/accounts", name: "Accounts", icon: faBuildingColumns },
@@ -21,7 +21,7 @@ const Sidebar = () => {
     { path: "/transactions", name: "Transactions", icon: faReceipt },
   ];
 
-  if (status === "authenticated") {
+  if (status === "authenticated" && sessionData?.user.isProfileComplete) {
     return (
       <aside className="fixed left-[10%] top-1/2 hidden -translate-y-1/2 text-white sm:flex">
         <div className="flex flex-col gap-3">
