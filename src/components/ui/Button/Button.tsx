@@ -11,7 +11,7 @@ type ButtonProps = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   iconRight?: boolean;
   disabled?: boolean;
-  size?: "sm";
+  size?: "sm" | "lg";
   className?: string;
   noShadow?: boolean;
   type?: "submit" | "button" | "reset";
@@ -49,7 +49,13 @@ const Button: FC<ButtonProps> = ({
       "bg-danger-med text-danger-dark hover:bg-danger-light hover:text-danger-med hover:ring hover:ring-danger-med group-hover:text-danger-light";
   }
 
-  const buttonSize = size === "sm" ? "px-2 text-xs py-1" : "h-10 py-3 px-5";
+  let buttonSize = "h-10 py-3 px-5";
+
+  if (size === "sm") {
+    buttonSize = "px-2 text-xs py-1";
+  } else if (size === "lg") {
+    buttonSize = "px-4 text-md py-2";
+  }
 
   return (
     <button
