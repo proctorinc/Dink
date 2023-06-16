@@ -24,7 +24,6 @@ type AccountProps = {
 const Account: FC<AccountProps> = ({ data: account }) => {
   const router = useRouter();
 
-  console.log(account?.institution.logo);
   return (
     <Card
       onClick={() => void router.push(`/accounts/${account?.id ?? ""}`)}
