@@ -23,12 +23,13 @@ export default function ProfileSetup() {
   const [nameComplete, setNameComplete] = useState(false);
   const [nickname, setNickname] = useState("");
   const [income, setIncome] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const completeProfile = api.users.completeProfile.useMutation({
     onSuccess: () => {
+      setIsLoading(true);
       clearNotification();
       void ctx.invalidate();
-      void router.push("/");
     },
     onError: () => setErrorNotification("Failed to update profile. Try again"),
   });
@@ -37,7 +38,11 @@ export default function ProfileSetup() {
     void router.push("/");
   }
 
-  if (status === "authenticated" && !sessionData?.user.isProfileComplete) {
+  if (
+    !isLoading &&
+    status === "authenticated" &&
+    !sessionData?.user.isProfileComplete
+  ) {
     return (
       <Page auth title="Get Started" style="centered">
         <Header title="Welcome!" subtitle="Let's get started" />
