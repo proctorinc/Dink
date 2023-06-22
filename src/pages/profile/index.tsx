@@ -1,6 +1,11 @@
-import { faAngleUp, faGear } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleUp,
+  faArrowLeft,
+  faGear,
+} from "@fortawesome/free-solid-svg-icons";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import Button, { ButtonBar } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
@@ -15,6 +20,7 @@ const UserPage = () => {
   const { data: sessionData } = useSession();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const notifications = useNotifications();
+  const router = useRouter();
 
   const userPreferences = api.users.getUserPreferences.useQuery();
   const updateNickname = api.users.updateNickname.useMutation();
@@ -44,27 +50,27 @@ const UserPage = () => {
 
   return (
     <Page auth title="Profile">
-      <Header title="Profile" />
-      <div className="flex items-center gap-2">
+      <div className="w-full">
+        <Button icon={faArrowLeft} onClick={() => void router.back()} />
+      </div>
+      <div className="flex flex-col items-center gap-2">
         {sessionData?.user.image && (
           <Image
-            className="w-20 rounded-full shadow-lg"
+            className="w-28 rounded-full bg-primary-med shadow-lg"
             width={100}
             height={100}
             src={`${sessionData.user.image}?sz=256`}
             alt="user-image"
           />
         )}
-        <div className="flex flex-col gap-1">
-          <EditableTitle
-            className="text-3xl font-bold"
-            value={sessionData?.user.nickname}
-            onUpdate={handleProfileUpdate}
-          />
-          <h2 className="text-xl font-light text-primary-light">
-            {sessionData?.user.email}
-          </h2>
-        </div>
+        <EditableTitle
+          className="text-3xl font-bold"
+          value={sessionData?.user.nickname}
+          onUpdate={handleProfileUpdate}
+        />
+        <h2 className="text-lg font-light text-primary-light">
+          {sessionData?.user.email}
+        </h2>
       </div>
       <ButtonBar>
         <Button
