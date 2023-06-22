@@ -5,7 +5,7 @@ import { type FC, type ReactNode } from "react";
 type ButtonProps = {
   primary?: boolean;
   icon?: IconDefinition;
-  style?: "primary" | "secondary" | "warning" | "danger";
+  style?: "primary" | "secondary" | "warning" | "danger" | "invisible";
   children?: ReactNode;
   title?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -30,7 +30,7 @@ const Button: FC<ButtonProps> = ({
   type,
 }) => {
   let buttonColors =
-    "bg-primary-med text-primary-light hover:bg-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light";
+    "bg-primary-med bg-gradient-to-b from-primary-med to-primary-med-dark text-primary-light hover:bg-primary-light hover:from-primary-light hover:to-primary-light hover:text-primary-med hover:ring hover:ring-primary-med group-hover:text-primary-light";
 
   if (disabled && style === "warning") {
     buttonColors = "text-warning-med ring ring-warning-med";
@@ -40,13 +40,15 @@ const Button: FC<ButtonProps> = ({
     buttonColors = "text-primary-med ring ring-primary-med bg-primary-dark";
   } else if (style === "secondary") {
     buttonColors =
-      "bg-secondary-med text-secondary-dark hover:bg-secondary-light hover:text-secondary-med hover:ring hover:ring-secondary-med group-hover:text-secondary-light";
+      "bg-secondary-med bg-gradient-to-b from-secondary-med to-secondary-med-dark text-secondary-dark hover:bg-secondary-light hover:text-secondary-med-light hover:from-secondary-light hover:to-secondary-light hover:ring hover:ring-secondary-med group-hover:text-secondary-light";
   } else if (style === "warning") {
     buttonColors =
       "bg-warning-med text-warning-dark hover:bg-warning-light hover:text-warning-med hover:ring hover:ring-warning-med group-hover:text-warning-light";
   } else if (style === "danger") {
     buttonColors =
       "bg-danger-med text-danger-dark hover:bg-danger-light hover:text-danger-med hover:ring hover:ring-danger-med group-hover:text-danger-light";
+  } else if (style === "invisible") {
+    buttonColors = "bg-transparent";
   }
 
   let buttonSize = "h-10 py-3 px-5";

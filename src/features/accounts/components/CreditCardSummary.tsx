@@ -45,6 +45,7 @@ export const CreditCardSummary: FC<CreditCardSummaryProps> = ({
             key={account.id}
             size="sm"
             noShadow
+            invisible
             onClick={() => void router.push(`/accounts/${account.id}`)}
           >
             <Card.Header>

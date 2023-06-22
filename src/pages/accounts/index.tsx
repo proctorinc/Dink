@@ -35,10 +35,12 @@ export default function BankAccounts() {
   return (
     <Page auth title="Accounts" style="basic">
       {sessionData?.user.role === "demo" && (
-        <Notification
-          type="info"
-          message="Only sample accounts are available for the demo"
-        />
+        <div className="w-full px-3">
+          <Notification
+            type="info"
+            message="Only sample accounts are available for the demo"
+          />
+        </div>
       )}
       <div className="w-full px-4">
         <Header

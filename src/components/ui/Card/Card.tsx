@@ -18,6 +18,7 @@ export type CardProps = {
   horizontal?: boolean;
   size?: "sm";
   noShadow?: boolean;
+  invisible?: boolean;
 };
 
 type CardSubcomponents = {
@@ -38,13 +39,16 @@ const Card: FC<CardProps> & CardSubcomponents = ({
   onClick,
   size,
   noShadow,
+  invisible,
 }) => {
   const clickable = !!onClick
-    ? "group hover:bg-primary-light hover:text-primary-dark cursor-pointer"
+    ? "group hover:bg-primary-light hover:from-primary-light hover:to-primary-light hover:text-primary-dark cursor-pointer"
     : "";
-  const cardStyle = `${
-    noShadow ? "" : "shadow-lg"
-  } flex flex-col w-full rounded-xl bg-primary-med ${clickable}`;
+  const cardStyle = invisible
+    ? `flex flex-col w-full rounded-xl  ${clickable}`
+    : `${
+        noShadow ? "" : "shadow-lg"
+      } flex flex-col w-full rounded-xl bg-primary-med bg-gradient-to-b from-primary-med to-primary-med-dark ${clickable}`;
 
   const renderChildren = () => {
     return Children.map(children, (child) => {

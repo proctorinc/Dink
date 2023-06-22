@@ -53,7 +53,9 @@ export default function Home() {
   return (
     <Page auth title="Home" style="basic">
       {sessionData?.user.role === "demo" && (
-        <Notification type="info" message="Welcome to the Demo!" />
+        <div className="w-full px-3">
+          <Notification type="info" message="Welcome to the Demo!" />
+        </div>
       )}
 
       <div className="flex w-full flex-col gap-4 px-4">

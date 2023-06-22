@@ -54,6 +54,7 @@ export default function CreateFundPage() {
             <Card.Group horizontal className="h-40 flex-wrap overflow-y-scroll">
               {icons.map((icon) => (
                 <IconButton
+                  noShadow
                   key={icon.name}
                   icon={icon.icon}
                   style={selectedIcon === icon.name ? "secondary" : "primary"}

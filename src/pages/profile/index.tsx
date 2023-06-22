@@ -92,7 +92,7 @@ const UserPage = () => {
         <Card.Header>
           <h3>Preferences</h3>
         </Card.Header>
-        <Card>
+        <Card invisible>
           <Card.Body>
             <Card.Group>
               {userPreferences && (

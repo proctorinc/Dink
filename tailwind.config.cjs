@@ -9,11 +9,14 @@ const config = {
       primary: {
         dark: "#2A285B",
         med: "#434280",
+        "med-dark": "#373669",
         light: "#A3A5D7",
       },
       secondary: {
         dark: "#167B8D",
         med: "#00C6C5",
+        "med-light": "#00c9c8",
+        "med-dark": "#00b3b2",
         light: "#B3FFFF",
       },
       warning: {
