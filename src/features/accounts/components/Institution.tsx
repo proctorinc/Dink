@@ -106,23 +106,23 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
         onClose={() => setSelectedAccount(null)}
       >
         {!!selectedAccount && (
-          <Account data={{ ...selectedAccount, institution }} />
+          <Account data={{ ...selectedAccount, institution }} invisible />
         )}
         <div className="flex flex-col gap-2">
           <h1 className="text-left text-xl font-bold">Settings:</h1>
-          <Card noShadow size="sm" onClick={() => console.log("ok")}>
+          <Card invisible noShadow size="sm" onClick={() => console.log("ok")}>
             <Card.Group horizontal className="justify-between">
               <h3 className="text-primary-light">Setting #1</h3>
               <IconButton icon={faToggleOn} noShadow />
             </Card.Group>
           </Card>
-          <Card noShadow size="sm" onClick={() => console.log("ok")}>
+          <Card invisible noShadow size="sm" onClick={() => console.log("ok")}>
             <Card.Group horizontal className="justify-between">
               <h3 className="text-primary-light">Setting #2</h3>
               <IconButton icon={faToggleOn} noShadow />
             </Card.Group>
           </Card>
-          <Card noShadow size="sm" onClick={() => console.log("ok")}>
+          <Card invisible noShadow size="sm" onClick={() => console.log("ok")}>
             <Card.Group horizontal className="justify-between">
               <h3 className="text-primary-light">Setting #3</h3>
               <IconButton icon={faToggleOn} noShadow />

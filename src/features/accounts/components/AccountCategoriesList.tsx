@@ -56,7 +56,7 @@ export const AccountCategoriesList: FC<AccountCategoriesListProps> = ({
       </Card.Header>
       <Card.Collapse open={open === category}>
         {data.accounts.map((account) => (
-          <Account key={account.id} data={account} />
+          <Account key={account.id} data={account} invisible />
         ))}
         {data.accounts.length === 0 && (
           <Card size="sm" noShadow>

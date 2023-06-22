@@ -15,7 +15,7 @@ export const AccountManage: FC<AccountManageProps> = ({
   onClick,
 }) => {
   return (
-    <Card noShadow onClick={onClick}>
+    <Card noShadow invisible onClick={onClick}>
       <Card.Body horizontal>
         <Card.Group horizontal className="w-full">
           <Card.Group size="sm" className="grow">

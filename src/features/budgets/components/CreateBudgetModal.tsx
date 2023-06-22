@@ -85,9 +85,9 @@ export const CreateBudgetModal: FC<CreateBudgetModalProps> = ({
       {createSpending.isLoading || (createSavings.isLoading && <Spinner />)}
       {!createSpending.isLoading && !createSavings.isLoading && (
         <>
-          <Card noShadow>
+          <Card invisible noShadow>
             <Card.Collapse open={isSavings === null}>
-              <Card noShadow onClick={() => setIsSavings(false)}>
+              <Card invisible noShadow onClick={() => setIsSavings(false)}>
                 <Card.Header size="xl">
                   <Card.Group horizontal>
                     <IconButton icon={faCoins} style="secondary" />
@@ -95,7 +95,7 @@ export const CreateBudgetModal: FC<CreateBudgetModalProps> = ({
                   </Card.Group>
                 </Card.Header>
               </Card>
-              <Card noShadow onClick={() => setIsSavings(true)}>
+              <Card invisible noShadow onClick={() => setIsSavings(true)}>
                 <Card.Header size="xl">
                   <Card.Group horizontal>
                     <IconButton icon={faPiggyBank} style="secondary" />
@@ -105,7 +105,7 @@ export const CreateBudgetModal: FC<CreateBudgetModalProps> = ({
               </Card>
             </Card.Collapse>
             <Card.Collapse open={!!isSavings}>
-              <Card noShadow>
+              <Card invisible noShadow>
                 <Card.Body horizontal>
                   <Card.Group className="w-full">
                     <label htmlFor="amount-input" className="font-bold">
@@ -127,7 +127,7 @@ export const CreateBudgetModal: FC<CreateBudgetModalProps> = ({
                     </Card.Group>
                     <label className="font-bold">Choose Fund:</label>
                     <Card.Collapse open={!!fund}>
-                      <Card noShadow onClick={() => setFund(null)}>
+                      <Card invisible noShadow onClick={() => setFund(null)}>
                         <div className="flex gap-3">
                           {fund && (
                             <Fund
@@ -149,6 +149,7 @@ export const CreateBudgetModal: FC<CreateBudgetModalProps> = ({
                           <Fund
                             key={fund.id}
                             data={fund}
+                            invisible
                             onClick={() => setFund(fund)}
                           />
                         ))}
@@ -159,7 +160,7 @@ export const CreateBudgetModal: FC<CreateBudgetModalProps> = ({
               </Card>
             </Card.Collapse>
             <Card.Collapse open={isSavings === false}>
-              <Card noShadow>
+              <Card invisible noShadow>
                 <Card.Body horizontal>
                   <Card.Group>
                     <label htmlFor="name-input" className="font-bold">

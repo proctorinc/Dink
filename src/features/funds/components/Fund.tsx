@@ -13,9 +13,10 @@ type FundProps = {
   };
   onClick?: MouseEventHandler<HTMLDivElement>;
   noShadow?: boolean;
+  invisible?: boolean;
 };
 
-const Fund: FC<FundProps> = ({ data: fund, onClick, noShadow }) => {
+const Fund: FC<FundProps> = ({ data: fund, onClick, noShadow, invisible }) => {
   const router = useRouter();
   const { convertToIcon } = useIcons();
   const icon = convertToIcon(fund?.icon) ?? faPiggyBank;
@@ -25,7 +26,11 @@ const Fund: FC<FundProps> = ({ data: fund, onClick, noShadow }) => {
   };
 
   return (
-    <Card onClick={onClick ?? navigateToFund} noShadow={noShadow}>
+    <Card
+      invisible={invisible}
+      onClick={onClick ?? navigateToFund}
+      noShadow={noShadow}
+    >
       <Card.Body horizontal>
         <Card.Group horizontal size="xl">
           <IconButton size="sm" icon={icon} style="secondary" />

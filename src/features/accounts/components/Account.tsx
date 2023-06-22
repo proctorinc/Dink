@@ -19,15 +19,17 @@ type AccountProps = {
       syncItem: InstitutionSyncItem | null;
     };
   };
+  invisible?: boolean;
 };
 
-const Account: FC<AccountProps> = ({ data: account }) => {
+const Account: FC<AccountProps> = ({ data: account, invisible }) => {
   const router = useRouter();
 
   return (
     <Card
       onClick={() => void router.push(`/accounts/${account?.id ?? ""}`)}
       noShadow
+      invisible={invisible}
     >
       <Card.Body horizontal>
         <Card.Group horizontal>
