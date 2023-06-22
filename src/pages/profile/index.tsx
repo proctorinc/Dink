@@ -11,7 +11,6 @@ import Button, { ButtonBar } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
 import EditableTitle from "~/components/ui/EditableTitle";
-import Header from "~/components/ui/Header";
 import Page from "~/components/ui/Page";
 import useNotifications from "~/hooks/useNotifications";
 import { api } from "~/utils/api";
