@@ -4,8 +4,8 @@
 
 html,
 body {
-  background: #2a285b;
-  background: linear-gradient(
+  background: rgb(37, 35, 74);
+  background-image: linear-gradient(
     225deg,
     rgb(57, 56, 114) 0%,
     rgb(37, 35, 74) 100%
