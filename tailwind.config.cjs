@@ -8,7 +8,7 @@ const config = {
       black: "#000000",
       primary: {
         dark: "#2A285B",
-        med: "#403e80",
+        med: "#434280",
         light: "#A3A5D7",
       },
       secondary: {
