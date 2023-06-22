@@ -18,7 +18,7 @@ export const ProgressBar: FC<ProgressBarProps> = ({
   let formattedPercent = percentComplete;
   let barColor = "from-secondary-dark to-secondary-med";
 
-  const barHeight = size === "sm" ? "h-4" : "h-6";
+  const barHeight = size === "sm" ? "h-[18px]" : "h-6";
 
   if (percentComplete > 100) {
     formattedPercent = 100;
