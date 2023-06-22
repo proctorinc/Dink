@@ -21,7 +21,7 @@ const Header: FC<HeaderProps> = ({ title, subtitle, icon, back }) => {
       {back && (
         <div className="w-full pb-8">
           <Button
-            title="Back"
+            // title="Back"
             icon={faArrowLeft}
             onClick={() => void router.back()}
           />
