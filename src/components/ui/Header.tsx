@@ -20,11 +20,7 @@ const Header: FC<HeaderProps> = ({ title, subtitle, icon, back }) => {
     <div className="flex w-full flex-col">
       {back && (
         <div className="w-full pb-8">
-          <Button
-            // title="Back"
-            icon={faArrowLeft}
-            onClick={() => void router.back()}
-          />
+          <Button icon={faArrowLeft} onClick={() => void router.back()} />
         </div>
       )}
       <div className="flex gap-4">
