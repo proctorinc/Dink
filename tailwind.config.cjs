@@ -7,7 +7,7 @@ const config = {
       white: "#FFFFFF",
       black: "#000000",
       primary: {
-        dark: "#2A285B",
+        dark: "#2c2a5c",
         med: "#434280",
         "med-dark": "#373669",
         light: "#A3A5D7",
