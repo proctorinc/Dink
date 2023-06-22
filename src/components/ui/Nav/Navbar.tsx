@@ -13,7 +13,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-30 flex w-full flex-col items-center justify-center gap-1 bg-primary-dark/90 py-2 pl-2 pr-4 text-primary-light backdrop-blur-sm md:flex">
+      <nav className="sticky top-0 z-30 flex w-full flex-col items-center justify-center gap-1 py-2 pl-2 pr-4 text-primary-light backdrop-blur-lg md:flex">
         <div className="flex w-full max-w-lg items-center justify-between sm:max-w-4xl">
           <button
             className="flex items-center gap-2 rounded-xl py-1 px-3 text-3xl font-bold"
@@ -27,7 +27,7 @@ const Navbar = () => {
           </button>
           {status === "authenticated" && (
             <button
-              className="aspect-square w-10 rounded-full shadow-lg"
+              className="aspect-square w-10 rounded-full bg-primary-med shadow-lg"
               onClick={() => void router.push("/profile")}
             >
               {sessionData?.user.image && (

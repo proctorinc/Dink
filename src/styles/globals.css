@@ -4,5 +4,10 @@
 
 html,
 body {
-  background-color: #292b4c;
+  background: #2a285b;
+  background: linear-gradient(
+    225deg,
+    rgb(57, 56, 114) 0%,
+    rgb(37, 35, 74) 100%
+  );
 }

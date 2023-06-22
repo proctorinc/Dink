@@ -24,7 +24,7 @@ const MobileNavbar = () => {
   if (status === "authenticated" && sessionData?.user.isProfileComplete) {
     return (
       <nav className="fixed inset-x-0 bottom-0 z-30 flex w-full justify-center px-3 text-primary-light sm:hidden">
-        <div className="flex h-full w-full max-w-md flex-col rounded-t-3xl bg-primary-dark/90 px-4 pt-2 pb-10 backdrop-blur-sm">
+        <div className="bg-transparent flex h-full w-full max-w-md flex-col rounded-t-3xl px-4 pt-2 pb-10 backdrop-blur-lg">
           <div className="flex items-center justify-around">
             {routes.map((route) => (
               <IconButton

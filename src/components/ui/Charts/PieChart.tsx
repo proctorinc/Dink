@@ -54,7 +54,7 @@ export const PieChart: FC<PieChartProps> = ({
       theme={theme}
       data={data}
       colors={
-        progress ? ["#00C6C5", style === "dark" ? "#292B4C" : "#3D3F71"] : []
+        progress ? ["#00C6C5", style === "dark" ? "#2A285B" : "#3e3d83"] : []
       }
       defs={patterns}
       fill={
