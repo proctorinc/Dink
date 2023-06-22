@@ -70,7 +70,7 @@ const Login = () => {
           }}
         ></div>
         <div className="absolute top-0 flex h-3/4 w-full items-center justify-center p-4 sm:h-screen">
-          <Card className="z-10 flex w-full max-w-sm flex-col items-center from-primary-med-dark to-primary-dark shadow-2xl">
+          <Card className="z-10 flex w-full max-w-sm flex-col items-center bg-primary-light/10 from-primary-light/20 to-primary-light/10 shadow-2xl backdrop-blur-sm">
             <Card.Body className="items-center">
               <div className="flex items-center gap-2 rounded-xl py-1 px-3 text-5xl font-bold text-primary-light">
                 <FontAwesomeIcon
@@ -88,11 +88,11 @@ const Login = () => {
                   onClick={() => void signIn("google")}
                 />
                 <div className="flex items-center justify-center gap-3 py-2">
-                  <div className="h-0.5 w-full rounded-full bg-primary-med" />
+                  <div className="h-0.5 w-full rounded-full bg-primary-light" />
                   <span className="text-xs font-bold text-primary-light">
                     OR
                   </span>
-                  <div className="h-0.5 w-full rounded-full bg-primary-med" />
+                  <div className="h-0.5 w-full rounded-full bg-primary-light" />
                 </div>
                 {!open && (
                   <Button
