@@ -15,7 +15,7 @@ const Modal: FC<ModalProps> = ({ open, children, title, onClose }) => {
     <Dialog as="div" className="relative z-50" open={open} onClose={onClose}>
       <div className="fixed inset-0 overflow-y-auto text-white">
         <div className="flex min-h-full items-center justify-center bg-primary-dark/60 p-4 text-center backdrop-blur-sm">
-          <Dialog.Panel className="w-full max-w-lg rounded-xl bg-primary-med shadow-xl shadow-primary-dark">
+          <Dialog.Panel className="w-full max-w-lg rounded-xl bg-primary-med bg-gradient-to-b from-primary-med to-primary-med-dark shadow-xl shadow-primary-dark">
             <div className="flex justify-between px-4 pt-4">
               <Dialog.Title className="text-2xl font-bold">
                 {title}
