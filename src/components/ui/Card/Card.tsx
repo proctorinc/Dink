@@ -19,6 +19,7 @@ export type CardProps = {
   size?: "sm";
   noShadow?: boolean;
   invisible?: boolean;
+  style?: "primary" | "secondary" | "primary-light" | "secondary-light";
 };
 
 type CardSubcomponents = {
@@ -40,15 +41,21 @@ const Card: FC<CardProps> & CardSubcomponents = ({
   size,
   noShadow,
   invisible,
+  style,
 }) => {
   const clickable = !!onClick
     ? "group hover:bg-primary-light hover:from-primary-light hover:to-primary-light hover:text-primary-dark cursor-pointer"
     : "";
-  const cardStyle = invisible
-    ? `flex flex-col w-full rounded-xl  ${clickable}`
-    : `${
-        noShadow ? "" : "shadow-lg"
-      } flex flex-col w-full rounded-xl bg-primary-med bg-gradient-to-b from-primary-med to-primary-med-dark ${clickable}`;
+  let cardStyle =
+    "flex flex-col w-full rounded-xl bg-primary-med bg-gradient-to-b from-primary-med to-primary-med-dark";
+
+  if (style === "primary-light") {
+    cardStyle = "flex flex-col w-full rounded-xl bg-primary-light";
+  }
+
+  if (invisible) {
+    cardStyle = "flex flex-col w-full rounded-xl";
+  }
 
   const renderChildren = () => {
     return Children.map(children, (child) => {
@@ -62,7 +69,12 @@ const Card: FC<CardProps> & CardSubcomponents = ({
   };
 
   return (
-    <div className={`${cardStyle} ${className ?? ""}`} onClick={onClick}>
+    <div
+      className={`${cardStyle} ${clickable} ${noShadow ? "" : "shadow-lg"} ${
+        className ?? ""
+      }`}
+      onClick={onClick}
+    >
       {renderChildren()}
     </div>
   );

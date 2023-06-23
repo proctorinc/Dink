@@ -70,7 +70,7 @@ const Login = () => {
           }}
         ></div>
         <div className="absolute top-0 flex h-screen w-full items-center justify-center p-4">
-          <Card className="z-10 flex w-full max-w-sm flex-col items-center bg-primary-light bg-primary-light/10 from-primary-light/10 to-primary-light/10 shadow-2xl backdrop-blur-sm">
+          <Card style="primary-light" className="max-w-sm bg-opacity-30">
             <Card.Body className="items-center">
               <div className="flex items-center gap-2 rounded-xl py-1 px-3 text-5xl font-bold text-primary-light">
                 <FontAwesomeIcon
