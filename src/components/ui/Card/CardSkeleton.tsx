@@ -3,14 +3,19 @@ import Card, { type CardProps } from "./Card";
 
 type CardSkeletonProps = {
   children: ReactNode;
+  className?: string;
 } & CardProps;
 
 export const CardSkeleton: FC<CardSkeletonProps> = ({
   children,
+  className,
   ...cardProps
 }) => {
   return (
-    <Card className="animate-pulse bg-primary-med/50" {...cardProps}>
+    <Card
+      className={`animate-pulse bg-primary-med/50 ${className ?? ""}`}
+      {...cardProps}
+    >
       {children}
     </Card>
   );
