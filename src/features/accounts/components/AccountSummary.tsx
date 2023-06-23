@@ -16,7 +16,11 @@ export const AccountSummary: FC<AccountSummaryProps> = ({
   const router = useRouter();
 
   return (
-    <Card horizontal onClick={() => void router.push("/accounts")}>
+    <Card
+      horizontal
+      onClick={() => void router.push("/accounts")}
+      className="justify-center"
+    >
       <Card.Body horizontal>
         <div className="flex flex-col">
           <h3 className="text-xl font-bold">Accounts</h3>

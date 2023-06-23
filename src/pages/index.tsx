@@ -63,26 +63,28 @@ export default function Home() {
           title={`Hi, ${sessionData?.user?.nickname ?? ""}`}
           subtitle={formatToMonthYear(new Date())}
         />
-        {transactionData?.data && (
-          <TransactionsSummary data={transactionData.data} />
-        )}
-        {dataIsLoaded && (
-          <>
-            <BudgetSummary data={budgetData.data} />
-            <SavingsSummary data={fundsData.data} />
-            <AccountSummary data={accountData.data} />
-            <CreditCardSummary data={creditAccounts.data} />
-          </>
-        )}
-        {isLoading && (
-          <>
-            <TransactionsSummarySkeleton />
-            <BudgetSummarySkeleton />
-            <SavingsSummarySkeleton />
-            <AccountSummarySkeleton />
-            <CreditCardSummarySkeleton />
-          </>
-        )}
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {transactionData?.data && (
+            <TransactionsSummary data={transactionData.data} />
+          )}
+          {dataIsLoaded && (
+            <>
+              <BudgetSummary data={budgetData.data} />
+              <SavingsSummary data={fundsData.data} />
+              <AccountSummary data={accountData.data} />
+              <CreditCardSummary data={creditAccounts.data} />
+            </>
+          )}
+          {isLoading && (
+            <>
+              <TransactionsSummarySkeleton />
+              <BudgetSummarySkeleton />
+              <SavingsSummarySkeleton />
+              <AccountSummarySkeleton />
+              <CreditCardSummarySkeleton />
+            </>
+          )}
+        </div>
       </div>
     </Page>
   );

@@ -31,47 +31,53 @@ export const CreditCardSummary: FC<CreditCardSummaryProps> = ({
   }
 
   return (
-    <Card>
+    <Card className={creditAccounts.length > 1 ? "lg:col-span-2" : ""}>
       <Card.Header size="xl">
         <h3>Credit Cards</h3>
       </Card.Header>
-      {creditAccounts.map((account) => {
-        const utilizationPercent = formatToPercentage(
-          account.current,
-          new Prisma.Decimal(account.creditLimit ?? 1)
-        );
-        return (
-          <Card
-            key={account.id}
-            size="sm"
-            noShadow
-            invisible
-            onClick={() => void router.push(`/accounts/${account.id}`)}
-          >
-            <Card.Header>
-              <h3 className="text-lg">{account.name}</h3>
-            </Card.Header>
-            <Card.Body>
-              {account.current && account.creditLimit && (
-                <ProgressBar
-                  value={account.current}
-                  goal={new Prisma.Decimal(account.creditLimit)}
-                />
-              )}
-              <div className="flex justify-between py-1 text-sm text-primary-light group-hover:text-primary-med">
-                <span>
-                  {formatToCurrency(account.current)} /{" "}
-                  {formatToCurrency(
-                    new Prisma.Decimal(account.creditLimit ?? 0)
-                  )}{" "}
-                  limit
-                </span>
-                <span>{utilizationPercent} utilization</span>
-              </div>
-            </Card.Body>
-          </Card>
-        );
-      })}
+      <div
+        className={`grid grid-flow-col ${
+          creditAccounts.length > 1 ? "lg:grid-cols-2" : ""
+        }`}
+      >
+        {creditAccounts.map((account) => {
+          const utilizationPercent = formatToPercentage(
+            account.current,
+            new Prisma.Decimal(account.creditLimit ?? 1)
+          );
+          return (
+            <Card
+              key={account.id}
+              size="sm"
+              noShadow
+              invisible
+              onClick={() => void router.push(`/accounts/${account.id}`)}
+            >
+              <Card.Header>
+                <h3 className="text-lg">{account.name}</h3>
+              </Card.Header>
+              <Card.Body>
+                {account.current && account.creditLimit && (
+                  <ProgressBar
+                    value={account.current}
+                    goal={new Prisma.Decimal(account.creditLimit)}
+                  />
+                )}
+                <div className="flex justify-between py-1 text-sm text-primary-light group-hover:text-primary-med">
+                  <span>
+                    {formatToCurrency(account.current)} /{" "}
+                    {formatToCurrency(
+                      new Prisma.Decimal(account.creditLimit ?? 0)
+                    )}{" "}
+                    limit
+                  </span>
+                  <span>{utilizationPercent} utilization</span>
+                </div>
+              </Card.Body>
+            </Card>
+          );
+        })}
+      </div>
     </Card>
   );
 };

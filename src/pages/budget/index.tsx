@@ -1,6 +1,7 @@
 import {
   faAngleDown,
   faAngleUp,
+  faBackward,
   faPlus,
   faRedo,
 } from "@fortawesome/free-solid-svg-icons";
@@ -40,44 +41,52 @@ export default function Budgets() {
   const [modalOpen, setModalOpen] = useState(false);
   const { setErrorNotification } = useNotifications();
 
+  const currentMonth = new Date().toLocaleString("en-us", {
+    month: "long",
+  });
+
   return (
     <>
       <Page auth title="Budget">
         <Header title={`Budget`} subtitle={`${month} ${year}`} />
-        <BudgetCharts data={budgetData.data} />
-        <ButtonBar>
-          {isCurrentMonth && (
-            <Button
-              title="Budget"
-              icon={faPlus}
-              style="secondary"
-              onClick={() => setModalOpen(true)}
-            />
-          )}
-          {!isCurrentMonth && (
-            <Button
-              title="Current"
-              icon={faRedo}
-              onClick={setCurrentMonth}
-              style="secondary"
-            />
-          )}
-        </ButtonBar>
-        <MonthYearSelector />
+        <div className="grid w-full grid-flow-row grid-cols-1 gap-4 lg:grid-cols-2">
+          <BudgetCharts data={budgetData.data} />
+          <div className="flex flex-col gap-4 lg:order-first">
+            <ButtonBar>
+              {isCurrentMonth && (
+                <Button
+                  title="Budget"
+                  icon={faPlus}
+                  style="secondary"
+                  onClick={() => setModalOpen(true)}
+                />
+              )}
+              {!isCurrentMonth && (
+                <Button
+                  title={currentMonth}
+                  icon={faBackward}
+                  onClick={setCurrentMonth}
+                  style="secondary"
+                />
+              )}
+            </ButtonBar>
+            <MonthYearSelector />
+            <IncomeBudget />
+          </div>
+        </div>
         {!budgetData.data && <BudgetSkeletons />}
         {budgetData.data && (
           <>
-            <IncomeBudget />
             <div
               className="flex w-full items-center justify-between"
               onClick={() => setShowSpending((prev) => !prev)}
             >
-              <div className="flex gap-1">
+              <div className="flex w-full items-center gap-1">
                 <IconButton
                   icon={showSpending ? faAngleUp : faAngleDown}
                   noShadow
                 />
-                <h3 className="w-full text-left text-xl font-bold text-primary-light">
+                <h3 className="text-left text-xl font-bold text-primary-light">
                   Spending
                 </h3>
               </div>
@@ -85,7 +94,7 @@ export default function Budgets() {
                 {formatToCurrency(budgetData.data?.spending.total)}
               </span>
             </div>
-            <div className="flex w-full flex-col gap-3">
+            <div className="grid w-full grid-flow-row grid-cols-1 gap-3 lg:grid-cols-2">
               {showSpending &&
                 budgetData.data?.spending.budgets.map((budget) => (
                   <Budget key={budget.id} data={budget} />
@@ -95,7 +104,7 @@ export default function Budgets() {
               className="flex w-full items-center justify-between"
               onClick={() => setShowSavings((prev) => !prev)}
             >
-              <div className="flex gap-1">
+              <div className="flex items-center gap-1">
                 <IconButton
                   icon={showSavings ? faAngleUp : faAngleDown}
                   noShadow
@@ -108,7 +117,7 @@ export default function Budgets() {
                 {formatToCurrency(budgetData.data?.savings.total)}
               </span>
             </div>
-            <div className="flex w-full flex-col gap-3">
+            <div className="grid w-full grid-flow-row grid-cols-1 gap-3 lg:grid-cols-2">
               {showSavings &&
                 budgetData.data?.savings.budgets.map((budget) => (
                   <SavingsBudget key={budget.id} data={budget} />

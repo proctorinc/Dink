@@ -75,7 +75,7 @@ const Login = () => {
             className="backdrop-blur-xs max-w-sm bg-opacity-30"
           >
             <Card.Body className="items-center">
-              <div className="flex items-center gap-2 rounded-xl py-1 px-3 pr-5 text-5xl font-bold text-primary-med">
+              <div className="flex items-center gap-2 rounded-xl py-1 px-3 pr-5 text-5xl font-bold text-primary-light">
                 <FontAwesomeIcon
                   className="h-10 w-10"
                   icon={faCircleHalfStroke}

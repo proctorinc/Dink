@@ -47,7 +47,7 @@ export default function Funds() {
           onClick={() => void router.push("/savings/allocate")}
         />
       </ButtonBar>
-      <div className="flex w-full flex-col gap-3">
+      <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
         {fundsData?.data?.funds.map((fund) => (
           <Fund
             key={fund.id}

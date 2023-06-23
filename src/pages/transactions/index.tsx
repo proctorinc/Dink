@@ -92,6 +92,9 @@ const TransactionsPage = () => {
             style="secondary"
             onClick={() => setModalOpen(true)}
           />
+          <div className="hidden w-full lg:flex">
+            <MonthYearSelector />
+          </div>
         </ButtonBar>
         {searchEnabled && (
           <Card size="sm">
@@ -182,11 +185,15 @@ const TransactionsPage = () => {
             </Card.Body>
           </Card>
         )}
-        {filterMonthly && <MonthYearSelector />}
-        <div className="flex w-full flex-col gap-3">
+        {filterMonthly && (
+          <div className="w-full lg:hidden">
+            <MonthYearSelector />
+          </div>
+        )}
+        <div className="grid w-full grid-cols-1 gap-3 lg:grid-cols-2">
           {!transactionData.data && <TransactionSkeletons />}
           {transactionData?.data && transactionData.data.length === 0 && (
-            <Card>
+            <Card className="col-span-2">
               <Card.Header size="xl">
                 <Card.Group>
                   <span className="text-lg">No Transactions</span>

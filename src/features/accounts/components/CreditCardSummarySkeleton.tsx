@@ -23,13 +23,14 @@ export const CreditCardSummarySkeleton = () => {
   );
 
   return (
-    <CardSkeleton>
+    <CardSkeleton className="lg:col-span-2">
       <Card.Header size="xl">
         <h3>Credit Cards</h3>
       </Card.Header>
-      <CreditCardSkeleton />
-      <CreditCardSkeleton />
-      <CreditCardSkeleton />
+      <div className="grid grid-flow-col lg:grid-cols-2">
+        <CreditCardSkeleton />
+        <CreditCardSkeleton />
+      </div>
     </CardSkeleton>
   );
 };

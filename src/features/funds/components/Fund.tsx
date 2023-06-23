@@ -27,6 +27,7 @@ const Fund: FC<FundProps> = ({ data: fund, onClick, noShadow, invisible }) => {
 
   return (
     <Card
+      className="justify-center"
       invisible={invisible}
       onClick={onClick ?? navigateToFund}
       noShadow={noShadow}

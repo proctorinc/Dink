@@ -30,10 +30,10 @@ export const SavingsCharts: FC<SavingsChartsProps> = ({ data }) => {
 
   return (
     <div className="flex w-full items-end overflow-x-clip">
-      <div className="max-h-1/4 h-64 w-2/3">
+      <div className="max-h-1/4 h-64 w-2/3 lg:w-1/2">
         <PieChart data={data?.funds ?? []} floatRight />
       </div>
-      <div className="flex h-full w-1/3 items-end justify-center">
+      <div className="flex h-full w-1/3 items-end justify-center lg:w-1/2">
         <div className="relative flex h-40 w-full flex-col items-center justify-center">
           {data && (
             <span className="absolute text-xl font-bold">
@@ -46,7 +46,7 @@ export const SavingsCharts: FC<SavingsChartsProps> = ({ data }) => {
             </div>
           )}
           <PieChart data={chartData} progress />
-          <span className="absolute bottom-0 font-bold text-primary-light">
+          <span className="absolute -bottom-2 font-bold text-primary-light lg:-bottom-5">
             Allocated
           </span>
         </div>

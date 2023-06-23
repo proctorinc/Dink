@@ -67,16 +67,18 @@ export default function BankAccounts() {
           />
           <PlaidLink style="secondary" />
         </ButtonBar>
-        {accountData.data &&
-          accountCategories.map((category) => (
-            <AccountCategoriesList
-              key={category}
-              category={category}
-              data={accountData.data.categories[category]}
-              open={open}
-              setOpen={(category) => handleOpen(category)}
-            />
-          ))}
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {accountData.data &&
+            accountCategories.map((category) => (
+              <AccountCategoriesList
+                key={category}
+                category={category}
+                data={accountData.data.categories[category]}
+                open={open}
+                setOpen={(category) => handleOpen(category)}
+              />
+            ))}
+        </div>
         {!accountData.data &&
           accountCategories.map((category) => (
             <AccountCategorySkeleton key={category} category={category} />
