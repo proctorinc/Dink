@@ -13,7 +13,9 @@ export const CardSkeleton: FC<CardSkeletonProps> = ({
 }) => {
   return (
     <Card
-      className={`animate-pulse bg-primary-med/50 ${className ?? ""}`}
+      className={`animate-pulse justify-center bg-primary-med/50 ${
+        className ?? ""
+      }`}
       {...cardProps}
     >
       {children}
