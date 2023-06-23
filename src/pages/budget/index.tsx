@@ -3,7 +3,6 @@ import {
   faAngleUp,
   faBackward,
   faPlus,
-  faRedo,
 } from "@fortawesome/free-solid-svg-icons";
 import { useMonthContext } from "~/hooks/useMonthContext";
 import { ButtonBar, IconButton } from "~/components/ui/Button";
