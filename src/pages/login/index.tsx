@@ -70,11 +70,14 @@ const Login = () => {
           }}
         ></div>
         <div className="absolute top-0 flex h-screen w-full items-center justify-center p-4">
-          <Card style="primary-light" className="max-w-sm bg-opacity-30">
+          <Card
+            style="primary-light"
+            className="backdrop-blur-xs max-w-sm bg-opacity-30"
+          >
             <Card.Body className="items-center">
-              <div className="flex items-center gap-2 rounded-xl py-1 px-3 text-5xl font-bold text-primary-light">
+              <div className="flex items-center gap-2 rounded-xl py-1 px-3 pr-5 text-5xl font-bold text-primary-med">
                 <FontAwesomeIcon
-                  className="h-10 w-10 text-primary-light"
+                  className="h-10 w-10"
                   icon={faCircleHalfStroke}
                 />
                 <span>Dink</span>
