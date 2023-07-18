@@ -9,7 +9,7 @@ import {
   type Budget,
   type Fund,
 } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 import { z } from "zod";
 import { AccountCategory } from "~/config";
 import {

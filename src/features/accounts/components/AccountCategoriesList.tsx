@@ -1,5 +1,5 @@
 import { type InstitutionSyncItem, type BankAccount } from "@prisma/client";
-import { type Decimal } from "@prisma/client/runtime";
+import { type Decimal } from "@prisma/client/runtime/library";
 import { type FC } from "react";
 import { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";

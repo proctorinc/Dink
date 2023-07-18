@@ -1,4 +1,4 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { type Transaction, type RemovedTransaction } from "plaid";
 import plaidClient from "../../plaid";
 import { createAccounts } from "./queries/accounts";
