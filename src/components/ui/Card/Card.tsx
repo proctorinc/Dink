@@ -47,7 +47,7 @@ const Card: FC<CardProps> & CardSubcomponents = ({
     ? "group hover:bg-primary-light hover:from-primary-light hover:to-primary-light hover:text-primary-dark cursor-pointer"
     : "";
   let cardStyle =
-    "flex flex-col w-full rounded-xl bg-primary-med bg-gradient-to-b from-primary-med to-primary-med-dark";
+    "flex flex-col w-full rounded-xl bg-primary-med bg-gradient-to-br from-primary-med to-primary-med-dark";
 
   if (style === "primary-light") {
     cardStyle = "flex flex-col w-full rounded-xl bg-primary-light";
