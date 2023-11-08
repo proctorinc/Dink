@@ -167,7 +167,7 @@ const TransactionsPage = () => {
                   transactionData.data.map((transaction, index) => (
                     <>
                       {(index === 0 ||
-                        transactionData.data[index - 1].date.getMonth() !==
+                        transactionData.data[index - 1]?.date.getMonth() !==
                           transaction.date.getMonth()) && (
                         <div
                           key="Not found"
