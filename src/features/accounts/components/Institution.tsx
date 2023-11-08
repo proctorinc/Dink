@@ -1,13 +1,17 @@
 import {
+  faAngleDown,
   faAngleUp,
+  faArrowRight,
   faBuildingColumns,
-  faGear,
+  faChainBroken,
+  faRefresh,
   faToggleOn,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type InstitutionSyncItem, type BankAccount } from "@prisma/client";
 import Image from "next/image";
 import React, { type FC, useState } from "react";
-import { IconButton } from "~/components/ui/Button";
+import Button, { IconButton } from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import ConfirmDelete from "~/components/ui/ConfirmDelete";
 import Modal from "~/components/ui/Modal";
@@ -39,9 +43,12 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
 
   return (
     <>
-      <Card key={institution.id}>
-        <Card.Header size="xl" onClick={toggleSettingsOpen}>
-          <Card.Group horizontal>
+      <div key={institution.id}>
+        <div
+          className="flex items-center justify-between border-b border-gray-300 p-4"
+          onClick={toggleSettingsOpen}
+        >
+          <div className="flex gap-2">
             {!institution?.logo && !institution?.url && (
               <div className="flex aspect-square h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary-dark shadow-xl">
                 <IconButton icon={faBuildingColumns} />
@@ -67,30 +74,23 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
                 alt="institution-image"
               />
             )}
-            <Card.Group size="sm">
+            <div>
               <h3>{institution.name}</h3>
-              <h3 className="text-sm font-normal text-primary-light group-hover:text-primary-med">
-                {institution.linkedAccounts.length} Linked Account
-                {institution.linkedAccounts.length === 1 ? "" : "s"}
+              <h3 className="text-sm font-normal group-hover:text-primary-med">
+                {institution.linkedAccounts.length} Linked
               </h3>
-            </Card.Group>
-          </Card.Group>
-          <IconButton
-            icon={settingsOpen ? faAngleUp : faGear}
+            </div>
+          </div>
+          <FontAwesomeIcon
+            icon={settingsOpen ? faAngleUp : faAngleDown}
             className="group-hover:text-primary-med"
-            noShadow
-            size="sm"
-            onClick={toggleSettingsOpen}
           />
-        </Card.Header>
-        <Card.Collapse open={settingsOpen}>
-          <Card.Body>
-            <h4 className="font-bold text-primary-light">Settings</h4>
-            <ConfirmDelete
-              confirmationText={`Delete my ${institution.name}`}
-              onDelete={() => console.log("delete")}
-            />
-          </Card.Body>
+        </div>
+        <div className={settingsOpen ? "flex flex-col" : "hidden"}>
+          <div className="flex items-center gap-2 border-b border-gray-300 bg-gray-100 p-4 text-sm">
+            <Button icon={faChainBroken} style="danger" title="Unlink" />
+            {/* <Button icon={faRefresh} style="secondary" title="Fix Connection" /> */}
+          </div>
           {institution.linkedAccounts.map((account) => (
             <AccountManage
               key={account.id}
@@ -98,36 +98,36 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
               onClick={() => setSelectedAccount(account)}
             />
           ))}
-        </Card.Collapse>
-      </Card>
+        </div>
+      </div>
       <Modal
         title="Manage Account"
         open={!!selectedAccount}
         onClose={() => setSelectedAccount(null)}
       >
         {!!selectedAccount && (
-          <Account data={{ ...selectedAccount, institution }} invisible />
+          <Account data={{ ...selectedAccount, institution }} />
         )}
         <div className="flex flex-col gap-2">
           <h1 className="text-left text-xl font-bold">Settings:</h1>
-          <Card invisible noShadow size="sm" onClick={() => console.log("ok")}>
-            <Card.Group horizontal className="justify-between">
+          <div onClick={() => console.log("ok")}>
+            <div className="justify-between">
               <h3 className="text-primary-light">Setting #1</h3>
               <IconButton icon={faToggleOn} noShadow />
-            </Card.Group>
-          </Card>
-          <Card invisible noShadow size="sm" onClick={() => console.log("ok")}>
-            <Card.Group horizontal className="justify-between">
+            </div>
+          </div>
+          <div onClick={() => console.log("ok")}>
+            <div className="justify-between">
               <h3 className="text-primary-light">Setting #2</h3>
               <IconButton icon={faToggleOn} noShadow />
-            </Card.Group>
-          </Card>
-          <Card invisible noShadow size="sm" onClick={() => console.log("ok")}>
-            <Card.Group horizontal className="justify-between">
+            </div>
+          </div>
+          <div onClick={() => console.log("ok")}>
+            <div className="justify-between">
               <h3 className="text-primary-light">Setting #3</h3>
               <IconButton icon={faToggleOn} noShadow />
-            </Card.Group>
-          </Card>
+            </div>
+          </div>
         </div>
       </Modal>
     </>

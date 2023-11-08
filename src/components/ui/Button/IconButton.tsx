@@ -26,11 +26,11 @@ export const IconButton: FC<IconButtonProps> = ({
   noShadow,
   disabled,
 }) => {
-  let buttonSize = "w-10";
+  let buttonSize = "w-10 h-10";
   if (size === "sm") {
-    buttonSize = "w-8";
+    buttonSize = "w-8 h-8";
   } else if (size === "xs") {
-    buttonSize = "w-4";
+    buttonSize = "w-4 h-4";
   }
   let innerIconSize: SizeProp = "lg";
   if (size === "sm") {

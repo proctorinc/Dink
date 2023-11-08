@@ -1,11 +1,11 @@
-import { faCoins, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Head from "next/head";
 import { useRouter } from "next/router";
-import { ButtonBar } from "~/components/ui/Button";
-import Button from "~/components/ui/Button/Button";
+import AuthPage from "~/components/routes/AuthPage";
 import Header from "~/components/ui/Header";
-import Page from "~/components/ui/Page";
 import { TextSkeleton } from "~/components/ui/Skeleton";
-import Fund, { FundSkeletons, SavingsCharts } from "~/features/funds";
+import Fund, { SavingsCharts } from "~/features/funds";
 import useNotifications from "~/hooks/useNotifications";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
@@ -18,45 +18,67 @@ export default function Funds() {
 
   const { setErrorNotification } = useNotifications();
 
-  const isFundsEmpty = fundsData?.data?.funds.length === 0;
-
   return (
-    <Page auth title="Savings">
-      <Header
-        title="Savings"
-        subtitle={
-          fundsData.data ? (
-            `Total: ${formatToCurrency(fundsData?.data?.total)}`
-          ) : (
-            <TextSkeleton width={200} size="xl" color="primary" />
-          )
-        }
-      />
-      <SavingsCharts data={fundsData?.data} />
-      <ButtonBar>
-        <Button
-          title="Fund"
-          icon={faPlus}
-          style={isFundsEmpty ? "secondary" : "primary"}
-          onClick={() => void router.push("/savings/create")}
-        />
-        <Button
-          title="Allocate"
-          icon={faCoins}
-          style={isFundsEmpty ? "primary" : "secondary"}
-          onClick={() => void router.push("/savings/allocate")}
-        />
-      </ButtonBar>
-      <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
-        {fundsData?.data?.funds.map((fund) => (
-          <Fund
-            key={fund.id}
-            data={fund}
-            onClick={() => void router.push(`/savings/${fund.id}`)}
-          />
-        ))}
-        {!fundsData.data && <FundSkeletons />}
-      </div>
-    </Page>
+    <AuthPage>
+      <Head>
+        <title>Savings</title>
+      </Head>
+      <main className="flex flex-col items-center text-white">
+        <div className="container flex max-w-md flex-col items-center justify-center gap-12 pt-5 sm:pb-4 lg:max-w-2xl">
+          <div className="flex w-full flex-col items-center gap-4">
+            <div className="flex w-full flex-col gap-4 px-4">
+              <Header
+                title="Savings"
+                subtitle={
+                  fundsData.data ? (
+                    `Total: ${formatToCurrency(fundsData?.data?.total)}`
+                  ) : (
+                    <TextSkeleton width={200} size="xl" color="primary" />
+                  )
+                }
+              />
+              <div className="flex w-full grid-cols-1 gap-4 overflow-x-scroll">
+                <SavingsCharts data={fundsData?.data} />
+              </div>
+            </div>
+            <div className="flex w-full flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
+              <h3 className="pl-2">This Month</h3>
+              <div className="grid grid-cols-2 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
+                <div className="flex flex-col items-center gap-2 p-4">
+                  <span>Saved</span>
+                  <span className="text-secondary-med">+2,250.00</span>
+                </div>
+                <div className="flex flex-col items-center gap-2 p-4">
+                  <span>Spent</span>
+                  <span className="text-danger-med">-$260.50</span>
+                </div>
+                <div className="col-span-2 flex items-center gap-2 border-t border-gray-300 bg-gray-100 p-4 text-sm text-gray-600">
+                  <span onClick={() => void router.push("/savings/allocate")}>
+                    Allocate Savings
+                  </span>
+                  <FontAwesomeIcon icon={faArrowRight} size="sm" />
+                </div>
+              </div>
+              <h3 className="pl-2">Funds</h3>
+              <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
+                {fundsData?.data?.funds.map((fund) => (
+                  <Fund
+                    key={fund.id}
+                    data={fund}
+                    onClick={() => void router.push(`/savings/${fund.id}`)}
+                  />
+                ))}
+                <div className="flex items-center gap-2 bg-gray-100 p-4 text-sm text-gray-600">
+                  <FontAwesomeIcon icon={faPlus} size="sm" />
+                  <span onClick={() => void router.push("/savings/create")}>
+                    New Fund
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </AuthPage>
   );
 }

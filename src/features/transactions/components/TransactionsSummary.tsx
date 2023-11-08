@@ -29,7 +29,7 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = ({
 
   return (
     <Card
-      onClick={() => void router.push("/transactions")}
+      onClick={() => void router.push("/transactions/categorize")}
       className="justify-center"
     >
       <Card.Body horizontal>

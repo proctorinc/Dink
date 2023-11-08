@@ -12,7 +12,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { z } from "zod";
 import Button, { IconButton } from "~/components/ui/Button";
-import Card from "~/components/ui/Card";
 import LoadingPage from "~/components/ui/LoadingPage";
 import Page from "~/components/ui/Page";
 import useNotifications from "~/hooks/useNotifications";
@@ -62,24 +61,27 @@ const Login = () => {
   if (status === "unauthenticated") {
     return (
       <Page title="Login" style="centered">
-        <div
+        {/* <div
           className="absolute top-0 z-0 h-screen w-full"
           style={{
             backgroundImage: `url(/static/images/stacked-waves-horizontal-light.svg)`,
             backgroundSize: "cover",
           }}
-        ></div>
+        ></div> */}
         <div className="absolute top-0 flex h-screen w-full items-center justify-center p-4">
-          <Card style="primary-light" className="max-w-sm bg-primary-light">
-            <Card.Body className="items-center">
-              <div className="flex items-center gap-2 rounded-xl py-1 px-3 pr-5 text-5xl font-bold text-primary-med-dark">
-                <FontAwesomeIcon
-                  className="h-10 w-10"
-                  icon={faCircleHalfStroke}
-                />
-                <span>Dink</span>
+          <div className="w-full max-w-sm">
+            <div className="items-center">
+              <div className="flex flex-col justify-center gap-2 rounded-xl px-3 py-1 text-left text-5xl font-bold text-primary-light">
+                <span>Welcome to</span>
+                <div className="flex items-center gap-2">
+                  <FontAwesomeIcon
+                    className="h-10 w-10 text-primary-light"
+                    icon={faCircleHalfStroke}
+                  />
+                  <span>Dink</span>
+                </div>
               </div>
-              <div className="flex w-full max-w-sm flex-col gap-4 px-4 pt-10">
+              <div className="mt-10 flex w-full max-w-sm flex-col gap-4 rounded-xl bg-gray-100 p-4 shadow-md">
                 <Button
                   title="Try the Demo"
                   className="w-full"
@@ -88,18 +90,18 @@ const Login = () => {
                   onClick={() => void signIn("google")}
                 />
                 <div className="flex items-center justify-center gap-3 py-2">
-                  <div className="h-0.5 w-full rounded-full bg-primary-med" />
-                  <span className="text-xs font-bold text-primary-med">OR</span>
-                  <div className="h-0.5 w-full rounded-full bg-primary-med" />
+                  <div className="h-0.5 w-full rounded-full bg-gray-300" />
+                  <span className="text-xs font-bold text-gray-300">OR</span>
+                  <div className="h-0.5 w-full rounded-full bg-gray-300" />
                 </div>
                 {!open && (
-                  <Button
-                    title="Request Access"
-                    className="w-full"
-                    style="primary"
-                    icon={faEnvelope}
+                  <button
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2 font-bold text-gray-600 shadow-md"
                     onClick={() => setOpen(true)}
-                  />
+                  >
+                    <FontAwesomeIcon icon={faEnvelope} />
+                    Request Full Access
+                  </button>
                 )}
                 {open && (
                   <form
@@ -135,8 +137,8 @@ const Login = () => {
                   </form>
                 )}
               </div>
-            </Card.Body>
-          </Card>
+            </div>
+          </div>
         </div>
       </Page>
     );

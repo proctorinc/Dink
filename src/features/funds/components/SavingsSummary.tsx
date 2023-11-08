@@ -1,4 +1,4 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { formatToCurrency } from "~/utils";
 import Card from "~/components/ui/Card";
@@ -9,6 +9,7 @@ import {
   type TransactionSource,
   type Prisma,
 } from "@prisma/client";
+import Button from "~/components/ui/Button";
 
 type SavingsSummaryProps = {
   data: {
@@ -49,21 +50,23 @@ export const SavingsSummary: FC<SavingsSummaryProps> = ({
   }
 
   return (
-    <Card onClick={() => void router.push("/savings")}>
-      <Card.Body>
-        <Card.Group
-          className="w-full justify-between text-xl font-bold"
-          horizontal
-        >
+    <Card
+      className="justify-center"
+      onClick={() => void router.push("/savings/allocate")}
+    >
+      <Card.Body horizontal>
+        <div className="flex flex-col">
           <h3 className="text-xl font-bold">Savings</h3>
-          <h3 className="text-lg font-bold text-primary-light group-hover:text-primary-med">
-            {formatToCurrency(fundsData.total)}
-          </h3>
-        </Card.Group>
-        <span className="text-sm text-primary-light group-hover:text-primary-med">
-          {formatToCurrency(fundsData.unallocatedTotal)} unallocated
-        </span>
-        <ProgressBar value={fundsData.total} goal={fundsData.available} />
+          <span className="text-sm text-primary-light group-hover:text-primary-med">
+            {formatToCurrency(fundsData.unallocatedTotal)} unallocated
+          </span>
+        </div>
+        <Button
+          title="Allocate"
+          icon={faArrowRight}
+          style="secondary"
+          iconRight
+        />
       </Card.Body>
     </Card>
   );

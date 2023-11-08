@@ -128,7 +128,6 @@ export const CategorizeTransactions: FC<CategorizeTransactionsProps> = ({
                 <Budget
                   key={budget.id}
                   data={budget}
-                  noShadow
                   onClick={() => selectById(budget.id)}
                 />
               ))}
@@ -138,7 +137,6 @@ export const CategorizeTransactions: FC<CategorizeTransactionsProps> = ({
                 <Fund
                   key={fund.id}
                   data={fund}
-                  noShadow
                   onClick={() => selectById(fund.id)}
                 />
               ))}

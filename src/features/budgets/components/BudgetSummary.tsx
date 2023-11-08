@@ -72,16 +72,19 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ data }) => {
           className="w-full justify-between text-xl font-bold"
           horizontal
         >
-          <h3>Budget</h3>
-          <h3 className="text-lg text-primary-light group-hover:text-primary-med">
-            Spent: {formatToPercentage(data.overall.spent, data.overall.goal)}
+          <h3>
+            {formatToCurrency(data.overall.goal - data.overall.spent)} left
           </h3>
         </Card.Group>
+        <ProgressBar
+          style="primary"
+          value={data.overall.spent}
+          goal={data.overall.goal}
+        />
         <span className="text-sm text-primary-light group-hover:text-primary-med">
           {formatToCurrency(data.overall.spent)} /{" "}
           {formatToCurrency(data.overall.goal)}
         </span>
-        <ProgressBar value={data.overall.spent} goal={data.overall.goal} />
       </Card.Body>
     </Card>
   );

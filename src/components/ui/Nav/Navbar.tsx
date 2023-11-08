@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import useNotifications from "~/hooks/useNotifications";
+import { formatToTitleCase } from "~/utils";
 import { Notification } from "../Notification/Notification";
 
 const Navbar = () => {
@@ -23,17 +24,19 @@ const Navbar = () => {
               className="h-6 w-6 text-primary-light"
               icon={faCircleHalfStroke}
             />
-            <span>Dink</span>
           </button>
+          <h3 className="text-lg font-bold">
+            {formatToTitleCase(router.asPath.split("/")[1])}
+          </h3>
           <button
-            className="aspect-square w-10 rounded-full bg-primary-med shadow-lg"
+            className="aspect-square h-8 w-8 rounded-full bg-primary-med shadow-lg"
             onClick={() => void router.push("/profile")}
           >
             {sessionData?.user.image && (
               <Image
                 className="w-full rounded-full shadow-lg"
-                width={10}
-                height={10}
+                width={1000}
+                height={1000}
                 src={sessionData?.user.image}
                 alt="user-image"
               />

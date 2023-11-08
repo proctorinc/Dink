@@ -13,11 +13,10 @@ export type BudgetProps = {
     spent: Prisma.Decimal;
     leftover: Prisma.Decimal;
   };
-  noShadow?: boolean;
   onClick?: MouseEventHandler<HTMLDivElement>;
 };
 
-const Budget: FC<BudgetProps> = ({ data: budget, onClick, noShadow }) => {
+const Budget: FC<BudgetProps> = ({ data: budget, onClick }) => {
   const router = useRouter();
   const { convertToIcon } = useIcons();
   const icon = convertToIcon(budget?.icon) ?? faMoneyBill1;
@@ -27,28 +26,23 @@ const Budget: FC<BudgetProps> = ({ data: budget, onClick, noShadow }) => {
   };
 
   return (
-    <Card size="sm" onClick={onClick ?? navigateToBudget} noShadow={noShadow}>
-      <Card.Body horizontal>
-        <IconButton icon={icon} style="secondary" />
-        <Card.Group size="sm" className="w-full gap-1 pl-2">
-          <h3 className="text-lg font-bold">
-            {formatToTitleCase(budget.name)}
-          </h3>
-          <ProgressBar size="sm" value={budget.spent} goal={budget.goal} />
-          <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
+    <div
+      className="flex w-full border-b border-gray-300 p-4"
+      onClick={onClick ?? navigateToBudget}
+    >
+      <div className="flex w-full items-center gap-1">
+        <IconButton size="sm" icon={icon} style="secondary" />
+        <div className="flex w-full flex-col gap-1 pl-2">
+          <div className="flex justify-between text-sm group-hover:text-primary-med">
+            <h3>{formatToTitleCase(budget.name)}</h3>
             <span>
               {formatToCurrency(budget.spent)} / {formatToCurrency(budget.goal)}
             </span>
-            {Number(budget.leftover) >= 0 && (
-              <span>{formatToCurrency(budget.leftover)} left</span>
-            )}
-            {Number(budget.leftover) < 0 && (
-              <span>{formatToCurrency(budget.leftover)} over</span>
-            )}
           </div>
-        </Card.Group>
-      </Card.Body>
-    </Card>
+          <ProgressBar size="sm" value={budget.spent} goal={budget.goal} />
+        </div>
+      </div>
+    </div>
   );
 };
 

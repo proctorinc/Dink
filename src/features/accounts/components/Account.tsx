@@ -4,8 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { type FC } from "react";
 import { IconButton } from "~/components/ui/Button";
-import Card from "~/components/ui/Card";
-import { formatToCurrency, formatToTitleCase } from "~/utils";
+import { formatToCurrency } from "~/utils";
 
 type AccountProps = {
   data: BankAccount & {
@@ -19,28 +18,26 @@ type AccountProps = {
       syncItem: InstitutionSyncItem | null;
     };
   };
-  invisible?: boolean;
 };
 
-const Account: FC<AccountProps> = ({ data: account, invisible }) => {
+const Account: FC<AccountProps> = ({ data: account }) => {
   const router = useRouter();
 
   return (
-    <Card
+    <div
+      className="border-b border-gray-300 p-4"
       onClick={() => void router.push(`/accounts/${account?.id ?? ""}`)}
-      noShadow
-      invisible={invisible}
     >
-      <Card.Body horizontal>
-        <Card.Group horizontal>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
           {!account?.institution?.logo && !account?.institution?.url && (
-            <div className="flex aspect-square h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary-dark shadow-xl">
+            <div className="flex aspect-square h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-primary-dark shadow-xl">
               <IconButton icon={faBuildingColumns} />
             </div>
           )}
           {account?.institution.logo && (
             <Image
-              className="w-10 rounded-full shadow-xl"
+              className="h-8 w-8 rounded-full shadow-xl"
               width={100}
               height={100}
               src={`data:image/jpeg;base64,${
@@ -51,25 +48,25 @@ const Account: FC<AccountProps> = ({ data: account, invisible }) => {
           )}
           {!account?.institution.logo && account.institution.url && (
             <Image
-              className="w-10 rounded-full bg-white shadow-xl"
+              className="h-8 w-8 rounded-full bg-white shadow-xl"
               width={100}
               height={100}
               src={`https://s2.googleusercontent.com/s2/favicons?domain=${account.institution.url}&sz=256`}
               alt="institution-image"
             />
           )}
-          <Card.Group size="sm" className="grow">
-            <h3 className="text-md">{account?.name}</h3>
-            <span className="text-sm text-primary-light group-hover:text-primary-med">
-              {formatToTitleCase(account?.subtype, true)} - {account?.mask}
+          <div className="grow">
+            <h3 className="text-sm">{account?.name}</h3>
+            <span className="text-sm text-gray-500 group-hover:text-primary-med">
+              {account?.mask} | {account?.institution.name}
             </span>
-          </Card.Group>
-        </Card.Group>
-        <span className="text-lg text-primary-light group-hover:text-primary-med">
+          </div>
+        </div>
+        <span className="text-gray-600 group-hover:text-primary-med">
           {formatToCurrency(account?.current)}
         </span>
-      </Card.Body>
-    </Card>
+      </div>
+    </div>
   );
 };
 

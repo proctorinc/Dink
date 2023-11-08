@@ -1,4 +1,5 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import { type FC, useEffect, useState } from "react";
 import { type PlaidLinkOnSuccess, usePlaidLink } from "react-plaid-link";
@@ -6,11 +7,7 @@ import Button from "~/components/ui/Button";
 import useNotifications from "~/hooks/useNotifications";
 import { api } from "~/utils/api";
 
-type PlaidLinkProps = {
-  style?: "primary" | "secondary";
-};
-
-export const PlaidLink: FC<PlaidLinkProps> = ({ style }) => {
+export const PlaidLink: FC = () => {
   const ctx = api.useContext();
   const { data: sessionData } = useSession();
   const [linkToken, setLinkToken] = useState<string | null>(null);
@@ -59,13 +56,13 @@ export const PlaidLink: FC<PlaidLinkProps> = ({ style }) => {
   }, [linkToken, ready, open]);
 
   return (
-    <Button
-      title="Account"
-      icon={faPlus}
-      style={style}
-      noShadow
+    <button
+      className="flex items-center gap-2"
       disabled={sessionData?.user.role === "demo"}
       onClick={() => getLinkToken.mutate()}
-    />
+    >
+      <FontAwesomeIcon icon={faPlus} />
+      Link Account
+    </button>
   );
 };

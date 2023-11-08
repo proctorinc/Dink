@@ -56,9 +56,9 @@ const UserPage = () => {
         {sessionData?.user.image && (
           <Image
             className="w-28 rounded-full bg-primary-med shadow-lg"
-            width={100}
-            height={100}
-            src={`${sessionData.user.image}?sz=256`}
+            width={1000}
+            height={1000}
+            src={`${sessionData.user.image}?sz=2048`}
             alt="user-image"
           />
         )}

@@ -44,7 +44,12 @@ export const IncomeBudget: FC = () => {
         </span>
       </Card.Header>
       <Card.Body>
-        <ProgressBar size="sm" value={income.data} goal={targetIncome} />
+        <ProgressBar
+          style="primary"
+          size="sm"
+          value={income.data}
+          goal={targetIncome}
+        />
       </Card.Body>
     </Card>
   );
