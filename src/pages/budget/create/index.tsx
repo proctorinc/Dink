@@ -106,11 +106,7 @@ export default function CreateBudgetPage() {
                   <Card onClick={() => setFund(null)}>
                     <div className="flex gap-3">
                       {fund && (
-                        <Fund
-                          data={fund}
-                          noShadow
-                          onClick={() => setFund(null)}
-                        />
+                        <Fund data={fund} onClick={() => setFund(null)} />
                       )}
                       <IconButton icon={faAngleRight} />
                     </div>

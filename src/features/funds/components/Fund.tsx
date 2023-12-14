@@ -1,42 +1,61 @@
-import { type FC, type MouseEventHandler } from "react";
+import { type FC, type HTMLAttributes } from "react";
 import { type Fund, type Prisma } from "@prisma/client";
-import { IconButton } from "~/components/ui/Button";
-import { faPiggyBank } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCoins,
+  faPencil,
+  faPiggyBank,
+  faReceipt,
+} from "@fortawesome/free-solid-svg-icons";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import useIcons from "~/hooks/useIcons";
-import { useRouter } from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { type IconColor } from "~/config";
 
-type FundProps = {
-  data?: Fund & {
+type FundProps = HTMLAttributes<HTMLDivElement> & {
+  data: Fund & {
     amount: Prisma.Decimal;
   };
-  onClick?: MouseEventHandler<HTMLDivElement>;
+  open?: string;
+  onSelection?: (fundId: string) => void;
 };
 
-const Fund: FC<FundProps> = ({ data: fund, onClick }) => {
-  const router = useRouter();
-  const { convertToIcon } = useIcons();
+const Fund: FC<FundProps> = ({ data: fund, open, onSelection, className }) => {
+  const { convertToIcon, convertToColor, defaultColor } = useIcons();
   const icon = convertToIcon(fund?.icon) ?? faPiggyBank;
-
-  const navigateToFund = () => {
-    void router.push(`/savings/${fund?.id ?? ""}`);
-  };
+  const color: IconColor = convertToColor(fund?.color) ?? defaultColor;
 
   return (
-    <div
-      className="flex w-full items-center border-b border-gray-300 p-2"
-      onClick={onClick ?? navigateToFund}
-    >
-      <div className="flex w-full items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="p-2 text-gray-500">
-            <IconButton style="secondary" size="sm" icon={icon} />
+    <>
+      <div
+        className={`flex w-full items-center p-4 ${className ?? ""} ${
+          open === fund?.id ? "bg-gray-100" : "border-b border-gray-300"
+        }`}
+        onClick={() => (onSelection ? onSelection(fund.id) : null)}
+      >
+        <div className="flex w-full items-center justify-between">
+          <div className="flex items-center gap-2">
+            <button
+              className="h-8 w-8 rounded-lg shadow-md"
+              style={{
+                backgroundColor: color?.primary,
+                color: color?.secondary,
+              }}
+            >
+              <FontAwesomeIcon size="lg" icon={icon} />
+            </button>
+            <h3>{formatToTitleCase(fund.name)}</h3>
           </div>
-          <h3>{formatToTitleCase(fund?.name)}</h3>
+          <span>{formatToCurrency(fund.amount)}</span>
         </div>
-        <span>{formatToCurrency(fund?.amount)}</span>
       </div>
-    </div>
+      {open === fund.id && (
+        <div className="flex justify-around border-b border-gray-300 bg-gray-100 p-4 text-gray-600">
+          <FontAwesomeIcon icon={faPencil} />
+          <FontAwesomeIcon icon={faCoins} />
+          <FontAwesomeIcon icon={faReceipt} />
+        </div>
+      )}
+    </>
   );
 };
 

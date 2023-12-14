@@ -25,27 +25,28 @@ export const SavingsBudget: FC<SavingsBudget> = ({ data: budget, onClick }) => {
   };
 
   return (
-    <Card onClick={onClick ?? navigateToBudget}>
-      <Card.Body horizontal>
-        <Card.Group size="sm">
-          <Card.Group horizontal>
-            <IconButton
-              icon={convertToIcon(budget.icon) ?? faSackDollar}
-              size="sm"
-              style="secondary"
-            />
-            <h3 className="text-lg font-bold">{budget?.savingsFund?.name}</h3>
-          </Card.Group>
-        </Card.Group>
-        <Card.Group horizontal size="sm">
-          <span className="font-bold text-primary-light">
-            {formatToCurrency(budget.goal)}
-          </span>
-          {Number(budget.spent) > 0 && (
-            <IconButton size="sm" icon={faCheckCircle} />
-          )}
-        </Card.Group>
-      </Card.Body>
-    </Card>
+    <div
+      className="flex w-full border-b border-gray-300 p-4"
+      onClick={onClick ?? navigateToBudget}
+    >
+      <div className="flex w-full items-center gap-1">
+        <IconButton
+          size="sm"
+          icon={convertToIcon(budget.icon) ?? faSackDollar}
+          style="secondary"
+        />
+        <div className="flex w-full flex-col gap-1 pl-2">
+          <div className="flex justify-between group-hover:text-primary-med">
+            <h3>{budget?.savingsFund?.name}</h3>
+            <span>
+              <span>{formatToCurrency(budget.goal)}</span>
+              {Number(budget.spent) > 0 && (
+                <IconButton size="sm" icon={faCheckCircle} />
+              )}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };

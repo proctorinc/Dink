@@ -1,4 +1,5 @@
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, type FC } from "react";
 import Button, { IconButton } from "./Button";
 import Modal from "./Modal";
@@ -28,8 +29,8 @@ const EditableTitle: FC<EditableTitleProps> = ({
     <>
       <div className="flex items-center gap-2">
         <h3 className={className}>{value}</h3>
-        <IconButton
-          className="aspect-square h-6 w-6"
+        <FontAwesomeIcon
+          className="aspect-square h-3 w-3 text-gray-600"
           icon={faPencil}
           size="xs"
           onClick={() => setEditing(true)}

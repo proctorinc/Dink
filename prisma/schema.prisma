@@ -155,6 +155,7 @@ model InstitutionSyncItem {
   cursor        String      @default("")
   institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   institutionId String      @unique
+  updatedAt      DateTime   @default(now())
 
   @@index([institutionId])
 }
@@ -163,6 +164,7 @@ model Budget {
   id                 String              @id @default(cuid())
   goal               Decimal             @db.Decimal(10, 2)
   icon               String
+  color              String              @default("teal")
   name               String
   startDate          DateTime
   endDate            DateTime?
@@ -179,7 +181,8 @@ model Budget {
 
 model Fund {
   id                 String              @id @default(cuid())
-  icon               String?
+  icon               String
+  color              String              @default("teal")
   name               String
   sourceTransactions TransactionSource[]
   savingsBudgets     Budget[]

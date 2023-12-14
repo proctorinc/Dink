@@ -88,7 +88,7 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
         </div>
         <div className={settingsOpen ? "flex flex-col" : "hidden"}>
           <div className="flex items-center gap-2 border-b border-gray-300 bg-gray-100 p-4 text-sm">
-            <Button icon={faChainBroken} style="danger" title="Unlink" />
+            <Button icon={faChainBroken} style="danger" title="Unlink All" />
             {/* <Button icon={faRefresh} style="secondary" title="Fix Connection" /> */}
           </div>
           {institution.linkedAccounts.map((account) => (

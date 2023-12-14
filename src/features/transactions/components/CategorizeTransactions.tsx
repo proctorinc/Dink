@@ -137,7 +137,7 @@ export const CategorizeTransactions: FC<CategorizeTransactionsProps> = ({
                 <Fund
                   key={fund.id}
                   data={fund}
-                  onClick={() => selectById(fund.id)}
+                  onSelection={(fundId) => selectById(fundId)}
                 />
               ))}
             </Card.Collapse>

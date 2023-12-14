@@ -2,6 +2,7 @@ import { Prisma, type Transaction } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { syncInstitutions } from "./plaid/update_transactions";
 
 function sumTransactions(transactions: Transaction[]) {
   return transactions.reduce((acc, transaction) => {
@@ -74,6 +75,7 @@ export const transactionsRouter = createTRPCRouter({
       });
     }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
+    await syncInstitutions(ctx.session.user.id);
     return ctx.prisma.transaction.findMany({
       where: {
         userId: ctx.session.user.id,

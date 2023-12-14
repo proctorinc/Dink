@@ -8,19 +8,21 @@ import useNotifications from "~/hooks/useNotifications";
 import { formatToMonthYear } from "~/utils";
 import { api } from "~/utils/api";
 import { useState } from "react";
-import Transaction, { TransactionsSummary } from "~/features/transactions";
+import Transaction, {
+  TransactionsSummary,
+  TransactionsSummarySkeleton,
+} from "~/features/transactions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faGear } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import Button from "~/components/ui/Button";
-import Card from "~/components/ui/Card";
-import { SavingsSummary } from "~/features/funds";
+import { SavingsSummary, SavingsSummarySkeleton } from "~/features/funds";
 
 export default function Home() {
   const router = useRouter();
   const { data: sessionData } = useSession();
   const { setErrorNotification } = useNotifications();
-  const [open, setOpen] = useState("");
+  const [openAccount, setOpenAccount] = useState("");
+  const [openTransaction, setOpenTransaction] = useState("");
   const accountData = api.bankAccounts.getAllData.useQuery(undefined, {
     onError: () => setErrorNotification("Failed to fetch accounts"),
   });
@@ -31,9 +33,14 @@ export default function Home() {
     onError: () => setErrorNotification("Failed to fetch transactions"),
   });
 
-  const handleOpen = (type: AccountCategory) => {
-    setOpen((prev) => (prev === type ? "" : type));
+  const handleOpenAccount = (type: AccountCategory) => {
+    setOpenAccount((prev) => (prev === type ? "" : type));
   };
+  const handleOpenTransaction = (transactionId: string) => {
+    setOpenTransaction((prev) => (prev === transactionId ? "" : transactionId));
+  };
+
+  const dataIsLoaded = transactionData.isSuccess && savingsData.isSuccess;
 
   return (
     <AuthPage>
@@ -48,13 +55,17 @@ export default function Home() {
                 title={`Hi, ${sessionData?.user?.nickname ?? ""}`}
                 subtitle={formatToMonthYear(new Date())}
               />
-              {/* <div className="flex w-full grid-cols-1 gap-4 overflow-x-scroll"></div> */}
-              {/* <h3 className="text-primary-light">Needs Attention</h3> */}
-              {transactionData.isSuccess && (
-                <TransactionsSummary data={transactionData.data} />
+              {dataIsLoaded && (
+                <>
+                  <TransactionsSummary data={transactionData.data} />
+                  <SavingsSummary data={savingsData.data} />
+                </>
               )}
-              {savingsData.isSuccess && (
-                <SavingsSummary data={savingsData.data} />
+              {!dataIsLoaded && (
+                <>
+                  <TransactionsSummarySkeleton />
+                  <SavingsSummarySkeleton />
+                </>
               )}
             </div>
             <div className="flex w-full flex-grow flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
@@ -73,8 +84,8 @@ export default function Home() {
                       key={category}
                       category={category}
                       data={accountData.data.categories[category]}
-                      open={open}
-                      setOpen={(category) => handleOpen(category)}
+                      open={openAccount}
+                      setOpen={(category) => handleOpenAccount(category)}
                     />
                   ))}
               </div>
@@ -84,9 +95,16 @@ export default function Home() {
                   transactionData.data
                     .slice(0, 5)
                     .map((transaction) => (
-                      <Transaction key={transaction.id} data={transaction} />
+                      <Transaction
+                        key={transaction.id}
+                        data={transaction}
+                        open={openTransaction}
+                        onClick={(transactionId) =>
+                          handleOpenTransaction(transactionId)
+                        }
+                      />
                     ))}
-                <div className="flex items-center gap-2 bg-gray-100 p-4 text-sm text-gray-600">
+                <div className="flex items-center justify-end gap-2 bg-gray-100 p-4 text-sm text-gray-600">
                   <span onClick={() => void router.push("/transactions")}>
                     All Transactions
                   </span>

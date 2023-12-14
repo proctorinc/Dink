@@ -132,12 +132,19 @@ export const fundsRouter = createTRPCRouter({
       return addAmountToFund(fund);
     }),
   create: protectedProcedure
-    .input(z.object({ name: z.string(), icon: z.string() }))
+    .input(
+      z.object({
+        name: z.string(),
+        icon: z.string(),
+        color: z.string().optional(),
+      })
+    )
     .mutation(({ input, ctx }) => {
       return ctx.prisma.fund.create({
         data: {
           icon: input.icon,
           name: input.name,
+          color: input.color,
           user: {
             connect: { id: ctx.session.user.id },
           },
@@ -163,7 +170,14 @@ export const fundsRouter = createTRPCRouter({
       });
     }),
   update: protectedProcedure
-    .input(z.object({ fundId: z.string(), name: z.string() }))
+    .input(
+      z.object({
+        fundId: z.string(),
+        name: z.string(),
+        icon: z.string(),
+        color: z.string().optional(),
+      })
+    )
     .mutation(async ({ input, ctx }) => {
       return ctx.prisma.fund.updateMany({
         where: {
@@ -172,6 +186,8 @@ export const fundsRouter = createTRPCRouter({
         },
         data: {
           name: input.name,
+          icon: input.icon,
+          color: input.color,
         },
       });
     }),

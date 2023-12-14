@@ -1,5 +1,6 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { type Transaction, type RemovedTransaction } from "plaid";
+import { prisma } from "~/server/db";
 import plaidClient from "../../plaid";
 import { createAccounts } from "./queries/accounts";
 import {
@@ -63,4 +64,40 @@ export async function syncTransactions(userId: string, plaidItemId: string) {
   await createOrUpdateTransactions(userId, added.concat(modified));
   await deleteTransactions(userId, removed);
   await updateItemTransactionsCursor(plaidItemId, cursor);
+}
+
+export async function syncInstitutions(userId: string) {
+  const institutions = await prisma.institution.findMany({
+    where: {
+      userId: userId,
+    },
+    include: {
+      syncItem: true,
+    },
+  });
+
+  institutions.map(async (institution) => {
+    if (institution.syncItem && institution.syncItem.status !== "demo") {
+      await syncTransactions(userId, institution.syncItem.plaidId);
+      // update the lastSynced date to now, check result as well? idkkkk
+
+      if (
+        true
+        // institution.syncItem.updatedAt.getTime() - new Date().getTime() >
+        // 1000 * 60 * 60 * 4 // 4 hours
+      ) {
+        console.log("Yes! Updating");
+        await prisma.institutionSyncItem.update({
+          where: {
+            id: institution.syncItem.plaidId,
+          },
+          data: {
+            updatedAt: new Date(),
+          },
+        });
+      }
+    } else {
+      console.log(`Don't update, demo: ${institution.name}`);
+    }
+  });
 }

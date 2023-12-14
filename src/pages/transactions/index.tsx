@@ -25,6 +25,11 @@ const TransactionsPage = () => {
   const [includeCategorized, setIncludeCategorized] = useState(true);
   const [includeUncategorized, setIncludeUncategorized] = useState(true);
   const [includeIncome, setIncludeIncome] = useState(true);
+  const [openTransaction, setOpenTransaction] = useState("");
+
+  const handleOpenTransaction = (transactionId: string) => {
+    setOpenTransaction((prev) => (prev === transactionId ? "" : transactionId));
+  };
 
   const transactionData = api.transactions.search.useQuery(
     {
@@ -170,7 +175,7 @@ const TransactionsPage = () => {
                         transactionData.data[index - 1]?.date.getMonth() !==
                           transaction.date.getMonth()) && (
                         <div
-                          key="Not found"
+                          key={index}
                           className="h-fit border-b border-gray-300 bg-gray-100 px-4 py-2 font-bold text-gray-600"
                         >
                           {transaction.date.toLocaleString("en-US", {
@@ -178,7 +183,14 @@ const TransactionsPage = () => {
                           })}
                         </div>
                       )}
-                      <Transaction key={transaction.id} data={transaction} />
+                      <Transaction
+                        key={transaction.id}
+                        data={transaction}
+                        open={openTransaction}
+                        onClick={(transactionId) =>
+                          handleOpenTransaction(transactionId)
+                        }
+                      />
                     </>
                   ))}
               </div>

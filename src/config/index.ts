@@ -75,3 +75,44 @@ export const iconMap = new Map<string, IconDefinition>(
     passport: faPassport,
   })
 );
+
+export type IconColor = {
+  name: string;
+  primary: string;
+  secondary: string;
+};
+
+export const iconColorMap = new Map<string, IconColor>(
+  Object.entries({
+    teal: {
+      name: "teal",
+      primary: "#167B8D",
+      secondary: "#00C6C5",
+    },
+    blue: {
+      name: "blue",
+      primary: "#0369a1",
+      secondary: "#38bdf8",
+    },
+    purple: {
+      name: "purple",
+      primary: "#434280",
+      secondary: "#A3A5D7",
+    },
+    red: {
+      name: "red",
+      primary: "#961737",
+      secondary: "#d18094",
+    },
+    orange: {
+      name: "orange",
+      primary: "#ea580c",
+      secondary: "#fdba74",
+    },
+    yellow: {
+      name: "yellow",
+      primary: "#eab308",
+      secondary: "#fef08a",
+    },
+  })
+);

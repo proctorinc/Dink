@@ -1,7 +1,6 @@
 import { faBuildingColumns } from "@fortawesome/free-solid-svg-icons";
 import { type InstitutionSyncItem, type BankAccount } from "@prisma/client";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { type FC } from "react";
 import { IconButton } from "~/components/ui/Button";
 import { formatToCurrency } from "~/utils";
@@ -21,13 +20,8 @@ type AccountProps = {
 };
 
 const Account: FC<AccountProps> = ({ data: account }) => {
-  const router = useRouter();
-
   return (
-    <div
-      className="border-b border-gray-300 p-4"
-      onClick={() => void router.push(`/accounts/${account?.id ?? ""}`)}
-    >
+    <div className="border-b border-gray-300 p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {!account?.institution?.logo && !account?.institution?.url && (

@@ -7,5 +7,6 @@ export * from "./components/IncomeBudget";
 export * from "./components/IncomeBudgetSkeleton";
 export * from "./components/BudgetSkeletons";
 export * from "./components/BudgetCharts";
+export * from "./components/CreateBudgetDrawer";
 
 export default Budget;

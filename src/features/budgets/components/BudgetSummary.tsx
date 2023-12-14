@@ -5,51 +5,60 @@ import { type FC } from "react";
 import Button from "~/components/ui/Button";
 import Card from "~/components/ui/Card";
 import { ProgressBar } from "~/components/ui/Charts";
-import { formatToCurrency, formatToPercentage } from "~/utils";
+import { formatToCurrency } from "~/utils";
 
 type BudgetSummaryProps = {
-  data: {
-    overall: {
-      goal: Prisma.Decimal;
-      spent: Prisma.Decimal;
-    };
-    spending: {
-      budgets: {
-        spent: Prisma.Decimal;
-        leftover: Prisma.Decimal;
-        id: string;
-        goal: Prisma.Decimal;
-        icon: string;
-        name: string;
-        startDate: Date;
-        endDate: Date | null;
-        savingsFundId: string | null;
-        userId: string;
-        savingsFund: Fund | null;
-      }[];
-    };
-    savings: {
-      budgets: {
-        spent: Prisma.Decimal;
-        leftover: Prisma.Decimal;
-        id: string;
-        goal: Prisma.Decimal;
-        icon: string;
-        name: string;
-        startDate: Date;
-        endDate: Date | null;
-        savingsFundId: string | null;
-        userId: string;
-        savingsFund: Fund | null;
-      }[];
-    };
-  };
+  data:
+    | {
+        overall: {
+          goal: Prisma.Decimal;
+          spent: Prisma.Decimal;
+          leftover: Prisma.Decimal;
+        };
+        spending: {
+          budgets: {
+            spent: Prisma.Decimal;
+            leftover: Prisma.Decimal;
+            id: string;
+            goal: Prisma.Decimal;
+            icon: string;
+            name: string;
+            startDate: Date;
+            endDate: Date | null;
+            savingsFundId: string | null;
+            userId: string;
+            savingsFund: Fund | null;
+          }[];
+          total: Prisma.Decimal;
+          goal: Prisma.Decimal;
+          leftover: Prisma.Decimal;
+        };
+        savings: {
+          budgets: {
+            spent: Prisma.Decimal;
+            leftover: Prisma.Decimal;
+            id: string;
+            goal: Prisma.Decimal;
+            icon: string;
+            name: string;
+            startDate: Date;
+            endDate: Date | null;
+            savingsFundId: string | null;
+            userId: string;
+            savingsFund: Fund | null;
+          }[];
+          total: Prisma.Decimal;
+          goal: Prisma.Decimal;
+          leftover: Prisma.Decimal;
+        };
+      }
+    | undefined;
 };
 
 export const BudgetSummary: FC<BudgetSummaryProps> = ({ data }) => {
   const router = useRouter();
 
-  if (data.spending.budgets.length === 0 && data.savings.budgets.length) {
+  if (data && data.spending.budgets.length === 0) {
     return (
       <Card onClick={() => void router.push("/budget")}>
         <Card.Body horizontal>
@@ -72,18 +81,16 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ data }) => {
           className="w-full justify-between text-xl font-bold"
           horizontal
         >
-          <h3>
-            {formatToCurrency(data.overall.goal - data.overall.spent)} left
-          </h3>
+          <h3>{formatToCurrency(data?.overall.leftover)} left</h3>
         </Card.Group>
         <ProgressBar
           style="primary"
-          value={data.overall.spent}
-          goal={data.overall.goal}
+          value={data?.overall.spent}
+          goal={data?.overall.goal}
         />
         <span className="text-sm text-primary-light group-hover:text-primary-med">
-          {formatToCurrency(data.overall.spent)} /{" "}
-          {formatToCurrency(data.overall.goal)}
+          {formatToCurrency(data?.overall.spent)} /{" "}
+          {formatToCurrency(data?.overall.goal)}
         </span>
       </Card.Body>
     </Card>

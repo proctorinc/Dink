@@ -55,4 +55,37 @@ export const plaidRouter = createTRPCRouter({
 
       await syncTransactions(userId, itemId);
     }),
+
+  // syncInstitutions: userProcedure.mutation(async ({ ctx }) => {
+  //   const institutions = await ctx.prisma.institution.findMany({
+  //     where: {
+  //       userId: ctx.session.user.id,
+  //     },
+  //     include: {
+  //       syncItem: true,
+  //     },
+  //   });
+
+  //   institutions.map(async (institution) => {
+  //     if (institution.syncItem) {
+  //       await syncTransactions(
+  //         ctx.session.user.id,
+  //         institution.syncItem.plaidId
+  //       );
+  //       // update the lastSynced date to now, check result as well? idkkkk
+  //       if (
+  //         institution.syncItem.updatedAt.getTime() - new Date().getTime() >
+  //         1000 * 60 * 60 * 4 // 4 hours
+  //       )
+  //         await ctx.prisma.institutionSyncItem.update({
+  //           where: {
+  //             id: institution.syncItem.plaidId,
+  //           },
+  //           data: {
+  //             updatedAt: new Date(),
+  //           },
+  //         });
+  //     }
+  //   });
+  // }),
 });

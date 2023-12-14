@@ -1,7 +1,7 @@
 import {
   faAngleDown,
   faAngleUp,
-  faArrowRight,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type InstitutionSyncItem, type BankAccount } from "@prisma/client";
@@ -41,6 +41,14 @@ export const AccountCategoriesList: FC<AccountCategoriesListProps> = ({
 }) => {
   const router = useRouter();
 
+  const handleOnClick = () => {
+    if (data.accounts.length === 0) {
+      void router.push("/accounts/manage");
+    } else {
+      setOpen(category);
+    }
+  };
+
   return (
     <div
       className={
@@ -52,7 +60,7 @@ export const AccountCategoriesList: FC<AccountCategoriesListProps> = ({
     >
       <div
         className="flex items-center justify-between p-2"
-        onClick={() => setOpen(category)}
+        onClick={handleOnClick}
       >
         <div className="flex items-center">
           <div className="p-2 text-gray-500">
@@ -68,36 +76,38 @@ export const AccountCategoriesList: FC<AccountCategoriesListProps> = ({
               : formatToTitleCase(category)}
           </h3>
         </div>
-        <div className="flex gap-2 p-2">
-          <span className="group-hover:text-primary-med">
-            {formatToCurrency(data.total)}
-          </span>
-          <div className="text-gray-600">
-            <FontAwesomeIcon
-              icon={open === category ? faAngleUp : faAngleDown}
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        className={
-          open === category
-            ? "flex flex-col border-t border-gray-300 bg-gray-100"
-            : "hidden"
-        }
-      >
-        {data.accounts.map((account) => (
-          <Account key={account.id} data={account} />
-        ))}
-        {data.accounts.length === 0 && (
-          <div className="flex items-center gap-2 bg-gray-100 p-4 text-sm text-gray-600">
-            <span onClick={() => void router.push("/accounts/manage")}>
-              Manage Accounts
+        {data.accounts.length > 0 && (
+          <div className="flex gap-2 p-2">
+            <span className="group-hover:text-primary-med">
+              {formatToCurrency(data.total)}
             </span>
-            <FontAwesomeIcon icon={faArrowRight} size="sm" />
+            <div className="text-gray-600">
+              <FontAwesomeIcon
+                icon={open === category ? faAngleUp : faAngleDown}
+              />
+            </div>
+          </div>
+        )}
+        {data.accounts.length === 0 && (
+          <div className="flex items-center gap-2 px-2 text-sm text-gray-600">
+            <span>Add</span>
+            <FontAwesomeIcon icon={faPlus} />
           </div>
         )}
       </div>
+      {data.accounts.length > 0 && (
+        <div
+          className={
+            open === category
+              ? "flex flex-col border-t border-gray-300 bg-gray-100"
+              : "hidden"
+          }
+        >
+          {data.accounts.map((account) => (
+            <Account key={account.id} data={account} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

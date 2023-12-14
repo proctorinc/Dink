@@ -42,10 +42,7 @@ export const PieChart: FC<PieChartProps> = ({
     {
       id: "gradient",
       type: "linearGradient",
-      colors: [
-        { offset: 0, color: "#00C6C5" },
-        // { offset: 100, color: "#126473" },
-      ],
+      colors: [{ offset: 0, color: "#00C6C5" }],
     },
   ];
 
