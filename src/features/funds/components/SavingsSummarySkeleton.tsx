@@ -16,6 +16,7 @@ export const SavingsSummarySkeleton = () => {
         </Card.Group>
         <TextSkeleton size="sm" color="primary" width={150} />
         <ProgressBar
+          style="primary"
           value={new Prisma.Decimal(30)}
           goal={new Prisma.Decimal(100)}
         />
