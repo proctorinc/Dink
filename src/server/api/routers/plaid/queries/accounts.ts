@@ -24,8 +24,11 @@ export async function createAccounts(
       });
     }
 
-    return await prisma.bankAccount.create({
-      data: {
+    return await prisma.bankAccount.upsert({
+      where: {
+        plaidId: account.account_id,
+      },
+      create: {
         plaidId: account.account_id,
         available: account.balances.available,
         current: account.balances.current,
@@ -43,6 +46,19 @@ export async function createAccounts(
         institution: {
           connect: { id: institution.id },
         },
+      },
+      update: {
+        plaidId: account.account_id,
+        available: account.balances.available,
+        current: account.balances.current,
+        isoCurrencyCode: account.balances.iso_currency_code,
+        creditLimit: account.balances.limit,
+        unofficialCurrencyCode: account.balances.unofficial_currency_code,
+        mask: account.mask,
+        name: account.name,
+        officialName: account.official_name,
+        subtype: account.subtype,
+        type: account.type === "other" ? "cash" : account.type,
       },
     });
   });
