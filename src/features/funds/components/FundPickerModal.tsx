@@ -19,9 +19,9 @@ export const FundPickerModal: FC<FundPickerModalProps> = ({
 
   return (
     <Modal title="Choose Savings Fund" open={open} onClose={onClose}>
-      <div className="grid max-h-72 grid-cols-1 overflow-clip overflow-y-scroll rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
+      <div className="grid grid-cols-1 overflow-clip overflow-y-scroll rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
         {fundsData?.data?.funds.map((fund) => (
-          <Fund key={fund.id} data={fund} onSelect={() => onSelect(fund)} />
+          <Fund key={fund.id} data={fund} onSelection={() => onSelect(fund)} />
         ))}
       </div>
     </Modal>
