@@ -69,7 +69,7 @@ export default function Funds() {
               )}
             </div>
             <div className="flex w-full flex-grow flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
-              <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
+              {/* <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
                 <div className="flex flex-col items-center gap-2 p-4 text-center">
                   <span>Uncategorized Spending</span>
                   <span className="text-danger-med">-$?,???.??</span>
@@ -80,7 +80,7 @@ export default function Funds() {
                   </span>
                   <FontAwesomeIcon icon={faArrowRight} size="sm" />
                 </div>
-              </div>
+              </div> */}
               <div className="flex items-center justify-between px-2">
                 <h3>Budgets</h3>
                 <FontAwesomeIcon

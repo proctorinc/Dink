@@ -48,7 +48,7 @@ export default function Funds() {
               <SavingsCharts data={fundsData?.data} />
             </div>
             <div className="flex w-full flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
-              <h3 className="pl-2">This Month</h3>
+              {/* <h3 className="pl-2">This Month</h3>
               <div className="grid grid-cols-2 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
                 <div className="flex flex-col items-center gap-2 p-4">
                   <span>Saved</span>
@@ -64,7 +64,7 @@ export default function Funds() {
                   </span>
                   <FontAwesomeIcon icon={faArrowRight} size="sm" />
                 </div>
-              </div>
+              </div> */}
               <h3 className="pl-2">Funds</h3>
               <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
                 {fundsData?.data?.funds.map((fund) => (
