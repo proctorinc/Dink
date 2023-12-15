@@ -1,28 +1,17 @@
-import {
-  faAngleUp,
-  faArrowLeft,
-  faGear,
-} from "@fortawesome/free-solid-svg-icons";
 import { signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import AuthPage from "~/components/routes/AuthPage";
-import Button, { ButtonBar } from "~/components/ui/Button";
-import Card from "~/components/ui/Card";
-import ConfirmDelete from "~/components/ui/ConfirmDelete";
+import Button from "~/components/ui/Button";
 import EditableTitle from "~/components/ui/EditableTitle";
-import Header from "~/components/ui/Header";
-import Page from "~/components/ui/Page";
 import useNotifications from "~/hooks/useNotifications";
 import { api } from "~/utils/api";
 
 const UserPage = () => {
   const { data: sessionData } = useSession();
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const notifications = useNotifications();
-  const router = useRouter();
 
   const userPreferences = api.users.getUserPreferences.useQuery();
   const updateNickname = api.users.updateNickname.useMutation();
@@ -103,6 +92,11 @@ const UserPage = () => {
                   </div>
                 )}
               </div>
+              <Button
+                style="secondary"
+                title="Log Out"
+                onClick={() => void signOut()}
+              />
             </div>
           </div>
         </div>
