@@ -1,5 +1,6 @@
 import { faArrowRight, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { type Prisma } from "@prisma/client";
 import Head from "next/head";
 import { useState } from "react";
 import AuthPage from "~/components/routes/AuthPage";
@@ -8,6 +9,7 @@ import { TextSkeleton } from "~/components/ui/Skeleton";
 import Fund, { SavingsCharts } from "~/features/funds";
 import AllocateSavingsDrawer from "~/features/funds/components/AllocateSavingsDrawer";
 import CreateFundDrawer from "~/features/funds/components/CreateFundDrawer";
+import EditFundDrawer from "~/features/funds/components/EditFundDrawer";
 import useNotifications from "~/hooks/useNotifications";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
@@ -18,12 +20,22 @@ export default function Funds() {
   });
   const [allocateDrawerOpen, setAllocateDrawerOpen] = useState(false);
   const [createFundDrawerOpen, setCreateFundDrawerOpen] = useState(false);
-  const [openFund, setOpenFund] = useState("");
+  const [openFund, setOpenFund] = useState<
+    | (Fund & {
+        amount: Prisma.Decimal;
+      })
+    | null
+  >(null);
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
 
   const { setErrorNotification } = useNotifications();
 
-  const handleOpenFund = (fundId: string) => {
-    setOpenFund((prev) => (prev === fundId ? "" : fundId));
+  const handleOpenFund = (
+    fund: Fund & {
+      amount: Prisma.Decimal;
+    }
+  ) => {
+    setOpenFund((prev) => (prev?.id === fund.id ? null : fund));
   };
 
   return (
@@ -48,7 +60,7 @@ export default function Funds() {
               <SavingsCharts data={fundsData?.data} />
             </div>
             <div className="flex w-full flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
-              {/* <h3 className="pl-2">This Month</h3>
+              <h3 className="pl-2">This Month</h3>
               <div className="grid grid-cols-2 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
                 <div className="flex flex-col items-center gap-2 p-4">
                   <span>Saved</span>
@@ -64,15 +76,16 @@ export default function Funds() {
                   </span>
                   <FontAwesomeIcon icon={faArrowRight} size="sm" />
                 </div>
-              </div> */}
+              </div>
               <h3 className="pl-2">Funds</h3>
               <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
                 {fundsData?.data?.funds.map((fund) => (
                   <Fund
                     key={fund.id}
                     data={fund}
-                    open={openFund}
+                    open={openFund?.id}
                     onSelection={handleOpenFund}
+                    onEdit={() => setEditDrawerOpen(true)}
                   />
                 ))}
                 <div className="flex items-center justify-end gap-2 bg-gray-100 p-4 text-sm text-gray-600">
@@ -94,6 +107,13 @@ export default function Funds() {
         open={createFundDrawerOpen}
         onClose={() => setCreateFundDrawerOpen(false)}
       />
+      {openFund && (
+        <EditFundDrawer
+          open={editDrawerOpen}
+          fund={openFund}
+          onClose={() => setEditDrawerOpen(false)}
+        />
+      )}
     </AuthPage>
   );
 }
