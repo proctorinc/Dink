@@ -16,10 +16,21 @@ type FundProps = HTMLAttributes<HTMLDivElement> & {
     amount: Prisma.Decimal;
   };
   open?: string;
-  onSelection?: (fundId: string) => void;
+  onSelection?: (
+    fundId: Fund & {
+      amount: Prisma.Decimal;
+    }
+  ) => void;
+  onEdit: () => void;
 };
 
-const Fund: FC<FundProps> = ({ data: fund, open, onSelection, className }) => {
+const Fund: FC<FundProps> = ({
+  data: fund,
+  open,
+  onSelection,
+  onEdit,
+  className,
+}) => {
   const { convertToIcon, convertToColor, defaultColor } = useIcons();
   const icon = convertToIcon(fund?.icon) ?? faPiggyBank;
   const color: IconColor = convertToColor(fund?.color) ?? defaultColor;
@@ -30,7 +41,7 @@ const Fund: FC<FundProps> = ({ data: fund, open, onSelection, className }) => {
         className={`flex w-full items-center p-4 ${className ?? ""} ${
           open === fund?.id ? "bg-gray-100" : "border-b border-gray-300"
         }`}
-        onClick={() => (onSelection ? onSelection(fund.id) : null)}
+        onClick={() => (onSelection ? onSelection(fund) : null)}
       >
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
@@ -50,7 +61,7 @@ const Fund: FC<FundProps> = ({ data: fund, open, onSelection, className }) => {
       </div>
       {open === fund.id && (
         <div className="flex justify-around border-b border-gray-300 bg-gray-100 p-4 text-gray-600">
-          <FontAwesomeIcon icon={faPencil} />
+          <FontAwesomeIcon icon={faPencil} onClick={() => onEdit()} />
           <FontAwesomeIcon icon={faCoins} />
           <FontAwesomeIcon icon={faReceipt} />
         </div>

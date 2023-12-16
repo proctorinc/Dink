@@ -4,7 +4,7 @@ import { type FC, useState, type FormEvent } from "react";
 import Button from "~/components/ui/Button";
 import Drawer from "~/components/ui/Drawer";
 import IconPickerModal from "~/components/ui/Icons/IconPickerModal";
-import { IconColor } from "~/config";
+import { type IconColor } from "~/config";
 import useIcons from "~/hooks/useIcons";
 import { api } from "~/utils/api";
 

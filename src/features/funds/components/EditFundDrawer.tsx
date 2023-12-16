@@ -11,22 +11,18 @@ import { api } from "~/utils/api";
 
 type EditFundDrawerProps = {
   open: boolean;
-  editingFund: Fund;
+  fund: Fund;
   onClose: () => void;
 };
 
-const EditFundDrawer: FC<EditFundDrawerProps> = ({
-  open,
-  onClose,
-  editingFund,
-}) => {
+const EditFundDrawer: FC<EditFundDrawerProps> = ({ open, onClose, fund }) => {
   const { convertToIcon, convertToColor, defaultColor } = useIcons();
   const ctx = api.useContext();
-  const [icon, setIcon] = useState<string | null>(editingFund?.icon ?? null);
+  const [icon, setIcon] = useState<string | null>(fund?.icon ?? null);
   const [color, setColor] = useState<IconColor>(
-    editingFund ? convertToColor(editingFund?.color) : defaultColor
+    fund ? convertToColor(fund?.color) : defaultColor
   );
-  const [name, setName] = useState(editingFund?.name ?? "");
+  const [name, setName] = useState(fund?.name ?? "");
   const [modalOpen, setModalOpen] = useState(false);
 
   const updateFund = api.funds.update.useMutation({
@@ -40,7 +36,7 @@ const EditFundDrawer: FC<EditFundDrawerProps> = ({
     event.preventDefault();
     if (isValidData) {
       updateFund.mutate({
-        fundId: editingFund.id,
+        fundId: fund.id,
         name,
         icon,
         color: color?.name,
@@ -48,7 +44,7 @@ const EditFundDrawer: FC<EditFundDrawerProps> = ({
     }
   };
 
-  const isValidData = !!editingFund && !!name && !!icon;
+  const isValidData = !!fund && !!name && !!icon;
 
   if (!open) {
     return <></>;
@@ -80,7 +76,10 @@ const EditFundDrawer: FC<EditFundDrawerProps> = ({
                 <FontAwesomeIcon
                   size="xl"
                   icon={convertToIcon(icon) ?? faPlusCircle}
-                  onClick={() => setModalOpen(true)}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setModalOpen(true);
+                  }}
                 />
               </button>
             </div>
@@ -90,7 +89,7 @@ const EditFundDrawer: FC<EditFundDrawerProps> = ({
           <Button
             style="secondary"
             type="submit"
-            title="Create"
+            title="Update"
             className="w-full"
             disabled={!isValidData}
           />
