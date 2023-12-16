@@ -7,6 +7,7 @@ import Drawer from "~/components/ui/Drawer";
 import IconPickerModal from "~/components/ui/Icons/IconPickerModal";
 import CurrencyInput from "~/components/ui/Inputs/CurrencyInput";
 import Modal from "~/components/ui/Modal";
+import { IconColor } from "~/config";
 import { FundPickerModal } from "~/features/funds";
 import FundBrief from "~/features/funds/components/FundBrief";
 import useIcons from "~/hooks/useIcons";
@@ -18,9 +19,10 @@ type CreateBudgetDrawerProps = {
 };
 
 const CreateBudgetDrawer: FC<CreateBudgetDrawerProps> = ({ open, onClose }) => {
-  const { convertToIcon } = useIcons();
+  const { convertToIcon, defaultColor } = useIcons();
   const ctx = api.useContext();
   const [icon, setIcon] = useState<string | null>(null);
+  const [color, setColor] = useState<IconColor>(defaultColor);
   const [iconModalOpen, setIconModalOpen] = useState(false);
   const [fundModalOpen, setFundModalOpen] = useState(false);
   const [budgetType, setBudgetType] = useState(open);
@@ -49,7 +51,8 @@ const CreateBudgetDrawer: FC<CreateBudgetDrawerProps> = ({ open, onClose }) => {
       createSpending.mutate({
         name,
         goal,
-        icon: icon,
+        icon,
+        color: color?.name,
       });
     } else if (isValidSavingsData && !!fund && budgetType === "savings") {
       createSavings.mutate({
@@ -139,16 +142,19 @@ const CreateBudgetDrawer: FC<CreateBudgetDrawerProps> = ({ open, onClose }) => {
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                 />
-                <div className="flex flex-col gap-2">
-                  <button className="h-14 w-14 rounded-xl border border-secondary-dark bg-secondary-dark shadow-md">
-                    <FontAwesomeIcon
-                      className="text-secondary-med"
-                      size="xl"
-                      icon={convertToIcon(icon) ?? faPlusCircle}
-                      onClick={() => setIconModalOpen(true)}
-                    />
-                  </button>
-                </div>
+                <button
+                  className="h-8 w-8 rounded-lg shadow-md"
+                  style={{
+                    backgroundColor: color?.primary,
+                    color: color?.secondary,
+                  }}
+                >
+                  <FontAwesomeIcon
+                    size="lg"
+                    icon={convertToIcon(icon) ?? faPlusCircle}
+                    onClick={() => setIconModalOpen(true)}
+                  />
+                </button>
               </div>
             </div>
             <div className="flex flex-col gap-2">
@@ -177,8 +183,9 @@ const CreateBudgetDrawer: FC<CreateBudgetDrawerProps> = ({ open, onClose }) => {
       </form>
       <IconPickerModal
         open={iconModalOpen}
-        onSelect={(iconName) => {
+        onSelect={(iconName, iconColor) => {
           setIcon(iconName);
+          setColor(iconColor);
           setIconModalOpen(false);
         }}
         onClose={() => setIconModalOpen(false)}

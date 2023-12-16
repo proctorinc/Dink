@@ -6,6 +6,7 @@ import { IconButton } from "~/components/ui/Button";
 import { faCheckCircle, faSackDollar } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import useIcons from "~/hooks/useIcons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type SavingsBudget = {
   data: Budget & {
@@ -18,7 +19,8 @@ type SavingsBudget = {
 
 export const SavingsBudget: FC<SavingsBudget> = ({ data: budget, onClick }) => {
   const router = useRouter();
-  const { convertToIcon } = useIcons();
+  const { convertToIcon, convertToColor } = useIcons();
+  const color = convertToColor(budget.color);
 
   const navigateToBudget = () => {
     void router.push(`/budget/${budget?.id ?? ""}`);
@@ -30,11 +32,18 @@ export const SavingsBudget: FC<SavingsBudget> = ({ data: budget, onClick }) => {
       onClick={onClick ?? navigateToBudget}
     >
       <div className="flex w-full items-center gap-1">
-        <IconButton
-          size="sm"
-          icon={convertToIcon(budget.icon) ?? faSackDollar}
-          style="secondary"
-        />
+        <button
+          className="h-8 w-8 rounded-lg border shadow-md"
+          style={{
+            backgroundColor: color?.primary,
+            color: color?.secondary,
+          }}
+        >
+          <FontAwesomeIcon
+            size="lg"
+            icon={convertToIcon(budget.icon) ?? faSackDollar}
+          />
+        </button>
         <div className="flex w-full flex-col gap-1 pl-2">
           <div className="flex justify-between group-hover:text-primary-med">
             <h3>{budget?.savingsFund?.name}</h3>
