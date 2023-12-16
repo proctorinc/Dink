@@ -277,6 +277,7 @@ export const budgetsRouter = createTRPCRouter({
         name: z.string(),
         goal: z.number(),
         icon: z.string(),
+        color: z.string(),
       })
     )
     .mutation(({ input, ctx }) => {
@@ -285,6 +286,7 @@ export const budgetsRouter = createTRPCRouter({
           icon: input.icon,
           name: input.name,
           goal: input.goal,
+          color: input.color,
           startDate: getFirstDayOfMonth(new Date()),
           user: {
             connect: { id: ctx.session.user.id },
