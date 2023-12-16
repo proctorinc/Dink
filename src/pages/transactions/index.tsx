@@ -84,7 +84,6 @@ const TransactionsPage = () => {
                     </span>
                     <input
                       id="name-input"
-                      autoFocus
                       placeholder="Search transactions..."
                       className="text-md flex-grow bg-transparent font-bold text-primary-light placeholder-primary-light"
                       value={search}
