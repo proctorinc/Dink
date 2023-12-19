@@ -21,7 +21,7 @@ type FundProps = HTMLAttributes<HTMLDivElement> & {
       amount: Prisma.Decimal;
     }
   ) => void;
-  onEdit: () => void;
+  onEdit?: () => void;
 };
 
 const Fund: FC<FundProps> = ({
@@ -61,7 +61,9 @@ const Fund: FC<FundProps> = ({
       </div>
       {open === fund.id && (
         <div className="flex justify-around border-b border-gray-300 bg-gray-100 p-4 text-gray-600">
-          <FontAwesomeIcon icon={faPencil} onClick={() => onEdit()} />
+          {onEdit && (
+            <FontAwesomeIcon icon={faPencil} onClick={() => onEdit()} />
+          )}
           <FontAwesomeIcon icon={faCoins} />
           <FontAwesomeIcon icon={faReceipt} />
         </div>

@@ -6,5 +6,6 @@ export * from "./components/TransactionSummarySkeleton";
 export * from "./components/DetailedTransaction";
 export * from "./components/TransactionSkeletons";
 export * from "./components/CategorizeTransactions";
+export * from "./components/CategorizeTransactionsDrawer";
 
 export default Transaction;
