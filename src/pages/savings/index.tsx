@@ -4,9 +4,8 @@ import { type Prisma } from "@prisma/client";
 import Head from "next/head";
 import { useState } from "react";
 import AuthPage from "~/components/routes/AuthPage";
-import Header from "~/components/ui/Header";
-import { TextSkeleton } from "~/components/ui/Skeleton";
-import Fund, { SavingsCharts } from "~/features/funds";
+import { PieChart } from "~/components/ui/Charts";
+import Fund from "~/features/funds";
 import AllocateSavingsDrawer from "~/features/funds/components/AllocateSavingsDrawer";
 import CreateFundDrawer from "~/features/funds/components/CreateFundDrawer";
 import EditFundDrawer from "~/features/funds/components/EditFundDrawer";
@@ -30,13 +29,10 @@ export default function Funds() {
 
   const { setErrorNotification } = useNotifications();
 
-  const handleOpenFund = (
-    fund: Fund & {
-      amount: Prisma.Decimal;
-    }
-  ) => {
-    setOpenFund((prev) => (prev?.id === fund.id ? null : fund));
-  };
+  const chartData = [
+    { name: "Allocated", amount: fundsData.data?.total },
+    { name: "Unallocated", amount: fundsData.data?.unallocatedTotal },
+  ];
 
   return (
     <AuthPage>
@@ -47,7 +43,7 @@ export default function Funds() {
         <div className="container flex max-w-md flex-col items-center justify-center gap-12 pt-5 sm:pb-4 lg:max-w-2xl">
           <div className="flex w-full flex-col items-center gap-4">
             <div className="flex w-full flex-col gap-4 px-4">
-              <Header
+              {/* <Header
                 title="Savings"
                 subtitle={
                   fundsData.data ? (
@@ -56,35 +52,47 @@ export default function Funds() {
                     <TextSkeleton width={200} size="xl" color="primary" />
                   )
                 }
-              />
-              <SavingsCharts data={fundsData?.data} />
-            </div>
-            <div className="flex w-full flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
-              <h3 className="pl-2">This Month</h3>
-              <div className="grid grid-cols-2 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
-                <div className="flex flex-col items-center gap-2 p-4">
-                  <span>Saved</span>
-                  <span className="text-secondary-med">+?,???.??</span>
-                </div>
-                <div className="flex flex-col items-center gap-2 p-4">
-                  <span>Spent</span>
-                  <span className="text-danger-med">-$???.??</span>
-                </div>
-                <div className="col-span-2 flex items-center justify-end gap-2 border-t border-gray-300 bg-gray-100 p-4 text-sm text-gray-600">
-                  <span onClick={() => setAllocateDrawerOpen(true)}>
-                    Allocate Savings
-                  </span>
-                  <FontAwesomeIcon icon={faArrowRight} size="sm" />
+              /> */}
+              <div className="max-h-1/4 relative flex h-64 w-2/3 items-center justify-center font-bold lg:w-1/2">
+                <PieChart data={fundsData.data?.funds ?? []} floatRight />
+                <div className="absolute flex flex-col items-center justify-center align-middle text-3xl">
+                  <span>{formatToCurrency(fundsData?.data?.total)}</span>
                 </div>
               </div>
-              <h3 className="pl-2">Funds</h3>
+            </div>
+            <div className="flex w-full flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
+              {/* <h3 className="pl-2">This Month</h3>
+              <div className="flex gap-4">
+                <div className="flex w-1/3 flex-col gap-2 overflow-clip rounded-xl border border-gray-300 bg-white p-4 text-center shadow-md">
+                  <span>Saved</span>
+                  <span className="text-xl text-secondary-med">
+                    +{formatToCurrency(fundsData.data?.monthly.saved)}
+                  </span>
+                </div>
+                <div className="flex w-1/3 flex-col gap-2 overflow-clip rounded-xl border border-gray-300 bg-white p-4 text-center shadow-md">
+                  <span>Spent</span>
+                  <span className="text-xl text-danger-med">
+                    -{formatToCurrency(fundsData.data?.monthly.spent)}
+                  </span>
+                </div>
+              </div> */}
+              <div className="flex w-full items-center justify-between px-2">
+                <h3>Funds</h3>
+                <button
+                  className="flex items-center justify-center gap-1 text-sm"
+                  onClick={() => setAllocateDrawerOpen(true)}
+                >
+                  Allocate Savings
+                  <FontAwesomeIcon icon={faArrowRight} size="sm" />
+                </button>
+              </div>
               <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
                 {fundsData?.data?.funds.map((fund) => (
                   <Fund
                     key={fund.id}
                     data={fund}
                     open={openFund?.id}
-                    onSelection={handleOpenFund}
+                    // onSelection={handleOpenFund}
                     onEdit={() => setEditDrawerOpen(true)}
                   />
                 ))}

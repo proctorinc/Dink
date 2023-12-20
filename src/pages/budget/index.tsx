@@ -81,11 +81,13 @@ export default function Funds() {
                   <FontAwesomeIcon icon={faArrowRight} size="sm" />
                 </div>
               </div> */}
-              <div className="flex items-center justify-between px-2">
+              <div
+                className="flex items-center justify-between px-2"
+                onClick={() => setIsBudgetsOpen((prev) => !prev)}
+              >
                 <h3>Budgets</h3>
                 <FontAwesomeIcon
                   icon={isBudgetsOpen ? faAngleDown : faAngleUp}
-                  onClick={() => setIsBudgetsOpen((prev) => !prev)}
                 />
               </div>
               <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
@@ -113,11 +115,13 @@ export default function Funds() {
                 )}
               </div>
               {!isBudgetsOpen && <div></div>}
-              <div className="flex items-center justify-between px-2">
+              <div
+                className="flex items-center justify-between px-2"
+                onClick={() => setIsSavingsOpen((prev) => !prev)}
+              >
                 <h3>Monthly Savings</h3>
                 <FontAwesomeIcon
                   icon={isSavingsOpen ? faAngleDown : faAngleUp}
-                  onClick={() => setIsSavingsOpen((prev) => !prev)}
                 />
               </div>
               <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
