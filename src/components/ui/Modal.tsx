@@ -6,7 +6,7 @@ import { type FC, type ReactNode } from "react";
 type ModalProps = {
   open: boolean;
   children: ReactNode;
-  title: string;
+  title: ReactNode;
   onClose: () => void;
 };
 
