@@ -15,13 +15,13 @@ const Navbar = () => {
   if (status === "authenticated") {
     return (
       <nav className="sticky top-0 z-30 flex w-full flex-col items-center justify-center gap-1 py-2 pl-2 pr-4 text-primary-light backdrop-blur-lg md:flex">
-        <div className="flex w-full max-w-lg items-center justify-between sm:max-w-4xl">
+        <div className="flex w-full items-center justify-between sm:max-w-2xl">
           <button
             className="flex items-center gap-2 rounded-xl py-1 px-3 text-3xl font-bold"
             onClick={() => void router.push("/")}
           >
             <FontAwesomeIcon
-              className="h-6 w-6 text-primary-light"
+              className="h-8 w-8 text-primary-light"
               icon={faCircleHalfStroke}
             />
           </button>
@@ -29,7 +29,7 @@ const Navbar = () => {
             {formatToTitleCase(router.asPath.split("/")[1])}
           </h3>
           <button
-            className="aspect-square h-8 w-8 rounded-full bg-primary-med shadow-lg"
+            className="aspect-square h-9 w-9 rounded-full bg-primary-med shadow-lg"
             onClick={() => void router.push("/profile")}
           >
             {sessionData?.user.image && (
