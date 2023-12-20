@@ -7,7 +7,9 @@ export const formatToCurrency = (
     style: "currency",
     currency: "USD",
   });
-  return amount ? USD.format(Number(amount)) : "$0.00";
+  const formatted = amount ? USD.format(Number(amount)) : "$0";
+
+  return formatted.replace(".00", "");
 };
 
 export const formatToTitleCase = (
