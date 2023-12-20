@@ -5,6 +5,8 @@ import { Institution } from "~/features/accounts";
 import AuthPage from "~/components/routes/AuthPage";
 import Head from "next/head";
 import { PlaidLink } from "~/features/plaid";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faToggleOff, faToggleOn } from "@fortawesome/free-solid-svg-icons";
 
 export default function BankAccounts() {
   const { setErrorNotification } = useNotifications();
@@ -28,6 +30,41 @@ export default function BankAccounts() {
               />
             </div>
             <div className="flex w-full flex-grow flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
+              <h3 className="pl-2">Show Categories</h3>
+              <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
+                <div className="flex items-center gap-2 px-4 py-2">
+                  <FontAwesomeIcon
+                    className={true ? "text-primary-med" : "text-gray-600"}
+                    size="2x"
+                    icon={true ? faToggleOn : faToggleOff}
+                  />
+                  <span>Cash</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2">
+                  <FontAwesomeIcon
+                    className={true ? "text-primary-med" : "text-gray-600"}
+                    size="2x"
+                    icon={true ? faToggleOn : faToggleOff}
+                  />
+                  <span>Credit</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2">
+                  <FontAwesomeIcon
+                    className={true ? "text-primary-med" : "text-gray-600"}
+                    size="2x"
+                    icon={true ? faToggleOn : faToggleOff}
+                  />
+                  <span>Investment</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2">
+                  <FontAwesomeIcon
+                    className={false ? "text-primary-med" : "text-gray-600"}
+                    size="2x"
+                    icon={false ? faToggleOn : faToggleOff}
+                  />
+                  <span>Loan</span>
+                </div>
+              </div>
               <h3 className="pl-2">Linked Accounts</h3>
               <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
                 {institutions?.data &&
