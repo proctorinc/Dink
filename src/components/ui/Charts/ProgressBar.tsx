@@ -40,10 +40,10 @@ export const ProgressBar: FC<ProgressBarProps> = ({
 
   return (
     <div
-      className={`${barHeight} ${barBackground} relative w-full rounded-md shadow-inner group-hover:bg-primary-med`}
+      className={`${barHeight} ${barBackground} relative w-full overflow-hidden rounded-md shadow-inner group-hover:bg-primary-med`}
     >
       <div
-        className={`${barColor} absolute h-full rounded-md bg-gradient-to-r ${
+        className={`${barColor} absolute h-full bg-gradient-to-r ${
           className ?? ""
         }`}
         style={{ width: `${formattedPercent}%` }}
