@@ -7,15 +7,9 @@ type PieChartProps = {
   data: unknown[];
   progress?: boolean;
   floatRight?: boolean;
-  style?: "dark";
 };
 
-export const PieChart: FC<PieChartProps> = ({
-  data,
-  progress,
-  floatRight,
-  style,
-}) => {
+export const PieChart: FC<PieChartProps> = ({ data, progress, floatRight }) => {
   const theme = {
     fontSize: 15,
   };
@@ -44,7 +38,7 @@ export const PieChart: FC<PieChartProps> = ({
       type: "linearGradient",
       colors: [
         { offset: 0, color: "#00C6C5" },
-        // { offset: 100, color: "#126473" },
+        { offset: 100, color: "#126473" },
       ],
     },
   ];
@@ -53,9 +47,7 @@ export const PieChart: FC<PieChartProps> = ({
     <ResponsivePie
       theme={theme}
       data={data}
-      colors={
-        progress ? ["#00C6C5", style === "dark" ? "#2A285B" : "#3e3d83"] : []
-      }
+      colors={progress ? ["#00C6C5", "#2A285B"] : []}
       defs={patterns}
       fill={
         progress
@@ -78,7 +70,7 @@ export const PieChart: FC<PieChartProps> = ({
       value="amount"
       margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
       valueFormat=" >-$,.2f"
-      innerRadius={progress ? 0.7 : 0.4}
+      innerRadius={progress ? 0.7 : 0.9}
       padAngle={2}
       cornerRadius={progress ? 2 : 5}
       activeOuterRadiusOffset={10}
