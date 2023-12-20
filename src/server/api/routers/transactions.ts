@@ -4,7 +4,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { syncInstitutions } from "./plaid/update_transactions";
 
-function sumTransactions(transactions: Transaction[]) {
+export function sumTransactions(transactions: Transaction[]) {
   return transactions.reduce((acc, transaction) => {
     return Decimal.add(acc, transaction.amount);
   }, new Prisma.Decimal(0));
@@ -14,17 +14,20 @@ export const transactionsRouter = createTRPCRouter({
   search: protectedProcedure
     .input(
       z.object({
-        filterMonthly: z.boolean(),
-        startOfMonth: z.date(),
-        endOfMonth: z.date(),
-        includeSavings: z.boolean(),
-        includeCategorized: z.boolean(),
-        includeUncategorized: z.boolean(),
-        includeIncome: z.boolean(),
-        searchText: z.string(),
+        filterMonthly: z.boolean().optional(),
+        startOfMonth: z.date().optional(),
+        endOfMonth: z.date().optional(),
+        includeSavings: z.boolean().optional(),
+        includeCategorized: z.boolean().optional(),
+        includeUncategorized: z.boolean().optional(),
+        includeIncome: z.boolean().optional(),
+        searchText: z.string().optional(),
+        page: z.number().optional(),
+        size: z.number().optional(),
       })
     )
     .query(async ({ input, ctx }) => {
+      const page = input.page ?? 0;
       const monthFilter = {
         date: {
           gte: input.startOfMonth,
@@ -72,6 +75,8 @@ export const transactionsRouter = createTRPCRouter({
             },
           },
         },
+        skip: input.size ? page * input.size : page * 6,
+        take: input.size ?? 6,
       });
     }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -84,7 +89,12 @@ export const transactionsRouter = createTRPCRouter({
         date: "desc",
       },
       include: {
-        source: true,
+        source: {
+          include: {
+            budget: true,
+            fund: true,
+          },
+        },
       },
     });
   }),

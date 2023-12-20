@@ -26,9 +26,19 @@ export default function Home() {
   const accountData = api.bankAccounts.getAllData.useQuery(undefined, {
     onError: () => setErrorNotification("Failed to fetch accounts"),
   });
-  const transactionData = api.transactions.getAll.useQuery(undefined, {
-    onError: () => setErrorNotification("Failed to fetch transactions"),
-  });
+  const transactionData = api.transactions.search.useQuery(
+    {
+      filterMonthly: false,
+      includeSavings: false,
+      includeCategorized: true,
+      includeUncategorized: true,
+      includeIncome: true,
+      size: 5,
+    },
+    {
+      onError: () => setErrorNotification("Failed to fetch transactions"),
+    }
+  );
   const savingsData = api.funds.getAllData.useQuery(undefined, {
     onError: () => setErrorNotification("Failed to fetch transactions"),
   });
@@ -92,18 +102,16 @@ export default function Home() {
               <h3 className="pl-2">Recent Transactions</h3>
               <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
                 {transactionData.data &&
-                  transactionData.data
-                    .slice(0, 5)
-                    .map((transaction) => (
-                      <Transaction
-                        key={transaction.id}
-                        data={transaction}
-                        open={openTransaction}
-                        onClick={(transactionId) =>
-                          handleOpenTransaction(transactionId)
-                        }
-                      />
-                    ))}
+                  transactionData.data.map((transaction) => (
+                    <Transaction
+                      key={transaction.id}
+                      data={transaction}
+                      open={openTransaction}
+                      onClick={(transactionId) =>
+                        handleOpenTransaction(transactionId)
+                      }
+                    />
+                  ))}
                 <div className="flex items-center justify-end gap-2 bg-gray-100 p-4 text-sm text-gray-600">
                   <span onClick={() => void router.push("/transactions")}>
                     All Transactions

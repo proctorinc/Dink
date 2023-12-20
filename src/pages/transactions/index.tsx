@@ -41,6 +41,7 @@ const TransactionsPage = () => {
       includeUncategorized,
       includeIncome,
       searchText: search,
+      size: 100,
     },
     { onError: () => setErrorNotification("Failed to fetch transactions") }
   );
@@ -174,12 +175,29 @@ const TransactionsPage = () => {
                         transactionData.data[index - 1]?.date.getMonth() !==
                           transaction.date.getMonth()) && (
                         <div
-                          key={index}
-                          className="h-fit border-b border-gray-300 bg-gray-100 px-4 py-2 font-bold text-gray-600"
-                        >
-                          {transaction.date.toLocaleString("en-US", {
+                          key={transaction.date.toLocaleString("en-US", {
                             month: "long",
+                            year: "numeric",
                           })}
+                          className="flex h-fit justify-between border-b border-gray-300 bg-gray-100 px-4 py-2 font-bold text-gray-600"
+                        >
+                          <span>
+                            {transaction.date.toLocaleString("en-US", {
+                              month: "long",
+                            })}
+                          </span>
+                          {transaction.date.toLocaleString("en-US", {
+                            year: "numeric",
+                          }) !==
+                            new Date().toLocaleString("en-US", {
+                              year: "numeric",
+                            }) && (
+                            <span>
+                              {transaction.date.toLocaleString("en-US", {
+                                year: "numeric",
+                              })}
+                            </span>
+                          )}
                         </div>
                       )}
                       <Transaction
