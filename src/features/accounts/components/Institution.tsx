@@ -56,7 +56,8 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
             )}
             {institution.logo && (
               <Image
-                className="w-10 rounded-full shadow-xl"
+                className="h-10 w-10 rounded-full border shadow-xl"
+                style={{ borderColor: institution.primaryColor ?? "#FFF" }}
                 width={100}
                 height={100}
                 src={`data:image/jpeg;base64,${
@@ -67,7 +68,8 @@ export const Institution: FC<InstitutionProps> = ({ data: institution }) => {
             )}
             {!institution.logo && institution.url && (
               <Image
-                className="w-10 rounded-full bg-white shadow-xl"
+                className="h-10 w-10 rounded-full border bg-white shadow-xl"
+                style={{ borderColor: institution.primaryColor ?? "#FFF" }}
                 width={100}
                 height={100}
                 src={`https://s2.googleusercontent.com/s2/favicons?domain=${institution.url}&sz=256`}
