@@ -114,5 +114,10 @@ export const iconColorMap = new Map<string, IconColor>(
       primary: "#eab308",
       secondary: "#fef08a",
     },
+    gray: {
+      name: "gray",
+      primary: "#a1a1aa",
+      secondary: "#e5e7eb",
+    },
   })
 );
