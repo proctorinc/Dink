@@ -4,16 +4,26 @@ import {
   type TransactionSource,
   type Transaction,
 } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/library";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { AccountCategory } from "~/config";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { getFirstDayOfMonth, getLastDayOfMonth } from "~/utils";
 
 type FundAmount = {
   amount: Prisma.Decimal;
 };
 
-function sumTransactions(
+export function sumTransactions(
+  transactions: ({ source: TransactionSource | null } & Transaction)[]
+) {
+  return transactions.reduce((acc, transaction) => {
+    return Decimal.add(acc, transaction.amount);
+  }, new Prisma.Decimal(0));
+}
+
+function sumSourceTransactions(
   sources: (TransactionSource & {
     transaction: Transaction;
   })[]
@@ -50,7 +60,7 @@ function addAmountToFund(
   return {
     ...otherFields,
     sourceTransactions,
-    amount: sumTransactions(sourceTransactions),
+    amount: sumSourceTransactions(sourceTransactions),
   };
 }
 
@@ -94,10 +104,54 @@ export const fundsRouter = createTRPCRouter({
       return acc;
     }, new Prisma.Decimal(0));
 
+    const startOfMonth = getFirstDayOfMonth(new Date());
+    const endOfMonth = getLastDayOfMonth(new Date());
+
+    const monthlySpentTransactions = await ctx.prisma.transaction.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        amount: {
+          lt: new Prisma.Decimal(0),
+        },
+        date: {
+          gte: startOfMonth,
+          lte: endOfMonth,
+        },
+        source: {
+          type: "savings",
+        },
+      },
+      include: {
+        source: true,
+      },
+    });
+    const monthlySavedTransactions = await ctx.prisma.transaction.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        amount: {
+          gte: new Prisma.Decimal(0),
+        },
+        date: {
+          gte: startOfMonth,
+          lte: endOfMonth,
+        },
+        source: {
+          type: "savings",
+        },
+      },
+      include: {
+        source: true,
+      },
+    });
+
     return {
       total: fundsTotal,
       available: accountsPositiveBalance,
       unallocatedTotal: Prisma.Decimal.sub(accountsPositiveBalance, fundsTotal),
+      monthly: {
+        saved: sumTransactions(monthlySavedTransactions),
+        spent: sumTransactions(monthlySpentTransactions),
+      },
       funds: fundsWithAmounts,
     };
   }),
