@@ -26,7 +26,7 @@ const Navbar = () => {
             />
           </button>
           <h3 className="text-lg font-bold">
-            {formatToTitleCase(router.asPath.split("/")[1])}
+            {formatToTitleCase(router.asPath.split("/")[1]?.split("?")[0])}
           </h3>
           <button
             className="aspect-square h-9 w-9 rounded-full bg-primary-med shadow-lg"
