@@ -5,7 +5,7 @@ import { useState, type FC, type ReactNode, type DragEvent } from "react";
 
 type DrawerProps = {
   open: boolean;
-  title?: string;
+  title?: ReactNode;
   children: ReactNode;
   onClose: () => void;
 };
@@ -32,7 +32,7 @@ const Drawer: FC<DrawerProps> = ({ open, title, children, onClose }) => {
               className="-mt-3 text-gray-500"
               onClick={onClose}
             />
-            <h1 className="text-xl">{title}</h1>
+            <div className="flex text-xl">{title}</div>
             <div className="flex w-full max-w-md flex-col gap-4 rounded-xl border border-gray-300 bg-white p-4 shadow-md">
               {children}
             </div>
