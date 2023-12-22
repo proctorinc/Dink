@@ -27,7 +27,7 @@ const config = {
         danger: {
           dark: "#961737",
           med: "#DA4167",
-          light: "#e58099",
+          light: "#f097ad",
         },
       },
     },
