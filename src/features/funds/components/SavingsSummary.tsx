@@ -52,7 +52,9 @@ export const SavingsSummary: FC<SavingsSummaryProps> = ({
   return (
     <Card
       className="justify-center"
-      onClick={() => void router.push("/savings/allocate")}
+      onClick={() =>
+        void router.push({ pathname: "/savings", query: { allocate: true } })
+      }
     >
       <Card.Body horizontal>
         <div className="flex flex-col">

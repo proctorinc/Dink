@@ -1,38 +1,48 @@
 import { faArrowRight, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type Prisma } from "@prisma/client";
 import Head from "next/head";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import AuthPage from "~/components/routes/AuthPage";
 import { PieChart } from "~/components/ui/Charts";
-import Fund from "~/features/funds";
+import { TextSkeleton } from "~/components/ui/Skeleton";
+import Fund, { FundSkeletons } from "~/features/funds";
 import AllocateSavingsDrawer from "~/features/funds/components/AllocateSavingsDrawer";
 import CreateFundDrawer from "~/features/funds/components/CreateFundDrawer";
-import EditFundDrawer from "~/features/funds/components/EditFundDrawer";
+import useIcons from "~/hooks/useIcons";
+import { useMonthContext } from "~/hooks/useMonthContext";
 import useNotifications from "~/hooks/useNotifications";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 
 export default function Funds() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const allocate = searchParams.get("allocate");
+
   const fundsData = api.funds.getAllData.useQuery(undefined, {
     onError: () => setErrorNotification("Failed to fetch funds"),
   });
-  const [allocateDrawerOpen, setAllocateDrawerOpen] = useState(false);
+  const [allocateDrawerOpen, setAllocateDrawerOpen] = useState<boolean>(
+    !!allocate ?? false
+  );
   const [createFundDrawerOpen, setCreateFundDrawerOpen] = useState(false);
-  const [openFund, setOpenFund] = useState<
-    | (Fund & {
-        amount: Prisma.Decimal;
-      })
-    | null
-  >(null);
-  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
 
   const { setErrorNotification } = useNotifications();
+  const { month } = useMonthContext();
+  const { convertToColor } = useIcons();
 
-  const chartData = [
-    { name: "Allocated", amount: fundsData.data?.total },
-    { name: "Unallocated", amount: fundsData.data?.unallocatedTotal },
-  ];
+  const openAllocationDrawer = () => {
+    void router.replace({ pathname: "/savings", query: { allocate: true } });
+    setAllocateDrawerOpen(true);
+  };
+
+  const sortedFunds = useMemo(() => {
+    return fundsData.data?.funds
+      ? fundsData.data?.funds.sort((a, b) => (a.amount >= b.amount ? 1 : -1))
+      : [];
+  }, [fundsData.data]);
 
   return (
     <AuthPage>
@@ -42,60 +52,72 @@ export default function Funds() {
       <main className="flex flex-col items-center text-white">
         <div className="container flex max-w-md flex-col items-center justify-center gap-12 pt-5 sm:pb-4 lg:max-w-2xl">
           <div className="flex w-full flex-col items-center gap-4">
-            <div className="flex w-full flex-col gap-4 px-4">
-              {/* <Header
-                title="Savings"
-                subtitle={
-                  fundsData.data ? (
-                    `Total: ${formatToCurrency(fundsData?.data?.total)}`
-                  ) : (
-                    <TextSkeleton width={200} size="xl" color="primary" />
-                  )
-                }
-              /> */}
-              <div className="max-h-1/4 relative flex h-64 w-2/3 items-center justify-center font-bold lg:w-1/2">
-                <PieChart data={fundsData.data?.funds ?? []} floatRight />
-                <div className="absolute flex flex-col items-center justify-center align-middle text-3xl">
-                  <span>{formatToCurrency(fundsData?.data?.total)}</span>
+            <div className="sticky top-20 z-10 flex w-full px-4">
+              <div className="relative flex h-52 w-2/3 items-center justify-center font-bold">
+                <PieChart
+                  colors={sortedFunds.map(
+                    (fund) => convertToColor(fund.color).primary
+                  )}
+                  data={sortedFunds}
+                  floatRight
+                />
+                {!fundsData?.data && (
+                  <div className="align-center absolute flex h-48 w-48 animate-pulse items-center justify-center rounded-full bg-white/20"></div>
+                )}
+                <div className="absolute flex flex-col items-center justify-center pb-2 align-middle">
+                  <span className="text-sm font-normal text-primary-light">
+                    Total Savings
+                  </span>
+                  <span className="text-4xl">
+                    {fundsData?.data?.total &&
+                      formatToCurrency(fundsData?.data?.total)}
+                    {!fundsData?.data?.total && (
+                      <TextSkeleton size="2xl" width={125} />
+                    )}
+                  </span>
                 </div>
               </div>
-            </div>
-            <div className="flex w-full flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
-              {/* <h3 className="pl-2">This Month</h3>
-              <div className="flex gap-4">
-                <div className="flex w-1/3 flex-col gap-2 overflow-clip rounded-xl border border-gray-300 bg-white p-4 text-center shadow-md">
-                  <span>Saved</span>
-                  <span className="text-xl text-secondary-med">
+              <div className="flex w-1/3 flex-col justify-center gap-2 pr-4 font-bold">
+                <span className="text-xl font-bold">{month}</span>
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-normal text-primary-light">
+                    Saved
+                  </span>
+                  <span className="rounded-md bg-secondary-med px-3 py-1 text-secondary-light">
                     +{formatToCurrency(fundsData.data?.monthly.saved)}
                   </span>
                 </div>
-                <div className="flex w-1/3 flex-col gap-2 overflow-clip rounded-xl border border-gray-300 bg-white p-4 text-center shadow-md">
-                  <span>Spent</span>
-                  <span className="text-xl text-danger-med">
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-normal text-primary-light">
+                    Spent
+                  </span>
+                  <span className="rounded-md bg-danger-med px-3 py-1 text-danger-light">
                     -{formatToCurrency(fundsData.data?.monthly.spent)}
                   </span>
                 </div>
-              </div> */}
+              </div>
+            </div>
+            <div className="z-20 flex w-full flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
               <div className="flex w-full items-center justify-between px-2">
-                <h3>Funds</h3>
+                <h3>Unallocated</h3>
                 <button
                   className="flex items-center justify-center gap-1 text-sm"
-                  onClick={() => setAllocateDrawerOpen(true)}
+                  onClick={() => openAllocationDrawer()}
                 >
-                  Allocate Savings
+                  Allocate
                   <FontAwesomeIcon icon={faArrowRight} size="sm" />
                 </button>
               </div>
+              <div className="rounded-xl border border-gray-300 bg-white p-4">
+                {formatToCurrency(fundsData.data?.unallocatedTotal)}
+              </div>
+              <h3 className="px-2">Funds</h3>
               <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
+                <FundSkeletons />
                 {fundsData?.data?.funds.map((fund) => (
-                  <Fund
-                    key={fund.id}
-                    data={fund}
-                    open={openFund?.id}
-                    // onSelection={handleOpenFund}
-                    onEdit={() => setEditDrawerOpen(true)}
-                  />
+                  <Fund key={fund.id} data={fund} />
                 ))}
+                {!fundsData?.data?.funds && <FundSkeletons />}
                 <div className="flex items-center justify-end gap-2 bg-gray-100 p-4 text-sm text-gray-600">
                   <FontAwesomeIcon icon={faPlus} size="sm" />
                   <span onClick={() => setCreateFundDrawerOpen(true)}>
@@ -109,19 +131,15 @@ export default function Funds() {
       </main>
       <AllocateSavingsDrawer
         open={allocateDrawerOpen}
-        onClose={() => setAllocateDrawerOpen(false)}
+        onClose={() => {
+          void router.replace("/savings", undefined);
+          setAllocateDrawerOpen(false);
+        }}
       />
       <CreateFundDrawer
         open={createFundDrawerOpen}
         onClose={() => setCreateFundDrawerOpen(false)}
       />
-      {openFund && (
-        <EditFundDrawer
-          open={editDrawerOpen}
-          fund={openFund}
-          onClose={() => setEditDrawerOpen(false)}
-        />
-      )}
     </AuthPage>
   );
 }
