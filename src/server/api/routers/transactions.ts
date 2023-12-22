@@ -2,6 +2,7 @@ import { Prisma, type Transaction } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { convertLogoBufferToString } from "./bankAccounts";
 import { syncInstitutions } from "./plaid/update_transactions";
 
 export function sumTransactions(transactions: Transaction[]) {
@@ -16,34 +17,53 @@ export const transactionsRouter = createTRPCRouter({
       z.object({
         filterMonthly: z.boolean().optional(),
         startOfMonth: z.date().optional(),
-        endOfMonth: z.date().optional(),
+        endOfMonth: z.date().nullable().optional(),
         includeSavings: z.boolean().optional(),
         includeCategorized: z.boolean().optional(),
         includeUncategorized: z.boolean().optional(),
         includeIncome: z.boolean().optional(),
         searchText: z.string().optional(),
+        fundId: z.string().nullable().optional(),
+        budgetId: z.string().nullable().optional(),
+        accountId: z.string().nullable().optional(),
         page: z.number().optional(),
         size: z.number().optional(),
       })
     )
     .query(async ({ input, ctx }) => {
       const page = input.page ?? 0;
-      const monthFilter = {
-        date: {
-          gte: input.startOfMonth,
-          lte: input.endOfMonth,
-        },
-      };
       const textFilter = {
         name: {
           contains: input.searchText,
         },
       };
-      return await ctx.prisma.transaction.findMany({
+      const transactions = await ctx.prisma.transaction.findMany({
         where: {
           userId: ctx.session.user.id,
-          ...(input.filterMonthly ? monthFilter : {}),
+          ...(input.filterMonthly && !!input.startOfMonth && !!input.endOfMonth
+            ? {
+                date: {
+                  gte: input.startOfMonth,
+                  lte: input.endOfMonth,
+                },
+              }
+            : {}),
           ...(input.searchText ? textFilter : {}),
+          ...(input.fundId
+            ? {
+                source: {
+                  fundId: input.fundId,
+                },
+              }
+            : {}),
+          ...(input.budgetId
+            ? {
+                source: {
+                  fundId: input.budgetId,
+                },
+              }
+            : {}),
+          ...(input.accountId ? { accountId: input.accountId } : {}),
           OR: [
             {
               ...(input.includeSavings ? { source: { type: "savings" } } : {}),
@@ -78,6 +98,53 @@ export const transactionsRouter = createTRPCRouter({
         skip: input.size ? page * input.size : page * 6,
         take: input.size ?? 6,
       });
+
+      const budget = input.budgetId
+        ? await ctx.prisma.budget.findUniqueOrThrow({
+            where: {
+              userId: ctx.session.user.id,
+              id: input.budgetId,
+            },
+            // include: {
+            //   source: true,
+            // },
+          })
+        : null;
+
+      const fund = input.fundId
+        ? await ctx.prisma.fund.findUniqueOrThrow({
+            where: {
+              userId: ctx.session.user.id,
+              id: input.fundId,
+            },
+            // include: {
+            //   source: true,
+            // },
+          })
+        : null;
+
+      const account = input.accountId
+        ? await ctx.prisma.bankAccount.findUniqueOrThrow({
+            where: {
+              userId: ctx.session.user.id,
+              id: input.accountId,
+            },
+            include: {
+              institution: {
+                include: {
+                  syncItem: true,
+                },
+              },
+            },
+          })
+        : null;
+
+      return {
+        transactions,
+        budget,
+        fund,
+        account: account ? convertLogoBufferToString(account) : null,
+      };
     }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
     await syncInstitutions(ctx.session.user.id);
