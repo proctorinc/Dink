@@ -1,7 +1,7 @@
 import { useMemo, type FC } from "react";
 
 type TextSkeletonProps = {
-  size?: "xl" | "lg" | "sm" | "xs";
+  size?: "2xl" | "xl" | "lg" | "sm" | "xs";
   color?: "white" | "primary" | "secondary";
   width?: number;
   minWidth?: number;
@@ -29,6 +29,8 @@ export const TextSkeleton: FC<TextSkeletonProps> = ({
     height = "h-3";
   } else if (size === "xl") {
     height = "h-6";
+  } else if (size === "2xl") {
+    height = "h-8";
   }
 
   let textWidth = width;
