@@ -1,24 +1,20 @@
 import { faPiggyBank } from "@fortawesome/free-solid-svg-icons";
-import { IconButton } from "~/components/ui/Button";
-import Card, { CardSkeleton } from "~/components/ui/Card";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TextSkeleton } from "~/components/ui/Skeleton";
 
 export const FundSkeletons = () => {
   const FundSkeleton = () => (
-    <CardSkeleton>
-      <Card.Body horizontal>
-        <Card.Group size="xl" horizontal>
-          <IconButton
-            icon={faPiggyBank}
-            size="sm"
-            style="secondary"
-            className="bg-secondary-dark/50 text-secondary-med/50"
-          />
+    <div className="flex w-full animate-pulse items-center border-b border-gray-300 bg-white/50 p-4">
+      <div className="flex w-full items-center justify-between">
+        <div className="flex items-center gap-2">
+          <button className="h-8 w-8 rounded-lg shadow-md">
+            <FontAwesomeIcon size="lg" icon={faPiggyBank} />
+          </button>
           <TextSkeleton maxWidth={125} minWidth={50} />
-        </Card.Group>
-        <TextSkeleton color="primary" maxWidth={125} minWidth={50} />
-      </Card.Body>
-    </CardSkeleton>
+        </div>
+        <TextSkeleton maxWidth={125} minWidth={50} />
+      </div>
+    </div>
   );
 
   return (
