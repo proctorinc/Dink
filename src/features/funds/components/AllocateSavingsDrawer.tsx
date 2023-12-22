@@ -4,8 +4,6 @@ import { type FC, useState, type FormEvent } from "react";
 import Button from "~/components/ui/Button";
 import Drawer from "~/components/ui/Drawer";
 import CurrencyInput from "~/components/ui/Inputs/CurrencyInput";
-import Modal from "~/components/ui/Modal";
-import Fund from "~/features/funds";
 import FundBrief from "~/features/funds/components/FundBrief";
 import { formatToCurrency } from "~/utils";
 import { api } from "~/utils/api";
@@ -13,11 +11,13 @@ import { FundPickerModal } from "./FundPickerModal";
 
 type AllocateSavingsDrawerProps = {
   open: boolean;
+  fund?: FundType & { amount: Prisma.Decimal };
   onClose: () => void;
 };
 
 const AllocateSavingsDrawer: FC<AllocateSavingsDrawerProps> = ({
   open,
+  fund,
   onClose,
 }) => {
   const ctx = api.useContext();
@@ -25,19 +25,19 @@ const AllocateSavingsDrawer: FC<AllocateSavingsDrawerProps> = ({
   const createAllocation = api.transactions.createFundAllocation.useMutation({
     onSuccess: () => void ctx.invalidate(),
   });
-  const [fund, setFund] = useState<
+  const [selectedFund, setSelectedFund] = useState<
     (FundType & { amount: Prisma.Decimal }) | null
-  >(null);
+  >(fund ?? null);
   const [amount, setAmount] = useState(0);
   const [name, setName] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
 
-  const isValidData = fundsData.data && !!fund && !!name && amount > 0;
+  const isValidData = fundsData.data && !!selectedFund && !!name && amount > 0;
 
   const handleAllocateFunds = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isValidData) {
-      createAllocation.mutate({ fundId: fund.id, amount, name });
+      createAllocation.mutate({ fundId: selectedFund.id, amount, name });
       closeOutDrawer();
     }
   };
@@ -45,7 +45,7 @@ const AllocateSavingsDrawer: FC<AllocateSavingsDrawerProps> = ({
   const closeOutDrawer = () => {
     setAmount(0);
     setName("");
-    setFund(null);
+    setSelectedFund(null);
     onClose();
   };
 
@@ -55,18 +55,23 @@ const AllocateSavingsDrawer: FC<AllocateSavingsDrawerProps> = ({
 
   return (
     <Drawer title="Allocate Savings" open={open} onClose={closeOutDrawer}>
-      <form onSubmit={handleAllocateFunds}>
-        <div className="flex flex-col gap-2 text-left">
-          <label className="px-2" htmlFor="name">
-            Reason:
-          </label>
-          <input
-            id="name"
-            placeholder="What are you saving this for?"
-            className="w-full rounded-xl border border-gray-300 p-4 font-bold placeholder-gray-500"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
+      <form onSubmit={handleAllocateFunds} className="flex flex-col gap-4">
+        <div className="flex flex-col py-4 text-left">
+          {selectedFund && (
+            <FundBrief
+              data={selectedFund}
+              className="rounded-xl border border-gray-300 bg-gray-100 shadow-md"
+              onClick={() => setModalOpen(true)}
+            />
+          )}
+          {!selectedFund && (
+            <Button
+              title="Select Fund"
+              style="secondary"
+              icon={faPlus}
+              onClick={() => setModalOpen(true)}
+            />
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
@@ -84,24 +89,16 @@ const AllocateSavingsDrawer: FC<AllocateSavingsDrawerProps> = ({
           />
         </div>
         <div className="flex flex-col gap-2 text-left">
-          <label className="px-2" htmlFor="amount">
-            Fund:
+          <label className="px-2" htmlFor="name">
+            Label:
           </label>
-          {fund && (
-            <FundBrief
-              data={fund}
-              className="rounded-xl border border-gray-300 bg-gray-100 shadow-md"
-              onClick={() => setModalOpen(true)}
-            />
-          )}
-          {!fund && (
-            <Button
-              title="Select Fund"
-              style="secondary"
-              icon={faPlus}
-              onClick={() => setModalOpen(true)}
-            />
-          )}
+          <input
+            id="name"
+            placeholder="What are you saving this for?"
+            className="w-full rounded-xl border border-gray-300 p-4 font-bold placeholder-gray-500"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
         </div>
         <div className="mt-5 flex w-full justify-center">
           <Button
@@ -109,14 +106,14 @@ const AllocateSavingsDrawer: FC<AllocateSavingsDrawerProps> = ({
             title="Allocate"
             type="submit"
             className="w-full"
-            disabled={fund === null || amount <= 0}
+            disabled={selectedFund === null || amount <= 0}
           />
         </div>
       </form>
       <FundPickerModal
-        open={modalOpen && fund === null}
+        open={modalOpen && selectedFund === null}
         onClose={() => setModalOpen(false)}
-        onSelect={(fund) => setFund(fund)}
+        onSelect={(fund) => setSelectedFund(fund)}
       />
     </Drawer>
   );
