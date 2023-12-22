@@ -67,7 +67,9 @@ export default function Home() {
               />
               {dataIsLoaded && (
                 <>
-                  <TransactionsSummary data={transactionData.data} />
+                  <TransactionsSummary
+                    data={transactionData.data.transactions}
+                  />
                   <SavingsSummary data={savingsData.data} />
                 </>
               )}
@@ -102,7 +104,7 @@ export default function Home() {
               <h3 className="pl-2">Recent Transactions</h3>
               <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
                 {transactionData.data &&
-                  transactionData.data.map((transaction) => (
+                  transactionData.data.transactions.map((transaction) => (
                     <Transaction
                       key={transaction.id}
                       data={transaction}
