@@ -20,7 +20,7 @@ const Modal: FC<ModalProps> = ({ open, children, title, onClose }) => {
     >
       <div className="fixed inset-0 overflow-y-auto text-black">
         <div className="flex min-h-full items-center justify-center bg-primary-dark/60 p-4 text-center backdrop-blur-sm">
-          <Dialog.Panel className="w-full max-w-md rounded-xl bg-white shadow-xl">
+          <Dialog.Panel className="w-full max-w-md rounded-xl bg-gray-100 shadow-xl">
             <div className="flex items-center justify-between px-4 pt-4">
               <Dialog.Title className="pl-2 text-2xl font-bold">
                 {title}
