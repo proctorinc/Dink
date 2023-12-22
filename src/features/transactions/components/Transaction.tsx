@@ -44,11 +44,9 @@ const Transaction: FC<TransactionProps> = ({
   if (transaction?.source?.budget?.icon !== undefined) {
     icon = convertToIcon(transaction.source.budget.icon);
     color = convertToColor(transaction.source.budget.color);
-    console.log(transaction.source.budget.icon);
   } else if (transaction?.source?.fund?.icon !== undefined) {
     icon = convertToIcon(transaction.source.fund.icon);
     color = convertToColor(transaction.source.fund.color);
-    console.log(transaction.source.fund.icon);
   }
 
   return (
