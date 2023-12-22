@@ -66,6 +66,26 @@ function sumTotalBudgetSpent(budgets: (Budget & BudgetAmount)[]) {
 }
 
 export const budgetsRouter = createTRPCRouter({
+  getAllData: protectedProcedure.query(async ({ ctx }) => {
+    const spendingBudgets = await ctx.prisma.budget.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        savingsFund: null,
+      },
+    });
+
+    const savingsBudgets = await ctx.prisma.budget.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        NOT: [{ savingsFund: null }],
+      },
+    });
+
+    return {
+      spending: spendingBudgets,
+      saving: savingsBudgets,
+    };
+  }),
   getDataByMonth: protectedProcedure
     .input(
       z.object({
