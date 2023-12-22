@@ -33,6 +33,9 @@ const CreateFundDrawer: FC<CreateFundDrawerProps> = ({ open, onClose }) => {
     if (isValidData) {
       createFund.mutate({ name, icon, color: color?.name });
     }
+    setName("");
+    setColor(defaultColor);
+    setIcon(null);
   };
 
   const isValidData = !!name && !!icon;
@@ -49,13 +52,6 @@ const CreateFundDrawer: FC<CreateFundDrawerProps> = ({ open, onClose }) => {
             Name:
           </label>
           <div className="flex items-center gap-2">
-            <input
-              id="fund-name"
-              placeholder="What are you saving for?"
-              className="w-full rounded-xl border border-gray-300 p-4 font-bold placeholder-gray-500"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
             <div className="flex flex-col gap-2">
               <button
                 className="h-14 w-14 rounded-xl shadow-md"
@@ -67,10 +63,20 @@ const CreateFundDrawer: FC<CreateFundDrawerProps> = ({ open, onClose }) => {
                 <FontAwesomeIcon
                   size="xl"
                   icon={convertToIcon(icon) ?? faPlusCircle}
-                  onClick={() => setModalOpen(true)}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setModalOpen(true);
+                  }}
                 />
               </button>
             </div>
+            <input
+              id="fund-name"
+              placeholder="What are you saving for?"
+              className="w-full rounded-xl border border-gray-300 p-4 font-bold placeholder-gray-500"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
           </div>
         </div>
         <div className="mt-5 flex w-full justify-center">
