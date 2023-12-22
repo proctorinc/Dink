@@ -8,7 +8,7 @@ import { useMonthContext } from "~/hooks/useMonthContext";
 import { DetailedTransaction } from "~/features/transactions";
 import Button from "~/components/ui/Button";
 import { api } from "~/utils/api";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import useNotifications from "~/hooks/useNotifications";
 import Head from "next/head";
 import AuthPage from "~/components/routes/AuthPage";
