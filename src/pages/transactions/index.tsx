@@ -15,6 +15,10 @@ import Modal from "~/components/ui/Modal";
 import Head from "next/head";
 import AuthPage from "~/components/routes/AuthPage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSearchParams } from "next/navigation";
+import Fund from "~/features/funds";
+import Budget from "~/features/budgets";
+import Account from "~/features/accounts";
 
 const TransactionsPage = () => {
   const { startOfMonth, endOfMonth } = useMonthContext();
@@ -26,6 +30,12 @@ const TransactionsPage = () => {
   const [includeUncategorized, setIncludeUncategorized] = useState(true);
   const [includeIncome, setIncludeIncome] = useState(true);
   const [openTransaction, setOpenTransaction] = useState("");
+
+  const searchParams = useSearchParams();
+
+  const fundId = searchParams.get("fundId");
+  const budgetId = searchParams.get("budgetId");
+  const accountId = searchParams.get("accountId");
 
   const handleOpenTransaction = (transactionId: string) => {
     setOpenTransaction((prev) => (prev === transactionId ? "" : transactionId));
@@ -40,10 +50,15 @@ const TransactionsPage = () => {
       includeCategorized,
       includeUncategorized,
       includeIncome,
+      fundId,
+      budgetId,
+      accountId,
       searchText: search,
       size: 100,
     },
-    { onError: () => setErrorNotification("Failed to fetch transactions") }
+    {
+      onError: () => setErrorNotification("Failed to fetch transactions"),
+    }
   );
 
   const { setErrorNotification } = useNotifications();
@@ -77,6 +92,15 @@ const TransactionsPage = () => {
         <div className="container flex max-w-md flex-grow flex-col items-center justify-center gap-12 pt-5 sm:pb-4 lg:max-w-2xl">
           <div className="flex w-full flex-grow flex-col items-center gap-4">
             <div className="flex w-full flex-col gap-4 px-4">
+              {transactionData.data?.fund && (
+                <Fund data={transactionData.data.fund} />
+              )}
+              {transactionData.data?.budget && (
+                <Budget data={transactionData.data.budget} />
+              )}
+              {transactionData.data?.account && (
+                <Account data={transactionData.data.account} />
+              )}
               <Card size="sm">
                 <Card.Body>
                   <Card.Group horizontal>
@@ -160,56 +184,61 @@ const TransactionsPage = () => {
                 </Card>
               )}
             </div>
-            <div className="flex w-full flex-grow flex-col rounded-t-2xl bg-white pb-20 font-bold text-black">
+            <div className="flex w-full flex-grow flex-col overflow-clip rounded-t-2xl bg-white pb-20 font-bold text-black">
               <div className="grid h-full w-full grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white text-black lg:grid-cols-2">
-                {transactionData?.data && transactionData.data.length === 0 && (
-                  <div className="flex items-center justify-center px-4 py-2 font-bold text-gray-600">
-                    No transactions match this search
-                  </div>
-                )}
+                {transactionData?.data &&
+                  transactionData.data.transactions.length === 0 && (
+                    <div className="flex items-center justify-center px-4 py-2 font-bold text-gray-600">
+                      No transactions match this search
+                    </div>
+                  )}
                 {transactionData.data &&
                   transactionData.isSuccess &&
-                  transactionData.data.map((transaction, index) => (
-                    <>
-                      {(index === 0 ||
-                        transactionData.data[index - 1]?.date.getMonth() !==
-                          transaction.date.getMonth()) && (
-                        <div
-                          key={transaction.date.toLocaleString("en-US", {
-                            month: "long",
-                            year: "numeric",
-                          })}
-                          className="flex h-fit justify-between border-b border-gray-300 bg-gray-100 px-4 py-2 font-bold text-gray-600"
-                        >
-                          <span>
-                            {transaction.date.toLocaleString("en-US", {
+                  transactionData.data.transactions.map(
+                    (transaction, index) => (
+                      <>
+                        {(index === 0 ||
+                          transactionData.data.transactions[
+                            index - 1
+                          ]?.date.getMonth() !==
+                            transaction.date.getMonth()) && (
+                          <div
+                            key={transaction.date.toLocaleString("en-US", {
                               month: "long",
-                            })}
-                          </span>
-                          {transaction.date.toLocaleString("en-US", {
-                            year: "numeric",
-                          }) !==
-                            new Date().toLocaleString("en-US", {
                               year: "numeric",
-                            }) && (
+                            })}
+                            className="flex h-fit justify-between border-b border-gray-300 bg-gray-100 px-4 py-2 font-bold text-gray-600"
+                          >
                             <span>
                               {transaction.date.toLocaleString("en-US", {
-                                year: "numeric",
+                                month: "long",
                               })}
                             </span>
-                          )}
-                        </div>
-                      )}
-                      <Transaction
-                        key={transaction.id}
-                        data={transaction}
-                        open={openTransaction}
-                        onClick={(transactionId) =>
-                          handleOpenTransaction(transactionId)
-                        }
-                      />
-                    </>
-                  ))}
+                            {transaction.date.toLocaleString("en-US", {
+                              year: "numeric",
+                            }) !==
+                              new Date().toLocaleString("en-US", {
+                                year: "numeric",
+                              }) && (
+                              <span>
+                                {transaction.date.toLocaleString("en-US", {
+                                  year: "numeric",
+                                })}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        <Transaction
+                          key={transaction.id}
+                          data={transaction}
+                          open={openTransaction}
+                          onClick={(transactionId) =>
+                            handleOpenTransaction(transactionId)
+                          }
+                        />
+                      </>
+                    )
+                  )}
               </div>
             </div>
           </div>
@@ -220,7 +249,9 @@ const TransactionsPage = () => {
         title="Categorize"
         onClose={() => setModalOpen(false)}
       >
-        <CategorizeTransactions transactions={transactionData.data ?? []} />
+        <CategorizeTransactions
+          transactions={transactionData.data?.transactions ?? []}
+        />
       </Modal>
     </AuthPage>
   );
