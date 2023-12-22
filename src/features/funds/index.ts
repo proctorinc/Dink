@@ -5,7 +5,7 @@ export * from "./components/SavingsSummarySkeleton";
 export * from "./components/FundSkeleton";
 export * from "./components/FundBrief";
 export * from "./components/AllocateSavingsDrawer";
-export * from "./components/EditFundDrawer";
+export * from "./components/FundDetailDrawer";
 export * from "./components/CreateFundDrawer";
 export * from "./components/FundPickerModal";
 
