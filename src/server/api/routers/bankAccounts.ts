@@ -29,7 +29,7 @@ function sumAccountsBalance(accounts: BankAccount[]) {
   }, new Prisma.Decimal(0));
 }
 
-function convertAccountLogosToString(
+export function convertAccountLogosToString(
   accounts: (BankAccount & {
     institution: Institution & {
       syncItem: InstitutionSyncItem | null;
@@ -41,7 +41,7 @@ function convertAccountLogosToString(
   });
 }
 
-function convertLogoBufferToString(
+export function convertLogoBufferToString(
   account: BankAccount & {
     institution: Institution & {
       syncItem: InstitutionSyncItem | null;
@@ -60,7 +60,7 @@ function convertLogoBufferToString(
   };
 }
 
-function convertLogoBufferToStringWithTransactions(
+export function convertLogoBufferToStringWithTransactions(
   account: BankAccount & {
     transactions: (Transaction & {
       source:
