@@ -1,6 +1,5 @@
 import { type Transaction, type TransactionSource } from "@prisma/client";
 import { type FC } from "react";
-import Card from "~/components/ui/Card";
 import { formatToCurrency } from "~/utils";
 
 type DetailedTransactionProps = {
@@ -13,30 +12,20 @@ export const DetailedTransaction: FC<DetailedTransactionProps> = ({
   data: transaction,
 }) => {
   return (
-    <Card
-      key={transaction?.id}
-      size="sm"
-      className="bg-secondary-med text-secondary-light"
-    >
-      <Card.Body horizontal>
-        <div className="flex flex-col">
-          <span className="text-xl font-bold">{transaction?.name}</span>
-          <span className="text-sm font-bold text-secondary-dark group-hover:text-primary-med">
-            {transaction?.merchantName} / {transaction?.paymentChannel}
-          </span>
-        </div>
-        <div className="flex flex-col justify-center text-right">
-          <span className="font-bold group-hover:text-primary-med">
-            {formatToCurrency(transaction?.amount)}
-          </span>
-          <span className="text-sm font-bold text-secondary-dark group-hover:text-primary-med">
-            {transaction?.date?.toLocaleString("en-us", {
-              month: "short",
-              day: "numeric",
-            })}
-          </span>
-        </div>
-      </Card.Body>
-    </Card>
+    <div className="flex w-full flex-col gap-2 overflow-clip rounded-2xl bg-white font-bold text-black">
+      <span className="px-6 pt-6 pb-2 text-4xl font-extrabold">
+        {formatToCurrency(transaction.amount)}
+      </span>
+      <div className="flex flex-col gap-1 bg-primary-light px-6 pb-4 pt-2">
+        <span className="font-bold text-primary-med">{transaction.name}</span>
+        <span className="text-sm text-white">
+          {transaction.date.toLocaleString("en-us", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </span>
+      </div>
+    </div>
   );
 };
