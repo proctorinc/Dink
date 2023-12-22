@@ -7,6 +7,7 @@ import Head from "next/head";
 import { PlaidLink } from "~/features/plaid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faToggleOff, faToggleOn } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 export default function BankAccounts() {
   const { setErrorNotification } = useNotifications();
@@ -14,6 +15,10 @@ export default function BankAccounts() {
   const institutions = api.bankAccounts.getInstitutions.useQuery(undefined, {
     onError: () => setErrorNotification("Failed to fetch Institutions"),
   });
+  const [cashEnabled, setCashEnabled] = useState(true);
+  const [creditEnabled, setCreditEnabled] = useState(true);
+  const [investmentEnabled, setInvestmentEnabled] = useState(true);
+  const [loanEnabled, setLoanEnabled] = useState(false);
 
   return (
     <AuthPage>
@@ -32,35 +37,55 @@ export default function BankAccounts() {
             <div className="flex w-full flex-grow flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
               <h3 className="pl-2">Show Categories</h3>
               <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
-                <div className="flex items-center gap-2 px-4 py-2">
+                <div
+                  className="flex items-center gap-2 px-4 py-2"
+                  onClick={() => setCashEnabled((prev) => !prev)}
+                >
                   <FontAwesomeIcon
-                    className={true ? "text-primary-med" : "text-gray-600"}
+                    className={
+                      cashEnabled ? "text-primary-med" : "text-gray-600"
+                    }
                     size="2x"
-                    icon={true ? faToggleOn : faToggleOff}
+                    icon={cashEnabled ? faToggleOn : faToggleOff}
                   />
                   <span>Cash</span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2">
+                <div
+                  className="flex items-center gap-2 px-4 py-2"
+                  onClick={() => setCreditEnabled((prev) => !prev)}
+                >
                   <FontAwesomeIcon
-                    className={true ? "text-primary-med" : "text-gray-600"}
+                    className={
+                      creditEnabled ? "text-primary-med" : "text-gray-600"
+                    }
                     size="2x"
-                    icon={true ? faToggleOn : faToggleOff}
+                    icon={creditEnabled ? faToggleOn : faToggleOff}
                   />
                   <span>Credit</span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2">
+                <div
+                  className="flex items-center gap-2 px-4 py-2"
+                  onClick={() => setInvestmentEnabled((prev) => !prev)}
+                >
                   <FontAwesomeIcon
-                    className={true ? "text-primary-med" : "text-gray-600"}
+                    className={
+                      investmentEnabled ? "text-primary-med" : "text-gray-600"
+                    }
                     size="2x"
-                    icon={true ? faToggleOn : faToggleOff}
+                    icon={investmentEnabled ? faToggleOn : faToggleOff}
                   />
                   <span>Investment</span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2">
+                <div
+                  className="flex items-center gap-2 px-4 py-2"
+                  onClick={() => setLoanEnabled((prev) => !prev)}
+                >
                   <FontAwesomeIcon
-                    className={false ? "text-primary-med" : "text-gray-600"}
+                    className={
+                      loanEnabled ? "text-primary-med" : "text-gray-600"
+                    }
                     size="2x"
-                    icon={false ? faToggleOn : faToggleOff}
+                    icon={loanEnabled ? faToggleOn : faToggleOff}
                   />
                   <span>Loan</span>
                 </div>
