@@ -1,98 +1,69 @@
-import {
-  faAngleUp,
-  faCalendarAlt,
-  faSackDollar,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCalendarAlt, faSackDollar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prisma } from "@prisma/client";
-import { IconButton } from "~/components/ui/Button";
-import Card, { CardSkeleton } from "~/components/ui/Card";
 import { ProgressBar } from "~/components/ui/Charts";
 import { TextSkeleton } from "~/components/ui/Skeleton";
-import { IncomeBudgetSkeleton } from "./IncomeBudgetSkeleton";
 
-const BudgetSkeleton = () => (
-  <CardSkeleton>
-    <Card.Body size="sm" horizontal>
-      <IconButton
-        className="bg-secondary-dark/50 text-secondary-med/50"
-        icon={faCalendarAlt}
-        style="secondary"
-      />
-      <Card.Group size="sm" className="w-full gap-1 pl-2">
-        <TextSkeleton width={100} />
-        <div className="py-0.5">
-          <ProgressBar
-            size="sm"
-            value={new Prisma.Decimal(60)}
-            goal={new Prisma.Decimal(100)}
-            className="bg-gradient-to-r from-secondary-dark/75 to-secondary-med/75"
-          />
+const SpendingBudgetSkeleton = () => (
+  <div className="flex w-full border-b border-gray-300 p-4">
+    <div className="flex w-full items-center gap-1">
+      <button className="h-8 w-8 rounded-lg shadow-md">
+        <FontAwesomeIcon size="lg" icon={faCalendarAlt} />
+      </button>
+      <div className="flex w-full flex-col gap-1 pl-2">
+        <div className="flex justify-between group-hover:text-primary-med">
+          <TextSkeleton maxWidth={125} minWidth={50} />
+          <span>
+            <TextSkeleton maxWidth={125} minWidth={50} /> /{" "}
+            <TextSkeleton maxWidth={125} minWidth={50} />
+          </span>
         </div>
-        <div className="flex justify-between text-sm text-primary-light group-hover:text-primary-med">
-          <TextSkeleton size="sm" color="primary" width={125} />
-          <TextSkeleton size="sm" color="primary" width={100} />
-        </div>
-      </Card.Group>
-    </Card.Body>
-  </CardSkeleton>
+        <ProgressBar
+          size="sm"
+          value={new Prisma.Decimal(50)}
+          goal={new Prisma.Decimal(100)}
+        />
+      </div>
+    </div>
+  </div>
 );
 
 const SavingsBudgetSkeleton = () => (
-  <CardSkeleton>
-    <Card.Body horizontal>
-      <Card.Group size="sm">
-        <Card.Group horizontal>
-          <IconButton icon={faSackDollar} size="sm" style="secondary" />
-          <TextSkeleton width={125} color="primary" />
-        </Card.Group>
-      </Card.Group>
-      <Card.Group horizontal size="sm">
-        <TextSkeleton color="primary" width={125} />
-      </Card.Group>
-    </Card.Body>
-  </CardSkeleton>
+  <div className="flex w-full border-b border-gray-300 p-4">
+    <div className="flex w-full items-center gap-1">
+      <button className="h-8 w-8 rounded-lg border shadow-md">
+        <FontAwesomeIcon size="lg" icon={faSackDollar} />
+      </button>
+      <div className="flex w-full flex-col gap-1 pl-2">
+        <div className="flex justify-between group-hover:text-primary-med">
+          <TextSkeleton maxWidth={125} minWidth={50} />
+          <span>
+            <TextSkeleton maxWidth={125} minWidth={50} />
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
 );
 
-export const BudgetSkeletons = () => {
+export const SavingsBudgetSkeletons = () => {
   return (
     <>
-      <IncomeBudgetSkeleton />
-      <div className="flex w-full items-center justify-between">
-        <div className="flex gap-1">
-          <IconButton
-            icon={faAngleUp}
-            noShadow
-            className="text-primary-light/75"
-          />
-          <h3 className="w-full text-left text-xl font-bold text-primary-light/75">
-            Spending
-          </h3>
-        </div>
-        <TextSkeleton width={50} color="primary" />
-      </div>
-      <div className="flex w-full flex-col gap-3">
-        <BudgetSkeleton />
-        <BudgetSkeleton />
-        <BudgetSkeleton />
-      </div>
-      <div className="flex w-full items-center justify-between">
-        <div className="flex gap-1">
-          <IconButton
-            icon={faAngleUp}
-            noShadow
-            className="text-primary-light/75"
-          />
-          <h3 className="w-full text-left text-xl font-bold text-primary-light/75">
-            Savings
-          </h3>
-        </div>
-        <TextSkeleton width={50} color="primary" />
-      </div>
-      <div className="flex w-full flex-col gap-3">
-        <SavingsBudgetSkeleton />
-        <SavingsBudgetSkeleton />
-        <SavingsBudgetSkeleton />
-      </div>
+      <SpendingBudgetSkeleton />
+      <SpendingBudgetSkeleton />
+      <SpendingBudgetSkeleton />
+      <SpendingBudgetSkeleton />
+    </>
+  );
+};
+
+export const SpendingBudgetSkeletons = () => {
+  return (
+    <>
+      <SavingsBudgetSkeleton />
+      <SavingsBudgetSkeleton />
+      <SavingsBudgetSkeleton />
+      <SavingsBudgetSkeleton />
     </>
   );
 };
