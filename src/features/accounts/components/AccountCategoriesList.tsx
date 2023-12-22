@@ -63,12 +63,8 @@ export const AccountCategoriesList: FC<AccountCategoriesListProps> = ({
         onClick={handleOnClick}
       >
         <div className="flex items-center">
-          <div className="p-2 text-gray-500">
-            <IconButton
-              style="secondary"
-              size="sm"
-              icon={AccountCategoryIcons[category]}
-            />
+          <div className="flex h-10 w-10 items-center justify-center p-2 text-primary-med">
+            <FontAwesomeIcon icon={AccountCategoryIcons[category]} size="lg" />
           </div>
           <h3>
             {category === AccountCategory.Cash
