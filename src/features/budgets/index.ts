@@ -9,5 +9,6 @@ export * from "./components/BudgetSkeletons";
 export * from "./components/BudgetCharts";
 export * from "./components/CreateBudgetDrawer";
 export * from "./components/BudgetPickerModal";
+export * from "./components/BudgetBrief";
 
 export default Budget;
