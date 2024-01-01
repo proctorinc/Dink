@@ -13,12 +13,13 @@ import {
   getLastDayOfLastMonth,
   getLastDayOfMonth,
 } from "~/utils";
+import { sumTransactions } from "./transactions";
 
 type BudgetAmount = {
   spent: Prisma.Decimal;
 };
 
-function sumTransactions(
+function sumTransactionsFromSources(
   sources: {
     transaction: Transaction;
   }[]
@@ -36,21 +37,30 @@ function sumBudgetTransactions(
     savingsFund: Fund | null;
   })[]
 ) {
-  return budgets.map((budget) => {
-    const { sourceTransactions, ...otherFields } = budget;
-    let spent = sumTransactions(sourceTransactions);
-    const leftover = Prisma.Decimal.add(budget.goal, spent);
+  return budgets.map(addBudgetAmounts);
+}
 
-    if (Number(spent) !== 0) {
-      spent = Decimal.mul(spent, new Decimal(-1));
-    }
+export function addBudgetAmounts(
+  budget: Budget & {
+    sourceTransactions: {
+      transaction: Transaction;
+    }[];
+    savingsFund: Fund | null;
+  }
+) {
+  const { sourceTransactions, ...otherFields } = budget;
+  let spent = sumTransactionsFromSources(sourceTransactions);
+  const leftover = Prisma.Decimal.add(budget.goal, spent);
 
-    return {
-      ...otherFields,
-      spent,
-      leftover,
-    };
-  });
+  if (Number(spent) !== 0) {
+    spent = Decimal.mul(spent, new Decimal(-1));
+  }
+
+  return {
+    ...otherFields,
+    spent,
+    leftover,
+  };
 }
 
 function sumBudgetGoals(budgets: Budget[]) {
@@ -72,6 +82,14 @@ export const budgetsRouter = createTRPCRouter({
         userId: ctx.session.user.id,
         savingsFund: null,
       },
+      include: {
+        savingsFund: true,
+        sourceTransactions: {
+          include: {
+            transaction: true,
+          },
+        },
+      },
     });
 
     const savingsBudgets = await ctx.prisma.budget.findMany({
@@ -79,11 +97,19 @@ export const budgetsRouter = createTRPCRouter({
         userId: ctx.session.user.id,
         NOT: [{ savingsFund: null }],
       },
+      include: {
+        savingsFund: true,
+        sourceTransactions: {
+          include: {
+            transaction: true,
+          },
+        },
+      },
     });
 
     return {
-      spending: spendingBudgets,
-      saving: savingsBudgets,
+      spending: sumBudgetTransactions(spendingBudgets),
+      saving: sumBudgetTransactions(savingsBudgets),
     };
   }),
   getDataByMonth: protectedProcedure
@@ -222,11 +248,27 @@ export const budgetsRouter = createTRPCRouter({
       );
       const overallLeftover = Decimal.sub(overallGoal, overallSpending);
 
+      const uncategorizedTransactions = await ctx.prisma.transaction.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          source: null,
+          date: {
+            gte: input.startOfMonth,
+            lte: input.endOfMonth,
+          },
+        },
+      });
+
       return {
         overall: {
           goal: overallGoal,
           spent: Decimal.abs(overallSpending),
           leftover: overallLeftover,
+        },
+        uncategorized: {
+          count: uncategorizedTransactions.length,
+          total: sumTransactions(uncategorizedTransactions),
+          transactions: uncategorizedTransactions,
         },
         spending: {
           budgets: spendingWithAmounts,
@@ -388,7 +430,14 @@ export const budgetsRouter = createTRPCRouter({
       });
     }),
   update: protectedProcedure
-    .input(z.object({ budgetId: z.string(), name: z.string() }))
+    .input(
+      z.object({
+        budgetId: z.string(),
+        icon: z.string(),
+        color: z.string(),
+        name: z.string(),
+      })
+    )
     .mutation(async ({ input, ctx }) => {
       return ctx.prisma.budget.updateMany({
         where: {
@@ -397,6 +446,8 @@ export const budgetsRouter = createTRPCRouter({
         },
         data: {
           name: input.name,
+          icon: input.icon,
+          color: input.color,
         },
       });
     }),
