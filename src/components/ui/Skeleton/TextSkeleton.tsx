@@ -2,7 +2,7 @@ import { useMemo, type FC } from "react";
 
 type TextSkeletonProps = {
   size?: "2xl" | "xl" | "lg" | "sm" | "xs";
-  color?: "white" | "primary" | "secondary";
+  color?: "black" | "white" | "primary" | "secondary";
   width?: number;
   minWidth?: number;
   maxWidth?: number;
@@ -34,14 +34,16 @@ export const TextSkeleton: FC<TextSkeletonProps> = ({
   }
 
   let textWidth = width;
-  let textColor = "bg-white/60";
+  let textColor = "bg-black/10";
   let padding = "py-0.5";
 
   if (!width && minWidth && maxWidth) {
     textWidth = randomWidth;
   }
 
-  if (color === "primary") {
+  if (color === "white") {
+    textColor = "bg-white/60";
+  } else if (color === "primary") {
     textColor = "bg-primary-light/50";
   } else if (color === "secondary") {
     textColor = "bg-secondary-light/50";
