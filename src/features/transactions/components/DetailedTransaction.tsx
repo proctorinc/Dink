@@ -12,7 +12,7 @@ export const DetailedTransaction: FC<DetailedTransactionProps> = ({
   data: transaction,
 }) => {
   return (
-    <div className="flex w-full flex-col gap-2 overflow-clip rounded-2xl bg-white font-bold text-black">
+    <div className="flex w-full flex-col gap-2 overflow-clip rounded-2xl bg-white font-bold text-black shadow-xl shadow-primary-med">
       <span className="px-6 pt-6 pb-2 text-4xl font-extrabold">
         {formatToCurrency(transaction.amount)}
       </span>
