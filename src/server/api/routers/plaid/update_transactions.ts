@@ -78,18 +78,15 @@ export async function syncInstitutions(userId: string) {
 
   institutions.map(async (institution) => {
     if (institution.syncItem && institution.syncItem.status !== "demo") {
-      await syncTransactions(userId, institution.syncItem.plaidId);
-      // update the lastSynced date to now, check result as well? idkkkk
-
+      // Only sync if syncItems have not been synced within 4 hours
       if (
-        true
-        // institution.syncItem.updatedAt.getTime() - new Date().getTime() >
-        // 1000 * 60 * 60 * 4 // 4 hours
+        institution.syncItem.updatedAt.getTime() - new Date().getTime() >=
+        1000 * 60 * 60 * 4 // 4 hours
       ) {
-        console.log("Yes! Updating");
+        await syncTransactions(userId, institution.syncItem.plaidId);
         await prisma.institutionSyncItem.update({
           where: {
-            id: institution.syncItem.plaidId,
+            plaidId: institution.syncItem.plaidId,
           },
           data: {
             updatedAt: new Date(),

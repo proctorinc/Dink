@@ -26,6 +26,7 @@ export default function Home() {
   const accountData = api.bankAccounts.getAllData.useQuery(undefined, {
     onError: () => setErrorNotification("Failed to fetch accounts"),
   });
+  const syncInstitutions = api.plaid.syncInstitutions.useQuery();
   const transactionData = api.transactions.search.useQuery(
     {
       filterMonthly: false,
@@ -60,7 +61,7 @@ export default function Home() {
       <main className="flex h-full min-h-screen flex-col items-center text-white">
         <div className="container flex max-w-md flex-grow flex-col items-center justify-center gap-12 pt-5 sm:pb-4 lg:max-w-2xl">
           <div className="flex w-full flex-grow flex-col items-center gap-4">
-            <div className="flex w-full flex-col gap-4 px-4">
+            <div className="sticky top-20 z-10 flex w-full flex-col gap-4 px-4">
               <Header
                 title={`Hi, ${sessionData?.user?.nickname ?? ""}`}
                 subtitle={formatToMonthYear(new Date())}
@@ -80,7 +81,7 @@ export default function Home() {
                 </>
               )}
             </div>
-            <div className="flex w-full flex-grow flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
+            <div className="z-20 flex w-full flex-grow flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
               <div className="flex items-center justify-between px-2">
                 <h3>Accounts</h3>
                 <FontAwesomeIcon
@@ -116,7 +117,7 @@ export default function Home() {
                   ))}
                 <div className="flex items-center justify-end gap-2 bg-gray-100 p-4 text-sm text-gray-600">
                   <span onClick={() => void router.push("/transactions")}>
-                    All Transactions
+                    View Transactions
                   </span>
                   <FontAwesomeIcon icon={faArrowRight} size="sm" />
                 </div>
