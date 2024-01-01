@@ -46,10 +46,10 @@ function sumFundTransactions(
     })[];
   })[]
 ) {
-  return funds.map((fund) => addAmountToFund(fund));
+  return funds.map(addAmountToFund);
 }
 
-function addAmountToFund(
+export function addAmountToFund(
   fund: Fund & {
     sourceTransactions: (TransactionSource & {
       transaction: Transaction;
