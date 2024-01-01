@@ -3,29 +3,22 @@ import { formatToCurrency } from "~/utils";
 import { ProgressBar } from "~/components/ui/Charts";
 import { api } from "~/utils/api";
 import { useMonthContext } from "~/hooks/useMonthContext";
-import {
-  faArrowRight,
-  faMoneyCheck,
-  faPencil,
-  faReceipt,
-  faSitemap,
-} from "@fortawesome/free-solid-svg-icons";
-import Button, { IconButton } from "~/components/ui/Button";
+import { faArrowRight, faMoneyCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Button from "~/components/ui/Button";
 
 export type IncomeBudgetType = {
   open: string;
   onClick: (budgetId: string) => void;
 };
 
-export const IncomeBudget: FC<IncomeBudgetType> = ({ open, onClick }) => {
+export const IncomeBudget: FC<IncomeBudgetType> = () => {
   const { startOfMonth, endOfMonth } = useMonthContext();
   const userPreferences = api.users.getUserPreferences.useQuery();
   const income = api.transactions.getIncomeByMonth.useQuery({
     startOfMonth,
     endOfMonth,
   });
-  const INCOME = "income";
 
   const targetIncome = userPreferences.data?.targetIncome;
 
@@ -45,16 +38,11 @@ export const IncomeBudget: FC<IncomeBudgetType> = ({ open, onClick }) => {
 
   return (
     <>
-      <div
-        className={
-          open === INCOME
-            ? "flex w-full bg-gray-100 p-4"
-            : "flex w-full border-b border-gray-300 p-4"
-        }
-        onClick={() => onClick(INCOME)}
-      >
+      <div className="flex w-full border-b border-gray-300 p-4">
         <div className="flex w-full items-center gap-1">
-          <IconButton size="sm" icon={faMoneyCheck} style="secondary" />
+          <button className="h-8 w-8 rounded-lg bg-secondary-dark text-secondary-med shadow-md">
+            <FontAwesomeIcon size="lg" icon={faMoneyCheck} />
+          </button>
           <div className="flex w-full flex-col gap-1 pl-2">
             <div className="flex justify-between group-hover:text-primary-med">
               <h3>Income</h3>
@@ -64,13 +52,6 @@ export const IncomeBudget: FC<IncomeBudgetType> = ({ open, onClick }) => {
           </div>
         </div>
       </div>
-      {open === INCOME && (
-        <div className="flex justify-around border-b border-gray-300 bg-gray-100 p-4 text-gray-600">
-          <FontAwesomeIcon icon={faPencil} />
-          <FontAwesomeIcon icon={faSitemap} />
-          <FontAwesomeIcon icon={faReceipt} />
-        </div>
-      )}
     </>
   );
 };
