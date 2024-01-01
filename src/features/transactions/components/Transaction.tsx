@@ -76,7 +76,11 @@ const Transaction: FC<TransactionProps> = ({
               <div className="flex items-center gap-1 text-sm text-gray-500 group-hover:text-primary-med">
                 <span>
                   {transaction?.source?.type
-                    ? formatToTitleCase(transaction.source.type)
+                    ? formatToTitleCase(
+                        transaction.source.type === "fund"
+                          ? "savings"
+                          : transaction.source.type
+                      )
                     : "Uncategorized"}
                 </span>
                 {(transaction?.source?.type === "budget" ||
