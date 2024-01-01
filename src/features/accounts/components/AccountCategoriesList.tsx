@@ -8,7 +8,6 @@ import { type InstitutionSyncItem, type BankAccount } from "@prisma/client";
 import { type Decimal } from "@prisma/client/runtime/library";
 import { useRouter } from "next/router";
 import { type FC } from "react";
-import { IconButton } from "~/components/ui/Button";
 import { AccountCategory, AccountCategoryIcons } from "~/config";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import Account from "./Account";
@@ -63,7 +62,7 @@ export const AccountCategoriesList: FC<AccountCategoriesListProps> = ({
         onClick={handleOnClick}
       >
         <div className="flex items-center">
-          <div className="flex h-10 w-10 items-center justify-center p-2 text-primary-med">
+          <div className="flex h-10 w-10 items-center justify-center p-2 text-gray-600">
             <FontAwesomeIcon icon={AccountCategoryIcons[category]} size="lg" />
           </div>
           <h3>
