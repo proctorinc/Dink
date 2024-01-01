@@ -1,27 +1,26 @@
 import {
   faArrowLeft,
   faArrowRight,
-  faPlus,
   faXmarkCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { useMonthContext } from "~/hooks/useMonthContext";
 import { DetailedTransaction } from "~/features/transactions";
 import Button from "~/components/ui/Button";
 import { api } from "~/utils/api";
-import { FormEvent, useState } from "react";
+import { type FormEvent, useState } from "react";
 import useNotifications from "~/hooks/useNotifications";
 import Head from "next/head";
 import AuthPage from "~/components/routes/AuthPage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSearchParams } from "next/navigation";
 import { FundPickerModal } from "~/features/funds";
-import { type Fund as FundType, type Prisma } from "@prisma/client";
+import { type Prisma, type Fund as FundType } from "@prisma/client";
 import FundBrief from "~/features/funds/components/FundBrief";
 import Budget, { BudgetPickerModal } from "~/features/budgets";
 
 const CategorizeTransactionsPage = () => {
   const [fundModalOpen, setFundModalOpen] = useState(false);
   const [budgetModalOpen, setBudgetModalOpen] = useState(false);
+  const [isIncome, setIsIncome] = useState(false);
   const [search, setSearch] = useState("");
   const [includeSavings, setIncludeSavings] = useState(false);
   const [openTransaction, setOpenTransaction] = useState("");
@@ -32,7 +31,13 @@ const CategorizeTransactionsPage = () => {
     | null
   >(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [selectedBudget, setSelectedBudget] = useState(null);
+  const [selectedBudget, setSelectedBudget] = useState<
+    | (Budget & {
+        spent: Prisma.Decimal;
+        leftover: Prisma.Decimal;
+      })
+    | null
+  >(null);
 
   const searchParams = useSearchParams();
   const ctx = api.useContext();
@@ -79,6 +84,11 @@ const CategorizeTransactionsPage = () => {
     },
   });
 
+  const { setErrorNotification } = useNotifications();
+
+  const transactions = transactionData.data?.transactions;
+  const currentTransaction = transactions ? transactions[selectedIndex] : null;
+
   const submitForm = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (currentTransaction && selectedFund && !selectedBudget) {
@@ -92,12 +102,11 @@ const CategorizeTransactionsPage = () => {
         budgetId: selectedBudget.id,
       });
     }
+
+    if (transactions && selectedIndex > transactions.length) {
+      setSelectedIndex(transactions.length);
+    }
   };
-
-  const { setErrorNotification } = useNotifications();
-
-  const transactions = transactionData.data?.transactions;
-  const currentTransaction = transactions ? transactions[selectedIndex] : null;
 
   return (
     <AuthPage>
@@ -119,7 +128,7 @@ const CategorizeTransactionsPage = () => {
                   <DetailedTransaction
                     key={currentTransaction.id}
                     data={currentTransaction}
-                    open={openTransaction}
+                    // open={openTransaction}
                   />
                 )}
               </div>
@@ -156,14 +165,46 @@ const CategorizeTransactionsPage = () => {
                 className="flex flex-col gap-4 overflow-clip rounded-xl border border-gray-300 bg-white p-4 text-black lg:grid-cols-2"
               >
                 <h3 className="pl-1">Choose category:</h3>
-                <div className="flex w-full py-4 text-left">
-                  {selectedFund && (
+                <div className="flex w-full text-left">
+                  {!selectedFund && !selectedBudget && (
+                    <div className="flex w-full flex-col gap-4">
+                      <Button
+                        title="Fund"
+                        style="secondary"
+                        className="w-full"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setFundModalOpen(true);
+                        }}
+                      />
+                      <Button
+                        title="Budget"
+                        style="secondary"
+                        className="w-full"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setBudgetModalOpen(true);
+                        }}
+                      />
+                      <Button
+                        title="Income"
+                        style="secondary"
+                        className="w-full"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setIsIncome(true);
+                        }}
+                      />
+                    </div>
+                  )}
+                  {(selectedBudget || selectedFund) && (
                     <button className="p-2">
                       <FontAwesomeIcon
                         icon={faXmarkCircle}
                         size="xl"
                         onClick={(event) => {
                           event.preventDefault();
+                          setSelectedBudget(null);
                           setSelectedFund(null);
                         }}
                       />
@@ -176,49 +217,11 @@ const CategorizeTransactionsPage = () => {
                       onClick={() => setFundModalOpen(true)}
                     />
                   )}
-                  {!selectedFund && (
-                    <Button
-                      title="Select Fund"
-                      style="secondary"
-                      className="w-full"
-                      icon={faPlus}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        setFundModalOpen(true);
-                      }}
-                    />
-                  )}
-                </div>
-                <div className="flex w-full py-4 text-left">
                   {selectedBudget && (
-                    <button className="p-2">
-                      <FontAwesomeIcon
-                        icon={faXmarkCircle}
-                        size="xl"
-                        onClick={(event) => {
-                          event.preventDefault();
-                          setSelectedBudget(null);
-                        }}
-                      />
-                    </button>
-                  )}
-                  {selectedFund && (
                     <Budget
                       data={selectedBudget}
                       className="rounded-xl border border-gray-300 bg-gray-100 shadow-md"
-                      onClick={() => setBudgetModalOpen(true)}
-                    />
-                  )}
-                  {!selectedBudget && (
-                    <Button
-                      title="Select Budget"
-                      style="secondary"
-                      className="w-full"
-                      icon={faPlus}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        setBudgetModalOpen(true);
-                      }}
+                      onSelection={() => setBudgetModalOpen(true)}
                     />
                   )}
                 </div>
