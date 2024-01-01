@@ -53,7 +53,7 @@ export default function Funds() {
         <div className="container flex max-w-md flex-col items-center justify-center gap-12 pt-5 sm:pb-4 lg:max-w-2xl">
           <div className="flex w-full flex-col items-center gap-4">
             <div className="sticky top-20 z-10 flex w-full px-4">
-              <div className="relative flex h-52 w-2/3 items-center justify-center font-bold">
+              <div className="relative flex h-60 w-full items-center justify-center font-bold">
                 <PieChart
                   colors={sortedFunds.map(
                     (fund) => convertToColor(fund.color).primary
@@ -77,7 +77,7 @@ export default function Funds() {
                   </span>
                 </div>
               </div>
-              <div className="flex w-1/3 flex-col justify-center gap-2 pr-4 font-bold">
+              {/* <div className="flex w-1/3 flex-col justify-center gap-2 pr-4 font-bold">
                 <span className="text-xl font-bold">{month}</span>
                 <div className="flex flex-col gap-1">
                   <span className="text-sm font-normal text-primary-light">
@@ -95,25 +95,47 @@ export default function Funds() {
                     -{formatToCurrency(fundsData.data?.monthly.spent)}
                   </span>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="z-20 flex w-full flex-col gap-4 rounded-t-2xl bg-gray-100 p-4 pb-20 font-bold text-black">
               <div className="flex w-full items-center justify-between px-2">
-                <h3>Unallocated</h3>
+                <h3>This month</h3>
                 <button
                   className="flex items-center justify-center gap-1 text-sm"
                   onClick={() => openAllocationDrawer()}
                 >
-                  Allocate
+                  Allocate Savings
                   <FontAwesomeIcon icon={faArrowRight} size="sm" />
                 </button>
               </div>
-              <div className="rounded-xl border border-gray-300 bg-white p-4">
-                {formatToCurrency(fundsData.data?.unallocatedTotal)}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex w-full flex-col items-center">
+                  <div className="w-full rounded-t-xl border border-secondary-dark bg-secondary-med px-4 py-1 text-center text-sm text-secondary-dark">
+                    <span className="text-sm font-bold">Saved</span>
+                  </div>
+                  <span className="w-full rounded-b-xl border-x border-b border-gray-300 bg-white p-4 text-center">
+                    +{formatToCurrency(fundsData.data?.monthly.saved)}
+                  </span>
+                </div>
+                <div className="flex w-full flex-col items-center">
+                  <div className="w-full rounded-t-xl border border-danger-dark bg-danger-med px-4 py-1 text-center text-sm text-danger-dark">
+                    <span className="text-sm font-bold">Spent</span>
+                  </div>
+                  <span className="w-full rounded-b-xl border-x border-b border-gray-300 bg-white p-4 text-center">
+                    -{formatToCurrency(fundsData.data?.monthly.spent)}
+                  </span>
+                </div>
+                <div className="flex w-full flex-col items-center">
+                  <div className="w-full rounded-t-xl border border-gray-400 bg-gray-300 px-4 py-1 text-center text-sm text-gray-500">
+                    <span className="text-sm font-bold">Unallocated</span>
+                  </div>
+                  <span className="w-full rounded-b-xl border-x border-b border-gray-300 bg-white p-4 text-center">
+                    {formatToCurrency(fundsData.data?.unallocatedTotal)}
+                  </span>
+                </div>
               </div>
               <h3 className="px-2">Funds</h3>
               <div className="grid grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white shadow-md lg:grid-cols-2">
-                <FundSkeletons />
                 {fundsData?.data?.funds.map((fund) => (
                   <Fund key={fund.id} data={fund} />
                 ))}
