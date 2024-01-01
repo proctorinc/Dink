@@ -17,11 +17,11 @@ const Navbar = () => {
       <nav className="sticky top-0 z-30 flex w-full flex-col items-center justify-center gap-1 py-2 pl-2 pr-4 text-primary-light backdrop-blur-lg md:flex">
         <div className="flex w-full items-center justify-between sm:max-w-2xl">
           <button
-            className="flex items-center gap-2 rounded-xl py-1 px-3 text-3xl font-bold"
+            className="flex items-center px-3"
             onClick={() => void router.push("/")}
           >
             <FontAwesomeIcon
-              className="h-8 w-8 text-primary-light"
+              className="h-7 w-7 text-primary-light"
               icon={faCircleHalfStroke}
             />
           </button>
