@@ -42,8 +42,8 @@ const IconPickerModal: FC<FundPickerModalProps> = ({
     <Modal title="Choose Icon" open={open} onClose={onClose}>
       <form onSubmit={submitForm} className="flex flex-col gap-4">
         <div className="flex w-full justify-center p-4">
-          <button
-            className="h-20 w-20 rounded-xl shadow-md"
+          <div
+            className="flex h-20 w-20 items-center justify-center rounded-xl shadow-md"
             style={{
               backgroundColor: selectedColor.primary,
               color: selectedColor.secondary,
@@ -53,7 +53,7 @@ const IconPickerModal: FC<FundPickerModalProps> = ({
               size="3x"
               icon={convertToIcon(selectedIcon) ?? faPlusCircle}
             />
-          </button>
+          </div>
         </div>
         <div className="grid grid-cols-6 gap-2 text-black">
           {colors.slice(0, -1).map((color) => (
