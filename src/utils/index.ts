@@ -1,5 +1,10 @@
 import { Prisma } from "@prisma/client";
 
+export enum Round {
+  DOLLAR,
+  ALL,
+}
+
 export const formatToCurrency = (
   amount: Prisma.Decimal | string | undefined | null
 ) => {
@@ -7,9 +12,20 @@ export const formatToCurrency = (
     style: "currency",
     currency: "USD",
   });
-  const formatted = amount ? USD.format(Number(amount)) : "$0";
 
-  return formatted.replace(".00", "");
+  let formatted = amount ? USD.format(Number(amount)) : "$0";
+
+  const value = Number(amount);
+
+  if (amount) {
+    if (value > 1000000) {
+      formatted = USD.format(Math.floor(value / 100000) / 10) + "M";
+    } else if (value > 1000) {
+      formatted = USD.format(Math.floor(value / 100) / 10) + "K";
+    }
+  }
+
+  return formatted.replace(".00", ""); //.replace(/.?0K/, /.?K/).replace("0M", "M");
 };
 
 export const formatToTitleCase = (
