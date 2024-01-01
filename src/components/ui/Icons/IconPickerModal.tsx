@@ -1,8 +1,4 @@
-import {
-  faCircleCheck,
-  faPlusCircle,
-  IconDefinition,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, type FC } from "react";
 import Modal from "~/components/ui/Modal";
@@ -34,9 +30,7 @@ const IconPickerModal: FC<FundPickerModalProps> = ({
     initialIcon ?? null
   );
 
-  const isValidData =
-    selectedIcon !== null &&
-    (selectedColor.name !== initialColor || selectedIcon !== initialIcon);
+  const isValidData = selectedIcon !== null;
 
   const submitForm = () => {
     if (isValidData) {
