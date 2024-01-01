@@ -3,6 +3,8 @@ import { Decimal } from "@prisma/client/runtime/library";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { convertLogoBufferToString } from "./bankAccounts";
+import { addBudgetAmounts } from "./budgets";
+import { addAmountToFund } from "./funds";
 import { syncInstitutions } from "./plaid/update_transactions";
 
 export function sumTransactions(transactions: Transaction[]) {
@@ -15,8 +17,8 @@ export const transactionsRouter = createTRPCRouter({
   search: protectedProcedure
     .input(
       z.object({
-        filterMonthly: z.boolean().optional(),
-        startOfMonth: z.date().optional(),
+        filterMonthly: z.boolean().nullable().optional(),
+        startOfMonth: z.date().nullable().optional(),
         endOfMonth: z.date().nullable().optional(),
         includeSavings: z.boolean().optional(),
         includeCategorized: z.boolean().optional(),
@@ -105,9 +107,14 @@ export const transactionsRouter = createTRPCRouter({
               userId: ctx.session.user.id,
               id: input.budgetId,
             },
-            // include: {
-            //   source: true,
-            // },
+            include: {
+              savingsFund: true,
+              sourceTransactions: {
+                include: {
+                  transaction: true,
+                },
+              },
+            },
           })
         : null;
 
@@ -117,9 +124,13 @@ export const transactionsRouter = createTRPCRouter({
               userId: ctx.session.user.id,
               id: input.fundId,
             },
-            // include: {
-            //   source: true,
-            // },
+            include: {
+              sourceTransactions: {
+                include: {
+                  transaction: true,
+                },
+              },
+            },
           })
         : null;
 
@@ -141,8 +152,8 @@ export const transactionsRouter = createTRPCRouter({
 
       return {
         transactions,
-        budget,
-        fund,
+        budget: budget ? addBudgetAmounts(budget) : null,
+        fund: fund ? addAmountToFund(fund) : null,
         account: account ? convertLogoBufferToString(account) : null,
       };
     }),
@@ -195,19 +206,17 @@ export const transactionsRouter = createTRPCRouter({
       });
     }),
   getUncategorized: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.transaction.findMany({
+    const uncategorizedTransactions = await ctx.prisma.transaction.findMany({
       where: {
         userId: ctx.session.user.id,
         source: null,
       },
-      include: {
-        category: true,
-        personalFinanceCategory: true,
-        paymentMetadata: true,
-        location: true,
-        account: true,
-      },
     });
+    return {
+      count: uncategorizedTransactions.length,
+      total: sumTransactions(uncategorizedTransactions),
+      transactions: uncategorizedTransactions,
+    };
   }),
   getIncomeByMonth: protectedProcedure
     .input(
