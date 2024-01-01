@@ -1,59 +1,17 @@
 import {
   faArrowRight,
   faCircleHalfStroke,
-  faEnvelope,
-  faPaperPlane,
-  faSquareXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type GetServerSideProps } from "next";
 import { getSession, signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { z } from "zod";
-import Button, { IconButton } from "~/components/ui/Button";
 import LoadingPage from "~/components/ui/LoadingPage";
-import Page from "~/components/ui/Page";
-import useNotifications from "~/hooks/useNotifications";
-import { api } from "~/utils/api";
 
 const Login = () => {
   const { status } = useSession();
   const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const notifications = useNotifications();
-
-  const requestAccessMutation = api.users.requestFullAccess.useMutation({
-    onSuccess: () => {
-      notifications.setSuccessNotification(
-        "Successfully requested. Updates will be sent via email"
-      );
-    },
-    onError: () => {
-      notifications.setErrorNotification("Failed to request access. Try again");
-    },
-  });
-
-  const LoginSchema = z.object({
-    email: z
-      .string()
-      .min(1, { message: "This field has to be filled." })
-      .email("Enter a valid email"),
-  });
-
-  const requestAccess = () => {
-    const result = LoginSchema.safeParse({ email });
-    if (result.success) {
-      void requestAccessMutation.mutate({ email });
-      notifications.setLoadingNotification("Requesting Access...");
-      setOpen(false);
-      setEmail("");
-    } else {
-      notifications.setErrorNotification("Enter a valid email");
-    }
-  };
 
   if (status === "authenticated") {
     void router.push("/");
@@ -63,7 +21,7 @@ const Login = () => {
     return (
       <>
         <Head>
-          <title>Home</title>
+          <title>Login</title>
         </Head>
         <main className="flex h-screen w-full items-end justify-center">
           <div
