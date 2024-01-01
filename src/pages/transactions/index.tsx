@@ -5,13 +5,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import { useMonthContext } from "~/hooks/useMonthContext";
-import Transaction, { CategorizeTransactions } from "~/features/transactions";
+import Transaction from "~/features/transactions";
 import Button, { IconButton } from "~/components/ui/Button";
 import { api } from "~/utils/api";
 import Card from "~/components/ui/Card";
 import { useState } from "react";
 import useNotifications from "~/hooks/useNotifications";
-import Modal from "~/components/ui/Modal";
 import Head from "next/head";
 import AuthPage from "~/components/routes/AuthPage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,20 +21,20 @@ import Account from "~/features/accounts";
 
 const TransactionsPage = () => {
   const { startOfMonth, endOfMonth } = useMonthContext();
-  const [modalOpen, setModalOpen] = useState(false);
+
+  const searchParams = useSearchParams();
+  const fundId = searchParams.get("fundId");
+  const budgetId = searchParams.get("budgetId");
+  const accountId = searchParams.get("accountId");
+  const includeSavingsParam = searchParams.get("includeSavings") === "true";
+
   const [search, setSearch] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [includeSavings, setIncludeSavings] = useState(false);
+  const [includeSavings, setIncludeSavings] = useState(includeSavingsParam);
   const [includeCategorized, setIncludeCategorized] = useState(true);
   const [includeUncategorized, setIncludeUncategorized] = useState(true);
   const [includeIncome, setIncludeIncome] = useState(true);
   const [openTransaction, setOpenTransaction] = useState("");
-
-  const searchParams = useSearchParams();
-
-  const fundId = searchParams.get("fundId");
-  const budgetId = searchParams.get("budgetId");
-  const accountId = searchParams.get("accountId");
 
   const handleOpenTransaction = (transactionId: string) => {
     setOpenTransaction((prev) => (prev === transactionId ? "" : transactionId));
@@ -91,7 +90,7 @@ const TransactionsPage = () => {
       <main className="flex h-full min-h-screen flex-col items-center text-white">
         <div className="container flex max-w-md flex-grow flex-col items-center justify-center gap-12 pt-5 sm:pb-4 lg:max-w-2xl">
           <div className="flex w-full flex-grow flex-col items-center gap-4">
-            <div className="flex w-full flex-col gap-4 px-4">
+            <div className="sticky top-20 z-10 flex w-full flex-col gap-4 px-4">
               {transactionData.data?.fund && (
                 <Fund data={transactionData.data.fund} />
               )}
@@ -184,7 +183,7 @@ const TransactionsPage = () => {
                 </Card>
               )}
             </div>
-            <div className="flex w-full flex-grow flex-col overflow-clip rounded-t-2xl bg-white pb-20 font-bold text-black">
+            <div className="z-20 flex w-full flex-grow flex-col overflow-clip rounded-t-2xl bg-white pb-20 font-bold text-black">
               <div className="grid h-full w-full grid-cols-1 overflow-clip rounded-xl border border-gray-300 bg-white text-black lg:grid-cols-2">
                 {transactionData?.data &&
                   transactionData.data.transactions.length === 0 && (
@@ -244,15 +243,6 @@ const TransactionsPage = () => {
           </div>
         </div>
       </main>
-      <Modal
-        open={modalOpen}
-        title="Categorize"
-        onClose={() => setModalOpen(false)}
-      >
-        <CategorizeTransactions
-          transactions={transactionData.data?.transactions ?? []}
-        />
-      </Modal>
     </AuthPage>
   );
 };
