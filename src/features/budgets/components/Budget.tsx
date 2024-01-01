@@ -1,16 +1,11 @@
 import { type Budget, type Prisma } from "@prisma/client";
-import { type FC } from "react";
+import { useState, type FC } from "react";
 import { formatToCurrency, formatToTitleCase } from "~/utils";
 import { ProgressBar } from "~/components/ui/Charts";
-import { IconButton } from "~/components/ui/Button";
 import useIcons from "~/hooks/useIcons";
-import {
-  faMoneyBill1,
-  faPencil,
-  faReceipt,
-  faSitemap,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill1 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import BudgetDetailDrawer from "./BudgetDetailDrawer";
 
 export type BudgetProps = {
   data: Budget & {
@@ -18,11 +13,18 @@ export type BudgetProps = {
     leftover: Prisma.Decimal;
   };
   open?: string;
-  onClick: (budgetId: string) => void;
+  onSelection?: (budget: Budget) => void;
+  className?: string;
 };
 
-const Budget: FC<BudgetProps> = ({ data: budget, open, onClick }) => {
+const Budget: FC<BudgetProps> = ({
+  data: budget,
+  open,
+  onSelection,
+  className,
+}) => {
   const { convertToIcon, convertToColor } = useIcons();
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const icon = convertToIcon(budget?.icon) ?? faMoneyBill1;
   const color = convertToColor(budget?.color);
 
@@ -31,10 +33,12 @@ const Budget: FC<BudgetProps> = ({ data: budget, open, onClick }) => {
       <div
         className={
           open === budget.id
-            ? "flex w-full bg-gray-100 p-4"
-            : "flex w-full border-b border-gray-300 p-4"
+            ? `flex w-full bg-gray-100 p-4 ${className ?? ""}`
+            : `flex w-full border-b border-gray-300 p-4 ${className ?? ""}`
         }
-        onClick={() => onClick(budget.id)}
+        onClick={() =>
+          onSelection ? onSelection(budget) : setIsDetailOpen(true)
+        }
       >
         <div className="flex w-full items-center gap-1">
           <button
@@ -58,13 +62,11 @@ const Budget: FC<BudgetProps> = ({ data: budget, open, onClick }) => {
           </div>
         </div>
       </div>
-      {open === budget.id && (
-        <div className="flex justify-around border-b border-gray-300 bg-gray-100 p-4 text-gray-600">
-          <FontAwesomeIcon icon={faPencil} />
-          <FontAwesomeIcon icon={faSitemap} />
-          <FontAwesomeIcon icon={faReceipt} />
-        </div>
-      )}
+      <BudgetDetailDrawer
+        open={isDetailOpen}
+        budget={budget}
+        onClose={() => setIsDetailOpen(false)}
+      />
     </>
   );
 };
