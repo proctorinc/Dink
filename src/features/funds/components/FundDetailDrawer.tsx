@@ -84,9 +84,19 @@ const FundDetailDrawer: FC<FundDetailDrawerProps> = ({
               size="3x"
               icon={convertToIcon(icon) ?? faPlusCircle}
             />
-            <h1 className="z-10 w-full text-3xl font-extrabold text-white">
-              {fund.name}
-            </h1>
+            <div className="flex w-full flex-col justify-start">
+              <h1 className="z-10 w-full text-3xl font-extrabold text-white">
+                {fund.name}
+              </h1>
+              <span
+                className="text-light text-sm"
+                style={{
+                  color: color?.secondary,
+                }}
+              >
+                Savings Fund
+              </span>
+            </div>
           </div>
         </div>
       )}
@@ -161,7 +171,7 @@ const FundDetailDrawer: FC<FundDetailDrawerProps> = ({
         onClose();
       }}
     >
-      <div className="flex flex-col gap-4 border-b p-4">
+      <div className="flex flex-col gap-4 border-b border-gray-300 p-4">
         <span className="text-lg">
           Current Savings: {formatToCurrency(fund.amount)}
         </span>
@@ -208,7 +218,7 @@ const FundDetailDrawer: FC<FundDetailDrawerProps> = ({
             <FontAwesomeIcon icon={faAngleRight} />
           </div>
           <div
-            className="flex w-full items-center justify-between gap-2 border-b border-gray-300 p-4"
+            className="flex w-full items-center justify-between gap-2 border-gray-300 p-4"
             onClick={() =>
               void router.push({
                 pathname: "/transactions",

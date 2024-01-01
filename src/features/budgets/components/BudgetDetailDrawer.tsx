@@ -85,9 +85,19 @@ const BudgetDetailDrawer: FC<BudgetDetailDrawerProps> = ({
               size="3x"
               icon={convertToIcon(icon) ?? faPlusCircle}
             />
-            <h1 className="z-10 w-full text-3xl font-extrabold text-white">
-              {budget.name}
-            </h1>
+            <div className="flex w-full flex-col justify-start">
+              <h1 className="z-10 w-full text-3xl font-extrabold text-white">
+                {budget.name}
+              </h1>
+              <span
+                className="text-light text-sm"
+                style={{
+                  color: color?.secondary,
+                }}
+              >
+                Spending Budget
+              </span>
+            </div>
           </div>
         </div>
       )}
@@ -162,7 +172,7 @@ const BudgetDetailDrawer: FC<BudgetDetailDrawerProps> = ({
         onClose();
       }}
     >
-      <div className="flex flex-col gap-2 border-b p-4">
+      <div className="flex flex-col gap-2 border-b border-gray-300 p-4">
         <div className="flex justify-between px-1">
           <span>
             {formatToCurrency(budget.spent)} / {formatToCurrency(budget.goal)}
@@ -202,7 +212,7 @@ const BudgetDetailDrawer: FC<BudgetDetailDrawerProps> = ({
             <FontAwesomeIcon icon={faAngleRight} />
           </div>
           <div
-            className="flex w-full items-center justify-between gap-2 border-b border-gray-300 p-4"
+            className="flex w-full items-center justify-between gap-2 border-gray-300 p-4"
             onClick={() =>
               void router.push({
                 pathname: "/transactions",

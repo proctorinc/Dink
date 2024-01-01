@@ -30,7 +30,7 @@ const Drawer: FC<DrawerProps> = ({
             className="absolute bottom-0 flex w-full max-w-md flex-col items-center gap-4 rounded-t-2xl bg-gray-100 pb-20 font-bold text-black"
           >
             <div
-              className="flex w-full flex-col items-center justify-center rounded-t-2xl border-b-2 p-4 text-xl"
+              className="flex w-full flex-col items-center justify-center rounded-t-2xl border-b-2 px-6 py-4 text-xl"
               style={{
                 backgroundColor: color?.secondary,
                 background: color
@@ -52,7 +52,7 @@ const Drawer: FC<DrawerProps> = ({
             </div>
             <div className="w-full p-4">
               <div
-                className={`flex w-full max-w-md flex-col gap-4 rounded-xl border border-gray-300 bg-white p-4 shadow-md ${
+                className={`flex w-full max-w-md flex-col rounded-xl border border-gray-300 bg-white shadow-md ${
                   className ?? ""
                 }`}
               >
