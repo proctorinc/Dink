@@ -1,10 +1,8 @@
 import { type Fund, type Budget, type Prisma } from "@prisma/client";
 import { type MouseEventHandler, type FC } from "react";
 import { formatToCurrency } from "~/utils";
-import Card from "~/components/ui/Card";
 import { IconButton } from "~/components/ui/Button";
 import { faCheckCircle, faSackDollar } from "@fortawesome/free-solid-svg-icons";
-import { useRouter } from "next/router";
 import useIcons from "~/hooks/useIcons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -14,23 +12,14 @@ type SavingsBudget = {
     leftover: Prisma.Decimal;
     savingsFund: Fund | null;
   };
-  onClick?: MouseEventHandler<HTMLDivElement>;
 };
 
-export const SavingsBudget: FC<SavingsBudget> = ({ data: budget, onClick }) => {
-  const router = useRouter();
+export const SavingsBudget: FC<SavingsBudget> = ({ data: budget }) => {
   const { convertToIcon, convertToColor } = useIcons();
   const color = convertToColor(budget.color);
 
-  const navigateToBudget = () => {
-    void router.push(`/budget/${budget?.id ?? ""}`);
-  };
-
   return (
-    <div
-      className="flex w-full border-b border-gray-300 p-4"
-      onClick={onClick ?? navigateToBudget}
-    >
+    <div className="flex w-full border-b border-gray-300 p-4">
       <div className="flex w-full items-center gap-1">
         <button
           className="h-8 w-8 rounded-lg border shadow-md"
