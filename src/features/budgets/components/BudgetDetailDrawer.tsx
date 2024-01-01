@@ -162,7 +162,7 @@ const BudgetDetailDrawer: FC<BudgetDetailDrawerProps> = ({
 
   return (
     <Drawer
-      className="gap-0 p-0"
+      className="gap-0 px-0 py-0"
       title={<DrawerHeader />}
       open={open}
       color={color}

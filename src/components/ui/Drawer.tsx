@@ -52,7 +52,7 @@ const Drawer: FC<DrawerProps> = ({
             </div>
             <div className="w-full p-4">
               <div
-                className={`flex w-full max-w-md flex-col rounded-xl border border-gray-300 bg-white shadow-md ${
+                className={`flex w-full max-w-md flex-col rounded-xl border border-gray-300 bg-white p-4 shadow-md ${
                   className ?? ""
                 }`}
               >
